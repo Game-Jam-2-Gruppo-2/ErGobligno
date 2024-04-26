@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class UI_Pause : MonoBehaviour
+public class UIPause : MonoBehaviour
 {
     public Action OnCloseMenu = ()=> { };
 

@@ -4,7 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class UI_VideoSettings : MonoBehaviour
+public class UIVideoSettings : MonoBehaviour
 {
     [SerializeField] private TMP_Dropdown ScreenTypeDropDown;
     [SerializeField] private TMP_Dropdown ResolutionDropDown;

@@ -1,12 +1,10 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
     //Singeton
-    [HideInInspector] public AudioManager Instance;
+    [HideInInspector] public static AudioManager Instance;
 
     [Header("Audio Settings")]
     [SerializeField] private List<AudioData> AudioData_List;
@@ -17,10 +15,16 @@ public class AudioManager : MonoBehaviour
         if (Instance == null)
             Instance = this;
         else
+        {
+            Debug.LogError("MULTIPLE AUDIO MANAGERS FOUND");
             Destroy(this.gameObject);
+            return;
+        }
+
+        SetUpAudio();
     }
 
-    private void Start()
+    private void SetUpAudio()
     {
         //Audio is saved in decimal scale an then converted
         float volume = 0f;

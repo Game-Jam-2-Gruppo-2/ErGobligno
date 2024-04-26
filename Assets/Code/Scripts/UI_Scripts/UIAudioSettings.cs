@@ -2,13 +2,13 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
-public class UI_AudioSettings : MonoBehaviour
+public class UIAudioSettings : MonoBehaviour
 {
     [SerializeField] private Slider Master_AudioSlider;
     [SerializeField] private Slider Music_AudioSlider;
     [SerializeField] private Slider SFX_AudioSlider;
     [SerializeField] private AudioMixer AudioMixer;
-
+    
     public void ChangeMaster()
     {
         float volume = Master_AudioSlider.value;

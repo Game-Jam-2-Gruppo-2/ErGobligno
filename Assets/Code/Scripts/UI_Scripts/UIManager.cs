@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UI_Manager : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
-    public static UI_Manager Instance;
+    public static UIManager Instance;
 
 
     [SerializeField] private Canvas Game_Canvas;
-    [SerializeField] private UI_Pause Pause_Canvas;
+    [SerializeField] private UIPause Pause_Canvas;
 
     private void Awake()
     {
