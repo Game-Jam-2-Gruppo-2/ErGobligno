@@ -3,24 +3,11 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    //Singeton
-    [HideInInspector] public static AudioManager Instance;
-
     [Header("Audio Settings")]
     [SerializeField] private List<AudioData> AudioData_List;
 
-    //Set up singleton
     private void Awake()
     {
-        if (Instance == null)
-            Instance = this;
-        else
-        {
-            Debug.LogError("MULTIPLE AUDIO MANAGERS FOUND");
-            Destroy(this.gameObject);
-            return;
-        }
-
         SetUpAudio();
     }
 

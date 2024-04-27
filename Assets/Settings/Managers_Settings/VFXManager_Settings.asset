@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: VFXManager_Settings
   m_EditorClassIdentifier: 
   MaxVFX: 10
+  DefaultParticleSystem: {fileID: 2130009982584459135, guid: 5a4031d4e22211648940e18e77b017fa,
+    type: 3}

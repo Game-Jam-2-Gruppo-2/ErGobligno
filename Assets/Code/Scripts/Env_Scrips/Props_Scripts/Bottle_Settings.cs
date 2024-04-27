@@ -9,6 +9,6 @@ public class Bottle_Settings : ScriptableObject
     [Tooltip("Force needed to break the bottle once it collide")]
     [SerializeField][Min(0.1f)] public float BreakingForce;
     [Header("FX")]
-    [SerializeField] public VFXObject Breaking_VFX;
+    [SerializeField] public ParticleSystem Breaking_VFX;
     [SerializeField] public AudioClip Breaking_SFX;
 }
