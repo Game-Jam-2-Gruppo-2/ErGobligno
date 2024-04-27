@@ -18,5 +18,7 @@ public class Director : MonoBehaviour
             Destroy(this.gameObject);
             return;
         }
+
+        DontDestroyOnLoad(this.gameObject);
     }
 }
