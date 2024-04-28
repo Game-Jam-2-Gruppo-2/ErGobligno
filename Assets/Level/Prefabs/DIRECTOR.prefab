@@ -59,16 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9836e5bce1b94d345ad7ded76755ed9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AudioData_List:
-  - SubMixer: {fileID: 24100000, guid: a5bcf197fee9ad346a08984901cc1ec7, type: 2}
-    Type: 0
-    DefaultVolume: 1
-  - SubMixer: {fileID: 24100000, guid: a5bcf197fee9ad346a08984901cc1ec7, type: 2}
-    Type: 1
-    DefaultVolume: 1
-  - SubMixer: {fileID: 24100000, guid: a5bcf197fee9ad346a08984901cc1ec7, type: 2}
-    Type: 2
-    DefaultVolume: 1
+  m_Settings: {fileID: 11400000, guid: f15e0648162ca964f92ea4e629e969d7, type: 2}
 --- !u!114 &23427134381702647
 MonoBehaviour:
   m_ObjectHideFlags: 0

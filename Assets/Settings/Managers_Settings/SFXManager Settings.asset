@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62876f7943662c64485017b6c4d19282, type: 3}
-  m_Name: SFXManager_Settings
+  m_Name: SFXManager Settings
   m_EditorClassIdentifier: 
   Max3DSFX: 10
   Max2DSFX: 10

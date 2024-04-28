@@ -22,7 +22,6 @@ public class VFXManager : MonoBehaviour
             m_VFXPool.Add(Instantiate(m_ManagerSettings.DefaultParticleSystem, transform));
             m_VFXPool[m_VFXPool.Count-1].gameObject.SetActive(false);
         }
-
         //Connect Action
         RequestVFX += PlaceVFX;
     }
