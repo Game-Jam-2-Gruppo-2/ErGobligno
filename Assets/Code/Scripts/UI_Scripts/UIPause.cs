@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class UIPause : MonoBehaviour
 {
-    public Action OnCloseMenu = ()=> { };
+    public Action OnCloseMenu = () => { };
 
     [SerializeField] private Canvas Select_Canvas;
     [SerializeField] private Canvas VolumeSettings_Canvas;
