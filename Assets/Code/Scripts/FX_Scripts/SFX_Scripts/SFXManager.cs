@@ -6,15 +6,10 @@ using UnityEngine.UIElements;
 
 public class SFXManager : MonoBehaviour
 {
-    public static Action<Vector3, AudioClip> Request3DSFX = (Vector3 pos, AudioClip clip) => { };
-    public static Action<Vector3, AudioClip> Request2DSFX = (Vector3 pos, AudioClip clip) => { };
+    public static Action<AudioClip, Vector3> Request3DSFX = (AudioClip clip, Vector3 pos) => { };
+    public static Action<AudioClip, Vector3> Request2DSFX = (AudioClip clip, Vector3 pos) => { };
 
-    [Header("Settings")]
-    [SerializeField][Range(0, 20)] private int Max3DSFX = 3;
-    [SerializeField][Range(0, 20)] private int Max2DSFX = 5;
-    [Header("Referces")]
-    [SerializeField] private SFXEffect Source3D = null;
-    [SerializeField] private SFXEffect Source2D = null;
+    [SerializeField] private SFXManager_Settings m_Settings;
 
     private List<SFXEffect> Sources_3D = new List<SFXEffect>();
     private List<SFXEffect> Sources_2D = new List<SFXEffect>();
@@ -23,29 +18,36 @@ public class SFXManager : MonoBehaviour
     {
         Request3DSFX += Request3D_SFX;
         Request2DSFX += Request2D_SFX;
+        SetUp();
     }
 
-    public void SetUp()
+    private void SetUp()
     {
-        for (int i = 0; i < Max3DSFX; i++)
+        //Instanciate 3D SFX
+        for (int i = 0; i < m_Settings.Max3DSFX; i++)
         {
-            Sources_3D.Add(Instantiate(Source3D, transform.position, Quaternion.identity));
+            Sources_3D.Add(Instantiate(m_Settings.Source3D, transform));
             Sources_3D[i].gameObject.SetActive(false);
         }
-        
-        for (int i = 0; i < Max2DSFX; i++)
+        //Instanciate 2D SFX
+        for (int i = 0; i < m_Settings.Max2DSFX; i++)
         {
-            Sources_2D.Add(Instantiate(Source2D, transform.position, Quaternion.identity));
+            Sources_2D.Add(Instantiate(m_Settings.Source2D, transform));
             Sources_2D[i].gameObject.SetActive(false);
         }
     }
-
-    public void Request3D_SFX(Vector3 position, AudioClip clip)
+    
+    /// <summary>
+    /// Place a game object containing a 3D audio source
+    /// </summary>
+    /// <param name="clip"></param>
+    /// <param name="position"></param>
+    public void Request3D_SFX(AudioClip clip, Vector3 position) 
     {
         if (clip == null)
             return;
 
-        for (int i = 0;i < Max3DSFX; i++)
+        for (int i = 0;i < m_Settings.Max3DSFX; i++)
         {
             if (!Sources_3D[i].gameObject.activeInHierarchy)
             {
@@ -56,12 +58,17 @@ public class SFXManager : MonoBehaviour
         }
     }
 
-    public void Request2D_SFX(Vector3 position, AudioClip clip)
+    /// <summary>
+    /// Place a game object containing a 2D audio source
+    /// </summary>
+    /// <param name="clip"></param>
+    /// <param name="position"></param>
+    public void Request2D_SFX(AudioClip clip, Vector3 position)
     {
         if (clip == null)
             return;
 
-        for (int i = 0; i < Max2DSFX; i++)
+        for (int i = 0; i < m_Settings.Max2DSFX; i++)
         {
             if (!Sources_2D[i].gameObject.activeInHierarchy)
             {

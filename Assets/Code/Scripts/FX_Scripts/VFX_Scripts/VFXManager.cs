@@ -7,16 +7,16 @@ using UnityEngine.UIElements;
 public class VFXManager : MonoBehaviour
 {
     //Actions
-    public static Action<ParticleSystem, Vector3, Quaternion> RequestVFX;
+    public static Action<VFXObject, Vector3, Quaternion> RequestVFX;
     //Settings
     [SerializeField] private VFXManager_Settings m_ManagerSettings;
     //Pooler List
-    private List<ParticleSystem> m_VFXPool;
+    private List<VFXObject> m_VFXPool;
     
     private void Awake()
     {
         //Set Up List
-        m_VFXPool = new List<ParticleSystem>();
+        m_VFXPool = new List<VFXObject>();
         for(int i=0; i<m_ManagerSettings.MaxVFX; i++)
         {
             m_VFXPool.Add(Instantiate(m_ManagerSettings.DefaultParticleSystem, transform));
@@ -27,7 +27,7 @@ public class VFXManager : MonoBehaviour
         RequestVFX += PlaceVFX;
     }
 
-    private void PlaceVFX(ParticleSystem VFX, Vector3 position, Quaternion rotation)
+    private void PlaceVFX(VFXObject VFX, Vector3 position, Quaternion rotation)
     {
         if(VFX == null)
             return;

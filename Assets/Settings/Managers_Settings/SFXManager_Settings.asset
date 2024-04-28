@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62876f7943662c64485017b6c4d19282, type: 3}
+  m_Name: SFXManager_Settings
+  m_EditorClassIdentifier: 
+  Max3DSFX: 10
+  Max2DSFX: 10
+  Source3D: {fileID: -6288604172438286560, guid: ebeb410a343d1a345b67007b9687d391,
+    type: 3}
+  Source2D: {fileID: -4665707991769908462, guid: 8e7fd7aec9b9e2e4392e54601807c9c5,
+    type: 3}

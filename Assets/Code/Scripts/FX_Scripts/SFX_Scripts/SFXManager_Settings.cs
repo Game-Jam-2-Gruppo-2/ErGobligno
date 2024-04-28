@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New VFX Manager", menuName = "Settings/Managers/VFX Manager")]
+[CreateAssetMenu(fileName = "New SFX Manager", menuName = "Settings/Managers/SFX Manager")]
 public class SFXManager_Settings : ScriptableObject
 {
     [Header("Settings")]
