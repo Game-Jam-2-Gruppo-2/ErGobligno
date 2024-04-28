@@ -6,5 +6,5 @@ using UnityEngine;
 public class VFXManager_Settings : ScriptableObject
 {
     [SerializeField] public int MaxVFX;
-    [SerializeField] public VFXObject DefaultParticleSystem;
+    [SerializeField] public ParticleSystem DefaultParticleSystem;
 }

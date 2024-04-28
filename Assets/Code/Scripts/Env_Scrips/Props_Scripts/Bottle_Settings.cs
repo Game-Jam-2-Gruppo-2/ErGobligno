@@ -11,7 +11,7 @@ public class Bottle_Settings : ScriptableObject
     [Tooltip("Noise created by breaking this oject, it will increase allert level of the tavern owner")]
     [SerializeField, Min(0f)] public float BreakingNoise = 0f;
     [Header("FX")]
-    [SerializeField] public VFXObject Breaking_VFX;
+    [SerializeField] public ParticleSystem Breaking_VFX;
     [SerializeField] public List<AudioClip> Breaking_SFX;
 
     /// <summary>
