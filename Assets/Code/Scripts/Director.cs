@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(AudioManager))]
+[RequireComponent(typeof(AudioManager), typeof(VFXManager), typeof(SFXManager))]
 public class Director : MonoBehaviour
 {
     //Singeton
