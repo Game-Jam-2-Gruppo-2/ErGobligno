@@ -9,26 +9,19 @@ public class Bottle : MonoBehaviour
 
     //force = velocity^2 * mass/2;
 
-    private void Awake()
+    private void OnCollisionEnter(Collision collision)
     {
-
+       if(collision.impulse.magnitude > m_Settings.BreakingForce)
+            Break();
     }
 
     private void Break()
     {
         VFXManager.RequestVFX?.Invoke(m_Settings.Breaking_VFX, transform.position, transform.rotation);
+        SFXManager.Request3DSFX?.Invoke(m_Settings.GetAudioClip(), transform.position);
         this.gameObject.SetActive(false);
     }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-       if(collision.impulse.magnitude > m_Settings.BreakingForce)
-            Break();
-
-        Debug.Log("Impulse Value = "+collision.impulse.magnitude+" to Break = "+ m_Settings.BreakingForce);
-    }
 }
-
 
 /*
  //Force

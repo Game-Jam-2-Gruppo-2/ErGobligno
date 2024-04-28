@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7447376378033958613}
   - component: {fileID: 7144772809476638901}
   - component: {fileID: 5331517471922367176}
+  - component: {fileID: 23427134381702647}
   - component: {fileID: 1807862305429813205}
   m_Layer: 0
   m_Name: DIRECTOR
@@ -68,6 +69,19 @@ MonoBehaviour:
   - SubMixer: {fileID: 24100000, guid: a5bcf197fee9ad346a08984901cc1ec7, type: 2}
     Type: 2
     DefaultVolume: 1
+--- !u!114 &23427134381702647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9054455641066227971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a58ebcb65e89014bb5ba29a6709e3fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Settings: {fileID: 11400000, guid: 96a39d8878bd8304cbd92552f1d5b8d0, type: 2}
 --- !u!114 &1807862305429813205
 MonoBehaviour:
   m_ObjectHideFlags: 0

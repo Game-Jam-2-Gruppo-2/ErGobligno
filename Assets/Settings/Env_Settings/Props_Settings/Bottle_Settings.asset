@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: Bottle_Settings
   m_EditorClassIdentifier: 
   BreakingForce: 5
-  Breaking_VFX: {fileID: 4211222479905449195, guid: 5a4031d4e22211648940e18e77b017fa,
+  BreakingNoise: 0
+  Breaking_VFX: {fileID: 2130009982584459135, guid: 5a4031d4e22211648940e18e77b017fa,
     type: 3}
-  Breaking_SFX: {fileID: 0}
+  Breaking_SFX:
+  - {fileID: 8300000, guid: 886a304d5f4494a49a82dcac10f520bc, type: 3}
+  - {fileID: 8300000, guid: 0f3a14573ed21d342abdb036a9c36889, type: 3}
+  - {fileID: 8300000, guid: 579a9a0fa05da2746b29387f3bc7ec7b, type: 3}
+  - {fileID: 8300000, guid: 7df9fc580c4c1444aa3ec3ab19a82241, type: 3}
