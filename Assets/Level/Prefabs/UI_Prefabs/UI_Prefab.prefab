@@ -353,6 +353,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI_Game
       objectReference: {fileID: 0}
+    - target: {fileID: 7233167733096378409, guid: 8dec0f87fb516a74eb2f1ea825fdaadd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -542,6 +547,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UI_Pause
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233167733096378409, guid: ae39dbca49de1374a9c7609ae5c55c10,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7283218348768901459, guid: ae39dbca49de1374a9c7609ae5c55c10,
         type: 3}
