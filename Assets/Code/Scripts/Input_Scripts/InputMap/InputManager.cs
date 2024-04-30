@@ -17,22 +17,20 @@ public static class InputManager
 
 	private static PlayerInputs inputActions;
 
-	static InputManager()
-	{
+	private static bool OnPause = false;
 
+	public static void Inizialize()
+	{
 		inputActions = new();
-		Inizialized();
-	}
-
-	public static void Inizialized()
-	{
 		inputActions.Movement.Walk.performed += WalkInput;
 		inputActions.Movement.Walk.canceled += StopWalkInput;
 		inputActions.Movement.Jump.performed += JumpInput;
 		inputActions.Movement.Run.performed += RunInput;
-		inputActions.UI.Pause.performed += PauseInput;
 		inputActions.Movement.Pause.performed += PauseInput;
-	}
+		inputActions.UI.Pause.performed += PauseInput;
+		MoveInputs(!OnPause);
+		UiInputs(OnPause);
+    }
 
 	public static void MoveInputs(bool ToActivate)
 	{
@@ -48,12 +46,17 @@ public static class InputManager
 			inputActions.UI.Enable();
 		else
 			inputActions.UI.Disable();
-	}
+    }
 
 	private static void PauseInput(InputAction.CallbackContext context)
 	{
+		OnPause = !OnPause;
+
+        MoveInputs(OnPause);
+        UiInputs(!OnPause);
+
 		OnPauseGame?.Invoke();
-	}
+    }
 
 	private static void RunInput(InputAction.CallbackContext context)
 	{
@@ -67,7 +70,6 @@ public static class InputManager
 
 	private static void StopWalkInput(InputAction.CallbackContext context)
 	{
-		Debug.LogWarning(lastDir);
 		OnStopMovement?.Invoke(lastDir);
 	}
 

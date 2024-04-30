@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
         }
 
         DontDestroyOnLoad(this.gameObject);
+
+        InputManager.Inizialize();
     }
 
     //TODO: REMOVE
@@ -46,6 +48,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.Game:
+                //TODO: FIX
                 if(!m_InGame)
                 {
                     m_InGame = true;
@@ -53,31 +56,33 @@ public class GameManager : MonoBehaviour
                 }
                 //TODO: Change State -> Game
                 Time.timeScale = 1;
+                CurrentState = newState;
                 break;
 
             case GameState.Pause:
-                if (CurrentState == newState)
-                {
-                    Time.timeScale = 0;
-                    ChangeState(GameState.Game);
-                    OnGamePause?.Invoke();
-                }
+                Time.timeScale = 0;
+                CurrentState = newState;
                 break;
         }
     }
 
     private void PauseGame()
     {
-        ChangeState(GameState.Pause);
+        if(CurrentState == GameState.Game)
+            ChangeState(GameState.Pause);
+        else
+            ChangeState(GameState.Game);
+        OnGamePause?.Invoke();
     }
 
     private void OnEnable()
     {
-        
+        InputManager.OnPauseGame += PauseGame;
     }
 
     private void OnDisable()
     {
+        InputManager.OnPauseGame -= PauseGame;
         OnNewGame -= OnNewGame;
         OnGamePause -= OnGamePause;
     }

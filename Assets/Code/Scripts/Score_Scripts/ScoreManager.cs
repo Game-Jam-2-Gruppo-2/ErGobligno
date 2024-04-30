@@ -110,7 +110,6 @@ public class ScoreManager: MonoBehaviour
         ResetValues();
     }
 
-
     //Public static getter
     public static float GetCoinValue()
     {

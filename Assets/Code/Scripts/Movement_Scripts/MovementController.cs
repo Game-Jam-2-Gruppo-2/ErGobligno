@@ -45,7 +45,7 @@ public class MovementController : MonoBehaviour
 	{
 		InputManager.MoveInputs(true);
 		InputManager.UiInputs(false);
-		InputManager.Inizialized();
+		InputManager.Inizialize();
 	}
 	private void OnEnable()
 	{
