@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7447376378033958613}
-  - component: {fileID: 7144772809476638901}
+  - component: {fileID: 443599308395904415}
   - component: {fileID: 5331517471922367176}
-  - component: {fileID: 23427134381702647}
   - component: {fileID: 1807862305429813205}
+  - component: {fileID: 7794150591792513178}
   m_Layer: 0
   m_Name: DIRECTOR
   m_TagString: Untagged
@@ -35,7 +35,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7144772809476638901
+--- !u!114 &443599308395904415
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,7 +44,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 9054455641066227971}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fef933c2683c004aabe3860727015ad, type: 3}
+  m_Script: {fileID: 11500000, guid: f1290adfea30dbb458001cee991f339b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &5331517471922367176
@@ -59,29 +59,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9836e5bce1b94d345ad7ded76755ed9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AudioData_List:
-  - SubMixer: {fileID: 24100000, guid: a5bcf197fee9ad346a08984901cc1ec7, type: 2}
-    Type: 0
-    DefaultVolume: 1
-  - SubMixer: {fileID: 24100000, guid: a5bcf197fee9ad346a08984901cc1ec7, type: 2}
-    Type: 1
-    DefaultVolume: 1
-  - SubMixer: {fileID: 24100000, guid: a5bcf197fee9ad346a08984901cc1ec7, type: 2}
-    Type: 2
-    DefaultVolume: 1
---- !u!114 &23427134381702647
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9054455641066227971}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a58ebcb65e89014bb5ba29a6709e3fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Settings: {fileID: 11400000, guid: 96a39d8878bd8304cbd92552f1d5b8d0, type: 2}
+  m_AudioMixer: {fileID: 24100000, guid: a5bcf197fee9ad346a08984901cc1ec7, type: 2}
+  m_AudioManager_Settings: {fileID: 11400000, guid: f15e0648162ca964f92ea4e629e969d7,
+    type: 2}
+  m_SFX_Settings: {fileID: 11400000, guid: 96a39d8878bd8304cbd92552f1d5b8d0, type: 2}
 --- !u!114 &1807862305429813205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,3 +76,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ManagerSettings: {fileID: 11400000, guid: 25abce7b13a3193479aad77cae1f3de3, type: 2}
+--- !u!114 &7794150591792513178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9054455641066227971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ff5fa9fa37be164d864bfd6872df1d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Settings: {fileID: 11400000, guid: 349cab5430d61a3439ab900cab307f64, type: 2}

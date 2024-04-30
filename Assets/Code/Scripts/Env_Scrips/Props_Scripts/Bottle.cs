@@ -18,7 +18,7 @@ public class Bottle : MonoBehaviour
     private void Break()
     {
         VFXManager.RequestVFX?.Invoke(m_Settings.Breaking_VFX, transform.position, transform.rotation);
-        SFXManager.Request3DSFX?.Invoke(m_Settings.GetAudioClip(), transform.position);
+        AudioManager.Request3DSFX?.Invoke(m_Settings.GetAudioClip(), transform.position);
         this.gameObject.SetActive(false);
     }
 }

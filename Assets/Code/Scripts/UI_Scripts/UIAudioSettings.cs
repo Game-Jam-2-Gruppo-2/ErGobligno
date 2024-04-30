@@ -12,14 +12,7 @@ public class UIAudioSettings : MonoBehaviour
     public void ChangeMaster()
     {
         float volume = Master_AudioSlider.value;
-        //Save volume value
-        if (PlayerPrefs.HasKey("MasterVolume"))
-            PlayerPrefs.SetFloat("MasterVolume", volume);
-        //Apply volume value into audio mixer
-        volume = 20 * Mathf.Log10(volume);
-        if (volume < -80f)
-            volume = -80f;
-        AudioMixer.SetFloat("MasterVolume", volume);
+        AudioManager.ChangeVolume(AudioChannel.Master, volume);
     }
 
     public void ChangeMusic()

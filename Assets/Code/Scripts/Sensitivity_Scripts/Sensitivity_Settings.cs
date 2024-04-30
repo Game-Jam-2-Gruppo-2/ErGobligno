@@ -5,9 +5,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Sensitivity Settings", menuName = "Settings/Other/Sensitivity")]
 public class Sensitivity_Settings : ScriptableObject
 {
-    [SerializeField] public float Sensitivity_Min { private set; get; } = 0.1f;
     [SerializeField] private float Sensitivity_Default = 500f;
-    [SerializeField] public float Sensitivity_Max { private set; get; } = 1000f;
+
+    public float Sensitivity_Min { private set; get; }
+    [SerializeField, Min(0.1f)] private float _Sensitivity_Min = 0.1f;
+    public float Sensitivity_Max { private set; get; } = 1000f;
+    [SerializeField, Min(0.1f)] private float _Sensitivity_Max = 0.1f;
 
     [HideInInspector] public float MouseSensitivity { private set; get; }
     [HideInInspector] public float ControllerSensitivity_Vertical { private set; get; }
@@ -15,6 +18,8 @@ public class Sensitivity_Settings : ScriptableObject
 
     private void OnEnable()
     {
+        Sensitivity_Min = _Sensitivity_Min;
+        Sensitivity_Max = _Sensitivity_Max;
         //Setup Mouse sens value
         if (PlayerPrefs.HasKey("MouseSens"))
             MouseSensitivity = PlayerPrefs.GetFloat("MouseSens");

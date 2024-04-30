@@ -27,8 +27,6 @@ public class UIPause : MonoBehaviour
         {
             case UI_State.Select:
             {
-                if (UI_CurrentState == state)
-                    OnCloseMenu();
                 Select_Canvas.gameObject.SetActive(true);
                 VolumeSettings_Canvas.gameObject.SetActive(false);
                 ControlsSettings_Canvas.gameObject.SetActive(false);

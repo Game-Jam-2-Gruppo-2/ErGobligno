@@ -6,9 +6,10 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-
-    [SerializeField] private Canvas Game_Canvas;
+    [SerializeField] private UIGame Game_Canvas;
     [SerializeField] private UIPause Pause_Canvas;
+
+    private bool IsPaused = false;
 
     private void Awake()
     {
@@ -48,12 +49,27 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private void SwichState()
+    {
+        if (IsPaused)
+            GameCanvas();
+        else
+            PauseCanvas();
+        IsPaused = !IsPaused;
+    }
+
     public void PauseCanvas() => ChangeState(UI_State.Pause);
     public void GameCanvas() => ChangeState(UI_State.Game);
 
     private void OnEnable()
     {
-        ChangeState(UI_State.Pause);
+        ChangeState(UI_State.Game);
         Pause_Canvas.OnCloseMenu += () => { ChangeState(UI_State.Game); };
+        GameManager.OnGamePause += SwichState;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnGamePause -= SwichState;
     }
 }
