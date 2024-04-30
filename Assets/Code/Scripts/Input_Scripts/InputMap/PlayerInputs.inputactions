@@ -2,7 +2,7 @@
     "name": "PlayerInputs",
     "maps": [
         {
-            "name": "Movemnt",
+            "name": "Movement",
             "id": "370a2a61-ef00-410b-b63b-283a43375119",
             "actions": [
                 {
@@ -37,7 +37,7 @@
                 {
                     "name": "WASD/Controller",
                     "id": "b94beae3-022c-4cba-be1b-3772f323810d",
-                    "path": "3DVector",
+                    "path": "3DVector(mode=1)",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -147,7 +147,7 @@
                 {
                     "name": "Controller_Dpad",
                     "id": "2085873a-14be-4c83-9a87-489d5f1e1daa",
-                    "path": "3DVector",
+                    "path": "3DVector(mode=1)",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -240,6 +240,45 @@
                     "processors": "",
                     "groups": "",
                     "action": "Run",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "a1615e8d-1e14-48f3-b437-434e8ac58416",
+            "actions": [
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "4ba11531-2f62-48ba-930b-379989179c8a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "a9c9666a-46e0-472b-b5ca-ad6d83f2f9f3",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "35a32fd4-7977-4098-8e6a-3e9a95274fa5",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

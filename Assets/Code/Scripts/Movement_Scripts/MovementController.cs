@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class MovementController : MonoBehaviour
@@ -8,6 +9,7 @@ public class MovementController : MonoBehaviour
 
 	[Header("Max Speed Settings: ")]
 	[SerializeField] public float MaxSpeed;
+	[SerializeField] public float RunMaxSpeed;
 	[SerializeField] public float MaxJumpHight;
 
 	#region Momentum Settings:
@@ -16,8 +18,8 @@ public class MovementController : MonoBehaviour
 	#region Acceleration:
 	[SerializeField] public AnimationCurve AccelerationCurve; // how fast you XLR8
 
-	[Tooltip("how fast you Accelerate")]
-	[SerializeField] public float AccelerationSpeed;
+	[Tooltip("how long you take to Accelerate")]
+	[SerializeField] public float AccelerationTime;
 	#endregion
 
 	#region Deceleration:
@@ -31,43 +33,48 @@ public class MovementController : MonoBehaviour
 	#endregion
 
 	//= the hidden variabiles 
-	[HideInInspector] public float MomentumCounter; // whare you are inside one of the curves
+	/*[HideInInspector]*/
+	public float MomentumCounter; // whare you are inside one of the curves
 	[HideInInspector] public MovementStates CurrentState;
-	[HideInInspector] public float MoveX, MoveZ, VelocityScale;
+	[HideInInspector] public float VelocityScale;
+	[HideInInspector] public Vector3 MoveDir;
+	[HideInInspector] public bool IsJumping, isRunning;
+
+
+	private void Awake()
+	{
+		InputManager.InGameInputs();
+		InputManager.OnEnableInGame();
+	}
+	private void OnEnable()
+	{
+		InputManager.OnMovement += Move;
+		InputManager.OnJump += Jump;
+		InputManager.OnStopMovement += StopMovement;
+	}
+
+	private void StopMovement()
+	{
+		ChangeState(new IdleState());
+
+	}
+
+	private void Jump()
+	{
+		IsJumping = true;
+		ChangeState(new JumpState());
+	}
+
+	private void Move(Vector3 dir)
+	{
+		MoveDir = dir;
+		ChangeState(new WalkState());
+	}
 
 	void Start()
 	{
 		Rb = GetComponent<Rigidbody>();
-		CurrentState = new WalkState();
-
-		var startTime = Time.time;
-		var x = AccelerationCurve.Evaluate(Time.time);
-		if (Time.time - startTime <= 0)
-		{
-			Rb.velocity = MaxSpeed * x * Rb.velocity;
-		}
-		else
-		{
-			MomentumCounter += Time.deltaTime;
-		}
-
-		var duration = 4f;
-		x = AccelerationCurve.Evaluate(MomentumCounter);
-		if (MomentumCounter < duration)
-		{
-			MomentumCounter += Time.deltaTime;
-			Rb.velocity = MaxSpeed * x * Rb.velocity;
-
-
-			// if (no imput)
-			// {
-			// 	Exit();
-			// }
-		}
-		else
-		{
-			MomentumCounter = 0;
-		}
+		CurrentState = new IdleState();
 	}
 
 	void Update()
@@ -75,8 +82,14 @@ public class MovementController : MonoBehaviour
 		CurrentState.Tick(this);
 	}
 
+	private void FixedUpdate()
+	{
+		CurrentState.FixedTick(this);
+	}
+
 	public void ChangeState(MovementStates newState)
 	{
 		CurrentState = newState;
+		CurrentState.Enter(this);
 	}
 }
