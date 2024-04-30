@@ -5,13 +5,14 @@ public static class InputManager
 {
 	public delegate void Vector3Delegate(Vector3 dir);
 	public static event Vector3Delegate OnMovement;
+	public static event Vector3Delegate OnStopMovement;
 
 	public delegate void EmptyDelegate();
-	public static event EmptyDelegate OnStopMovement;
 	public static event EmptyDelegate OnJump;
 	public static event EmptyDelegate OnRun;
 	public static event EmptyDelegate OnPauseGame;
 
+	private static Vector3 lastDir;
 
 	private static PlayerInputs inputActions;
 
@@ -48,12 +49,12 @@ public static class InputManager
 
 	private static void StopWalkInput(InputAction.CallbackContext context)
 	{
-		OnStopMovement?.Invoke();
+		OnStopMovement?.Invoke(lastDir);
 	}
 
 	private static void WalkInput(InputAction.CallbackContext context)
 	{
-		Debug.Log(context.ReadValue<Vector3>());
+		lastDir = context.ReadValue<Vector3>();
 		OnMovement?.Invoke(context.ReadValue<Vector3>());
 	}
 	public static void InGameInputs()

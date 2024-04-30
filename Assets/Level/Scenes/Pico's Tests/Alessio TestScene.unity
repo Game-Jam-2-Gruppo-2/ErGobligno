@@ -576,8 +576,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  DecelerationSpeed: 3
+  DecelerationTime: 1
   MomentumCounter: 0
+  MomentumTimer: 0
   VelocityScale: 0
   MoveDir: {x: 0, y: 0, z: 0}
   IsJumping: 0

@@ -23,18 +23,18 @@ public class MovementController : MonoBehaviour
 	#endregion
 
 	#region Deceleration:
-	[Tooltip("how you stop moving based on decelerationSpeed")]
+	[Tooltip("how you stop moving based on decelerationTime")]
 	[SerializeField] public AnimationCurve DecelerationCurve;
 
 	[Tooltip("how fast you decelerate over time")]
-	[SerializeField] public float DecelerationSpeed;
+	[SerializeField] public float DecelerationTime;
 	#endregion
 
 	#endregion
 
 	//= the hidden variabiles 
 	/*[HideInInspector]*/
-	public float MomentumCounter; // whare you are inside one of the curves
+	//public float MomentumCounter, MomentumTimer; // whare you are inside one of the curves
 	[HideInInspector] public MovementStates CurrentState;
 	[HideInInspector] public float VelocityScale;
 	[HideInInspector] public Vector3 MoveDir;
@@ -53,10 +53,18 @@ public class MovementController : MonoBehaviour
 		InputManager.OnStopMovement += StopMovement;
 	}
 
-	private void StopMovement()
+	private void OnDisable()
 	{
-		ChangeState(new IdleState());
+		InputManager.OnMovement -= Move;
+		InputManager.OnJump -= Jump;
+		InputManager.OnStopMovement -= StopMovement;
+	}
 
+	private void StopMovement(Vector3 dir)
+	{
+		MoveDir = dir;
+		Debug.LogWarning("opsy");
+		ChangeState(new IdleState());
 	}
 
 	private void Jump()

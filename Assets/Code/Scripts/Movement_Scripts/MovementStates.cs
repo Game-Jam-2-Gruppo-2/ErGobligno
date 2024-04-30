@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
-using UnityEditor;
+using System.Threading;
 using UnityEngine;
 
 public abstract class MovementStates
@@ -15,7 +12,9 @@ public abstract class MovementStates
 
 public class WalkState : MovementStates
 {
-
+	float MomentumCounter, MomentumTimer;
+	float Bestspeed;
+	float LastSpeed;
 	public override void Enter(MovementController controller)
 	{
 
@@ -28,34 +27,41 @@ public class WalkState : MovementStates
 
 	public override void FixedTick(MovementController controller)
 	{
-		controller.VelocityScale = controller.AccelerationCurve.Evaluate(controller.MomentumCounter);
-		if (controller.MomentumCounter < 1)
+		controller.VelocityScale = controller.AccelerationCurve.Evaluate(MomentumCounter);
+		if (MomentumTimer < controller.AccelerationTime)
 		{
-			controller.MomentumCounter += Time.fixedDeltaTime * (1 / controller.AccelerationTime);
-			Debug.Log(controller.MomentumCounter);
+			MomentumTimer += Time.fixedDeltaTime;
+			MomentumCounter = MomentumTimer / controller.AccelerationTime;
+			//Debug.Log(MomentumCounter);
 		}
 		else
 		{
-			controller.MomentumCounter = 1;
+			MomentumCounter = 1;
+			Exit(controller, new IdleState());
 		}
 
-		if (controller.isRunning)
-			controller.Rb.velocity = controller.VelocityScale * controller.RunMaxSpeed * Time.fixedDeltaTime * controller.MoveDir;
-		else
-			controller.Rb.velocity = controller.VelocityScale * controller.MaxSpeed * Time.fixedDeltaTime * controller.MoveDir;
+		//Debug.Log(controller.MoveDir);
+		LastSpeed = controller.VelocityScale * Bestspeed;
+
+		controller.Rb.velocity = controller.VelocityScale * Bestspeed * Time.fixedDeltaTime * controller.MoveDir;
 	}
 
 	public override void Tick(MovementController controller)
 	{
-
+		if (controller.isRunning)
+			Bestspeed = controller.RunMaxSpeed;
+		else
+			Bestspeed = controller.MaxSpeed;
 	}
 }
 
 public class IdleState : MovementStates
 {
+	float MomentumCounter, MomentumTimer;
+	float Bestspeed;
 	public override void Enter(MovementController controller)
 	{
-
+		Debug.Log("why am i here?");
 	}
 	public override void Exit(MovementController controller, MovementStates newState)
 	{
@@ -64,29 +70,27 @@ public class IdleState : MovementStates
 
 	public override void FixedTick(MovementController controller)
 	{
-		controller.VelocityScale = controller.DecelerationCurve.Evaluate(controller.MomentumCounter);
-
-		if (controller.MomentumCounter > 0)
+		controller.VelocityScale = controller.AccelerationCurve.Evaluate(MomentumCounter);
+		if (MomentumTimer > 0)
 		{
-			controller.MomentumCounter -= Time.fixedDeltaTime * (1 / controller.DecelerationSpeed);
+			MomentumTimer -= Time.fixedDeltaTime;
+			MomentumCounter = MomentumTimer / controller.DecelerationTime;
+			Debug.Log(MomentumCounter);
 		}
 		else
 		{
-			controller.MomentumCounter = 0;
+			MomentumCounter = 0;
 		}
+		controller.Rb.velocity = controller.VelocityScale * Bestspeed * Time.fixedDeltaTime * controller.MoveDir;
 
-		if (controller.isRunning)
-		{
-			controller.Rb.velocity = controller.VelocityScale * controller.RunMaxSpeed * Time.fixedDeltaTime * controller.MoveDir;
-		}
-		else
-			controller.Rb.velocity = controller.VelocityScale * controller.MaxSpeed * Time.fixedDeltaTime * controller.MoveDir;
 	}
 
 	public override void Tick(MovementController controller)
 	{
-
-
+		if (controller.isRunning)
+			Bestspeed = controller.RunMaxSpeed;
+		else
+			Bestspeed = controller.MaxSpeed;
 	}
 }
 public class JumpState : MovementStates
