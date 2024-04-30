@@ -43,8 +43,9 @@ public class MovementController : MonoBehaviour
 
 	private void Awake()
 	{
-		InputManager.InGameInputs();
-		InputManager.OnEnableInGame();
+		InputManager.MoveInputs(true);
+		InputManager.UiInputs(false);
+		InputManager.Inizialized();
 	}
 	private void OnEnable()
 	{

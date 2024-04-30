@@ -32,12 +32,10 @@ public class WalkState : MovementStates
 		{
 			MomentumTimer += Time.fixedDeltaTime;
 			MomentumCounter = MomentumTimer / controller.AccelerationTime;
-			//Debug.Log(MomentumCounter);
 		}
 		else
 		{
 			MomentumCounter = 1;
-			Exit(controller, new IdleState());
 		}
 
 		//Debug.Log(controller.MoveDir);
