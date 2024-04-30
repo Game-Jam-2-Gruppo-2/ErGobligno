@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
     public delegate void NewGame();
     public static event NewGame OnNewGame;
 
+    public delegate void GamePaused();
+    public static event GamePaused OnGamePause;
+
     private GameState CurrentState = GameState.Menu;
     private bool m_InGame = false;
 
@@ -28,6 +31,12 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
+    //TODO: REMOVE
+    private void Start()
+    {
+        ChangeState(GameState.Game);
+    }
+
     private void ChangeState(GameState newState)
     {
         switch (newState)
@@ -40,17 +49,26 @@ public class GameManager : MonoBehaviour
                 if(!m_InGame)
                 {
                     m_InGame = true;
-
+                    OnNewGame?.Invoke();
                 }
                 //TODO: Change State -> Game
-
+                Time.timeScale = 1;
                 break;
 
             case GameState.Pause:
                 if (CurrentState == newState)
+                {
+                    Time.timeScale = 0;
                     ChangeState(GameState.Game);
+                    OnGamePause?.Invoke();
+                }
                 break;
         }
+    }
+
+    private void PauseGame()
+    {
+        ChangeState(GameState.Pause);
     }
 
     private void OnEnable()
@@ -61,6 +79,7 @@ public class GameManager : MonoBehaviour
     private void OnDisable()
     {
         OnNewGame -= OnNewGame;
+        OnGamePause -= OnGamePause;
     }
 }
 

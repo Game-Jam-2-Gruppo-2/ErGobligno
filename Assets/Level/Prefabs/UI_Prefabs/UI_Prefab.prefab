@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46ac3e80557b7da4599164631a9bd682, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Game_Canvas: {fileID: 1092910971456533157}
+  Game_Canvas: {fileID: 1427650128877365449}
   Pause_Canvas: {fileID: 5965951233628183285}
 --- !u!1 &2434363068534468995
 GameObject:
@@ -168,8 +168,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 245470851024586904}
   - {fileID: 6206857607960027367}
+  - {fileID: 245470851024586904}
   m_Father: {fileID: 3131737291272227217}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -353,22 +353,23 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI_Game
       objectReference: {fileID: 0}
-    - target: {fileID: 7233167733096378409, guid: 8dec0f87fb516a74eb2f1ea825fdaadd,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8dec0f87fb516a74eb2f1ea825fdaadd, type: 3}
---- !u!223 &1092910971456533157 stripped
-Canvas:
-  m_CorrespondingSourceObject: {fileID: 2293488013316942820, guid: 8dec0f87fb516a74eb2f1ea825fdaadd,
+--- !u!114 &1427650128877365449 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 229366598481408392, guid: 8dec0f87fb516a74eb2f1ea825fdaadd,
     type: 3}
   m_PrefabInstance: {fileID: 1224653156438530369}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7494f14df1ae354b8e73b86df2d5f3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &6206857607960027367 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5106492180843149734, guid: 8dec0f87fb516a74eb2f1ea825fdaadd,

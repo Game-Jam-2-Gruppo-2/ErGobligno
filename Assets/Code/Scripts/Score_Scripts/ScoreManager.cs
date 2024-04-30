@@ -94,7 +94,6 @@ public class ScoreManager: MonoBehaviour
         {
             GameTime += Time.deltaTime;
             OnGameTimeChanged?.Invoke();
-            Debug.Log(GameTime);
             yield return null;
         }
     }
@@ -125,7 +124,7 @@ public class ScoreManager: MonoBehaviour
 
     public static float GetGameTimeValue()
     {
-        return CoinAmount;
+        return GameTime;
     }
 
     //public static List<float> GetRecords()
@@ -133,8 +132,14 @@ public class ScoreManager: MonoBehaviour
 
     //}
 
+    private void OnEnable()
+    {
+        GameManager.OnNewGame += StartGame;
+    }
+
     private void OnDisable()
     {
+        GameManager.OnNewGame -= StartGame;
         OnCoinChanged -= OnCoinChanged;
         OnNoiseChanged -= OnNoiseChanged;
         OnGameTimeChanged -= OnGameTimeChanged;
