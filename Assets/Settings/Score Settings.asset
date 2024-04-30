@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b5e8f9e6ddc3d042b6f9d6c3420749c, type: 3}
-  m_Name: VFXManager Settings
+  m_Script: {fileID: 11500000, guid: b4bb5f9790a5ec84eadf459f91deda9e, type: 3}
+  m_Name: Score Settings
   m_EditorClassIdentifier: 
-  MaxVFX: 20
-  DefaultParticleSystem: {fileID: 2130009982584459135, guid: 5a4031d4e22211648940e18e77b017fa,
-    type: 3}
+  MaxNoiseAmount: 1

@@ -1,11 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class VFXManager : MonoBehaviour
 {
+    //Singleton
+    private static VFXManager Instance;
     //Actions
     public static Action<ParticleSystem, Vector3, Quaternion> RequestVFX;
     //Settings
@@ -15,6 +15,16 @@ public class VFXManager : MonoBehaviour
     
     private void Awake()
     {
+        //Singleton set up
+        if (Instance == null)
+            Instance = this;
+        else
+        {
+            Debug.LogError("MULTIPLE VFX MANAGER FOUND");
+            Destroy(this.gameObject);
+            return;
+        }
+
         //Set Up List
         m_VFXPool = new List<ParticleSystem>();
         for(int i=0; i<m_ManagerSettings.MaxVFX; i++)

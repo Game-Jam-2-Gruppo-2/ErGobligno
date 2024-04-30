@@ -6,7 +6,6 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-
     [SerializeField] private Canvas Game_Canvas;
     [SerializeField] private UIPause Pause_Canvas;
 

@@ -5,6 +5,8 @@ using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
+    public static AudioManager Instance;
+
     [Header("Audio Settings")]
     [SerializeField] private AudioMixer m_AudioMixer;
     [SerializeField] private AudioManager_Settings m_AudioManager_Settings;
@@ -22,13 +24,22 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
+        //Singleton set up
+        if (Instance == null)
+            Instance = this;
+        else
+        {
+            Debug.LogError("MULTIPLE AUDIO MANAGER FOUND");
+            Destroy(this.gameObject);
+            return;
+        }
+
         SetUpAudio();
         SetUpSFX();
         Request3DSFX += Request3D_SFX;
         Request2DSFX += Request2D_SFX;
     }
     #region Audio Manager
-
     private void SetUpAudio()
     {
         Mixer = m_AudioMixer;
