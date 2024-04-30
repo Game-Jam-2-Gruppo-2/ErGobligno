@@ -515,9 +515,9 @@ MonoBehaviour:
   ClimableLayers:
     serializedVersion: 2
     m_Bits: 0
-  MaxSpeed: 500
+  MaxSpeed: 1000
   RunMaxSpeed: 20
-  MaxJumpHight: 10
+  MaxJumpHight: 0.5
   AccelerationCurve:
     serializedVersion: 2
     m_Curve:
@@ -576,9 +576,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  DecelerationTime: 1
-  MomentumCounter: 0
-  MomentumTimer: 0
+  DecelerationTime: 0.2
   VelocityScale: 0
   MoveDir: {x: 0, y: 0, z: 0}
   IsJumping: 0
