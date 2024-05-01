@@ -621,9 +621,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  DecelerationTime: 0.2
+  DecelerationTime: 10
   VelocityScale: 0
+  LastSpeed: 0
   MoveDir: {x: 0, y: 0, z: 0}
+  LastDirection: {x: 0, y: 0, z: 0}
   IsJumping: 0
   isRunning: 0
 --- !u!1660057539 &9223372036854775807
