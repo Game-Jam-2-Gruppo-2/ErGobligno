@@ -26,16 +26,19 @@ public static class InputManager
 
 	public static void Inizialized()
 	{
-		inputActions.Movement.Walk.performed += WalkInput;
-		inputActions.Movement.Walk.canceled += StopWalkInput;
+		// inputActions.Movement.Walk.performed += WalkInput;
+		// inputActions.Movement.Walk.canceled += StopWalkInput;
 		inputActions.Movement.Jump.performed += JumpInput;
 		inputActions.Movement.Run.performed += RunInput;
 		inputActions.UI.Pause.performed += PauseInput;
 		inputActions.Movement.Pause.performed += PauseInput;
 	}
 
+	public static Vector3 MovementDir => inputActions.Movement.Walk.ReadValue<Vector3>();
+
 	public static void MoveInputs(bool ToActivate)
 	{
+		Debug.LogError("i'm inside " + ToActivate);
 		if (ToActivate)
 			inputActions.Movement.Enable();
 		else
@@ -65,16 +68,38 @@ public static class InputManager
 		OnJump?.Invoke();
 	}
 
-	private static void StopWalkInput(InputAction.CallbackContext context)
+
+
+	/// <summary>
+	/// checks every frame if you pressed a movement button 
+	/// and then sends the Vector3 value with the OnMovement event
+	/// </summary>
+	public static void IsIdle(out Vector3 dir)
 	{
-		Debug.LogWarning(lastDir);
-		OnStopMovement?.Invoke(lastDir);
+		dir = MovementDir;
+
+		if (dir == Vector3.zero)
+		{
+			OnStopMovement?.Invoke(lastDir);
+		}
+		else
+		{
+			lastDir = dir;
+		}
 	}
 
-	private static void WalkInput(InputAction.CallbackContext context)
+	/// <summary>
+	/// Check if player is moving
+	/// </summary>
+	/// <param name="dir"> this will become the controller's movement dir </param>
+	public static void IsMoving(out Vector3 dir)
 	{
+		dir = MovementDir;
 
-		lastDir = context.ReadValue<Vector3>();
-		OnMovement?.Invoke(context.ReadValue<Vector3>());
+		if (dir != Vector3.zero)
+		{
+			OnMovement?.Invoke(dir);
+		}
 	}
+
 }

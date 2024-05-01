@@ -36,8 +36,8 @@ public class MovementController : MonoBehaviour
 	/*[HideInInspector]*/
 	//public float MomentumCounter, MomentumTimer; // whare you are inside one of the curves
 	[HideInInspector] public MovementStates CurrentState;
-	[HideInInspector] public float VelocityScale;
-	[HideInInspector] public Vector3 MoveDir;
+	[HideInInspector] public float VelocityScale, LastSpeed;
+	[HideInInspector] public Vector3 MoveDir, LastDirection;
 	[HideInInspector] public bool IsJumping, isRunning;
 
 
@@ -61,10 +61,14 @@ public class MovementController : MonoBehaviour
 		InputManager.OnStopMovement -= StopMovement;
 	}
 
+	void Start()
+	{
+		Rb = GetComponent<Rigidbody>();
+		CurrentState = new IdleState();
+	}
 	private void StopMovement(Vector3 dir)
 	{
 		MoveDir = dir;
-		Debug.LogWarning("opsy");
 		ChangeState(new IdleState());
 	}
 
@@ -76,14 +80,16 @@ public class MovementController : MonoBehaviour
 
 	private void Move(Vector3 dir)
 	{
-		MoveDir = dir;
+		//! cambia qui il change state 
+		LastDirection = dir;
 		ChangeState(new WalkState());
+
 	}
 
-	void Start()
+	private void MoveChange(Vector3 dir)
 	{
-		Rb = GetComponent<Rigidbody>();
-		CurrentState = new IdleState();
+		Move(dir);
+
 	}
 
 	void Update()
