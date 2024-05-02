@@ -563,11 +563,11 @@ MonoBehaviour:
   RaycastDetectionHeight: 0.5
   RaycastDetectionLenght: 3
   CheckCooldown: 0.3
-  JumpForce: 0
+  JumpForce: 10
   GroundLayer:
     serializedVersion: 2
     m_Bits: 256
-  GroundCheckLenght: 0
+  GroundCheckLenght: 0.6
   CooldownAfterEnd: 0
   WalkMaxSpeed: 500
   RunMaxSpeed: 700
