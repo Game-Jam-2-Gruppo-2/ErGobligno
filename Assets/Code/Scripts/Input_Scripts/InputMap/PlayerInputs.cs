@@ -336,6 +336,122 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Climb"",
+            ""id"": ""6e591a46-d107-4f31-8fb6-c29026805c0e"",
+            ""actions"": [
+                {
+                    ""name"": ""Climb"",
+                    ""type"": ""Value"",
+                    ""id"": ""97470ded-ebd5-4c07-84ab-d5d7d9b3db25"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""WASD"",
+                    ""id"": ""6c50f1b0-2554-4f61-a6c3-80e0bea71a95"",
+                    ""path"": ""1DAxis(whichSideWins=1)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Climb"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""6063fa69-24eb-459b-ae24-4faa8dd7d84f"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Climb"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""70671406-f37a-4d5e-b4d3-76e129fbd2e2"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Climb"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Controller_Analog"",
+                    ""id"": ""0988b6cd-80b3-4d42-9e1a-9c5df8e1f152"",
+                    ""path"": ""1DAxis(whichSideWins=1)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Climb"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""c4440e6f-41c3-4b12-95a4-53a4d3f521f3"",
+                    ""path"": ""<Gamepad>/leftStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Climb"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""7886d69f-4df4-4e9f-94e1-f29b5cae642b"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Climb"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Controller_Dpad"",
+                    ""id"": ""2b3c459e-5b09-4069-a41d-b278906ed2e0"",
+                    ""path"": ""1DAxis(whichSideWins=1)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Climb"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""87b4b010-b2db-48d5-b1a5-e86bf4dcacbf"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Climb"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""ee9dc620-8f4f-42bf-ac47-a46ccdc4de5d"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Climb"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -349,6 +465,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Pause = m_UI.FindAction("Pause", throwIfNotFound: true);
+        // Climb
+        m_Climb = asset.FindActionMap("Climb", throwIfNotFound: true);
+        m_Climb_Climb = m_Climb.FindAction("Climb", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -522,6 +641,52 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // Climb
+    private readonly InputActionMap m_Climb;
+    private List<IClimbActions> m_ClimbActionsCallbackInterfaces = new List<IClimbActions>();
+    private readonly InputAction m_Climb_Climb;
+    public struct ClimbActions
+    {
+        private @PlayerInputs m_Wrapper;
+        public ClimbActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Climb => m_Wrapper.m_Climb_Climb;
+        public InputActionMap Get() { return m_Wrapper.m_Climb; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(ClimbActions set) { return set.Get(); }
+        public void AddCallbacks(IClimbActions instance)
+        {
+            if (instance == null || m_Wrapper.m_ClimbActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_ClimbActionsCallbackInterfaces.Add(instance);
+            @Climb.started += instance.OnClimb;
+            @Climb.performed += instance.OnClimb;
+            @Climb.canceled += instance.OnClimb;
+        }
+
+        private void UnregisterCallbacks(IClimbActions instance)
+        {
+            @Climb.started -= instance.OnClimb;
+            @Climb.performed -= instance.OnClimb;
+            @Climb.canceled -= instance.OnClimb;
+        }
+
+        public void RemoveCallbacks(IClimbActions instance)
+        {
+            if (m_Wrapper.m_ClimbActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IClimbActions instance)
+        {
+            foreach (var item in m_Wrapper.m_ClimbActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_ClimbActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public ClimbActions @Climb => new ClimbActions(this);
     public interface IMovementActions
     {
         void OnWalk(InputAction.CallbackContext context);
@@ -532,5 +697,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         void OnPause(InputAction.CallbackContext context);
+    }
+    public interface IClimbActions
+    {
+        void OnClimb(InputAction.CallbackContext context);
     }
 }

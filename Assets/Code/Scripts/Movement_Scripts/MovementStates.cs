@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using UnityEngine;
 
@@ -12,13 +13,16 @@ public abstract class MovementStates
 
 public class WalkState : MovementStates
 {
-	float MomentumCounter, MomentumTimer;
-	float Bestspeed;
+	float AccelerationTimer = 0;
+	float counter;
+
+	/// <summary>
+	/// Q
+	/// </summary>
+	float enterScalar = 0;
 	public override void Enter(MovementController controller)
 	{
-		Debug.LogWarning("walking");
-		MomentumCounter = 0;
-		MomentumTimer = 0;
+		enterScalar = controller.VelocityScalar;
 	}
 
 	public override void Exit(MovementController controller, MovementStates newState)
@@ -28,85 +32,145 @@ public class WalkState : MovementStates
 
 	public override void FixedTick(MovementController controller)
 	{
-		controller.VelocityScale = controller.AccelerationCurve.Evaluate(MomentumCounter);
+		// get values:
+		AccelerationTimer += Time.fixedDeltaTime * (1 / controller.AccelerationTime);
 
-		controller.LastSpeed = controller.VelocityScale * Bestspeed;
-		controller.Rb.velocity = controller.LastSpeed * Time.fixedDeltaTime * controller.MoveDir;
-		Debug.Log(controller.Rb.velocity);
+		var c = controller.AccelerationCurve.Evaluate(AccelerationTimer);
 
-		if (MomentumTimer < controller.AccelerationTime)
-		{
-			MomentumTimer += Time.fixedDeltaTime;
-			MomentumCounter = MomentumTimer / controller.AccelerationTime;
-		}
-		else
-		{
-			MomentumCounter = 1;
-		}
+		//Calculate velocity Scale
+		controller.VelocityScalar = enterScalar + (c * (1 - enterScalar));
 
-		//Debug.Log(controller.MoveDir);
+		controller.Rb.velocity = controller.VelocityScalar * controller.MaxSpeed * Time.fixedDeltaTime * controller.MoveDir;
+
+		// Debug.Log("A= " + AccelerationTimer);
+		// Debug.Log("Q = " + enterScalar + "\nC = " + c);
 
 	}
 
 	public override void Tick(MovementController controller)
 	{
-		InputManager.IsIdle(out controller.MoveDir);
-		controller.MoveDir = InputManager.MovementDir;
 
-		if (controller.isRunning)
-			Bestspeed = controller.RunMaxSpeed;
-		else
-			Bestspeed = controller.MaxSpeed;
+		if (InputManager.MovementDir == Vector3.zero)
+		{
+			Exit(controller, new IdleState());
+			return;
+		}
+
+		controller.MoveDir = InputManager.MovementDir;
+	}
+}
+
+public class RunState : MovementStates
+{
+	float AccelerationTimer = 0;
+
+	/// <summary>
+	/// Q
+	/// </summary>
+	float enterScalar = 0;
+	public override void Enter(MovementController controller)
+	{
+		enterScalar = controller.VelocityScalar;
+	}
+
+	public override void Exit(MovementController controller, MovementStates newState)
+	{
+		controller.ChangeState(newState);
+	}
+
+	public override void FixedTick(MovementController controller)
+	{
+		// get values:
+		AccelerationTimer += Time.fixedDeltaTime * (1 / controller.AccelerationTime);
+
+		var c = controller.AccelerationCurve.Evaluate(AccelerationTimer);
+
+		//Calculate velocity Scale
+		controller.VelocityScalar = enterScalar + (c * (1 - enterScalar));
+
+		controller.Rb.velocity = controller.VelocityScalar * controller.MaxSpeed * Time.fixedDeltaTime * controller.MoveDir;
+
+		// Debug.Log("A= " + AccelerationTimer);
+		// Debug.Log("Q = " + enterScalar + "\nC = " + c);
+
+	}
+
+	public override void Tick(MovementController controller)
+	{
+
+		if (InputManager.MovementDir == Vector3.zero)
+		{
+			Exit(controller, new IdleState());
+			return;
+		}
+
+		controller.MoveDir = InputManager.MovementDir;
 	}
 }
 
 public class IdleState : MovementStates
 {
-	float MomentumCounter, MomentumTimer;
+	float decelerationTimer = 0;
+
+	/// <summary>
+	/// Q
+	/// </summary>
+	float enterScalar = 0;
 	public override void Enter(MovementController controller)
 	{
-		MomentumCounter = 0;
-		MomentumTimer = 0;
+		enterScalar = controller.VelocityScalar;
 	}
 
 	public override void Exit(MovementController controller, MovementStates newState)
 	{
-
+		controller.ChangeState(newState);
 	}
 
 	public override void FixedTick(MovementController controller)
 	{
-		controller.VelocityScale = controller.AccelerationCurve.Evaluate(MomentumCounter);
-		controller.Rb.velocity = controller.VelocityScale * controller.LastSpeed * Time.fixedDeltaTime * controller.LastDirection;
+		if (controller.VelocityScalar == 0)
+			return;
 
-		if (MomentumTimer < controller.DecelerationTime)
-		{
-			MomentumTimer += Time.fixedDeltaTime;
-			MomentumCounter = MomentumTimer / controller.DecelerationTime;
-		}
-		else
-		{
-			MomentumCounter = 0;
-			controller.Rb.velocity = Vector3.zero;
-		}
+		// get values:
+		decelerationTimer += Time.fixedDeltaTime * (1 / controller.DecelerationTime);
 
+		decelerationTimer = Mathf.Clamp01(decelerationTimer);
+
+		var c = controller.DecelerationCurve.Evaluate(decelerationTimer);
+
+		//Calculate velocity Scale
+		controller.VelocityScalar = enterScalar * c;
+
+		controller.Rb.velocity = controller.VelocityScalar * controller.MaxSpeed * Time.fixedDeltaTime * controller.MoveDir;
+		// Debug.Log(decelerationTimer);
+		// Debug.Log("Q = " + enterScalar + "\nC = " + c);
+		// Debug.Log("S= " + controller.VelocityScale + "\nV= " + controller.Rb.velocity.magnitude);
 	}
 
 	public override void Tick(MovementController controller)
 	{
-		InputManager.IsMoving(out controller.MoveDir);
+		if (InputManager.MovementDir != Vector3.zero)
+		{
+			Exit(controller, new WalkState());
+		}
+
+
 	}
 }
 public class JumpState : MovementStates
 {
+	float timer;
+	float dur = 0.5f;
 	public override void Enter(MovementController controller)
 	{
-
+		controller.Rb.AddForce(controller.transform.up * controller.JumpForce, ForceMode.Impulse);
+		controller.IsJumping = true;
 	}
 
 	public override void Exit(MovementController controller, MovementStates newState)
 	{
-		throw new System.NotImplementedException();
+		controller.IsJumping = false;
+		controller.ChangeState(newState);
 	}
 
 	public override void FixedTick(MovementController controller)
@@ -116,7 +180,17 @@ public class JumpState : MovementStates
 
 	public override void Tick(MovementController controller)
 	{
+		if (timer < dur)
+		{
+			timer += Time.deltaTime;
+			return;
+		}
 
+
+		if (Physics.Raycast(controller.transform.position, -controller.transform.up, controller.GroundCheckLenght, controller.GroundLayer))
+		{
+			Exit(controller, new IdleState());
+		}
 	}
 }
 
@@ -124,11 +198,19 @@ public class ClimbState : MovementStates
 {
 	public override void Enter(MovementController controller)
 	{
-
+		InputManager.MoveInputs(false);
+		InputManager.ClimbInputs(true);
+		controller.Rb.useGravity = false;
+		controller.isClimbing = true;
+		controller.IsJumping = false;
 	}
 	public override void Exit(MovementController controller, MovementStates newState)
 	{
-		throw new System.NotImplementedException();
+		InputManager.MoveInputs(true);
+		InputManager.ClimbInputs(false);
+		controller.StartCoroutine(controller.CheckLedgeCooldown());
+		//|------------------------------------------------------------------------------------------|
+		controller.ChangeState(newState);
 	}
 
 	public override void FixedTick(MovementController controller)
@@ -138,6 +220,16 @@ public class ClimbState : MovementStates
 
 	public override void Tick(MovementController controller)
 	{
-
+		if (InputManager.ClimbUp > 0)
+		{
+			Vector3 pos = controller.transform.position;
+			pos.y = controller.ClimbableObject.bounds.extents.y;
+			pos.z = controller.ClimbableObject.transform.position.z;
+			pos.x = controller.ClimbableObject.transform.position.x;
+		}
+		else
+		{
+			Exit(controller, new IdleState());
+		}
 	}
 }

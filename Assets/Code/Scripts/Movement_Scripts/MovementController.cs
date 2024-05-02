@@ -1,18 +1,36 @@
-using System;
+using System.Collections;
 using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
 	[Header("Serialize:")]
 	[SerializeField] public Rigidbody Rb;
-	[SerializeField] public LayerMask ClimableLayers;
 
-	[Header("Max Speed Settings: ")]
-	[SerializeField] public float MaxSpeed;
+	//|------------------------------------------------------------------------------------------|
+	[Header("Climb Settings:")]
+	[SerializeField] public LayerMask ClimableLayers;
+	[Tooltip("how far from the center in y is the raycast to detect ledges")]
+	[SerializeField] public float RaycastDetectionHeight;
+	[Tooltip("how long is the raycast to detect ledges")]
+	[SerializeField] public float RaycastDetectionLenght;
+	[SerializeField] public float CheckCooldown = 0.3f;
+
+	//|------------------------------------------------------------------------------------------|
+	[Header("Jump Settings:")]
+	[SerializeField] public float JumpForce;
+	[SerializeField] public LayerMask GroundLayer;
+
+	[Tooltip("how long is the raycast to detect the ground")]
+	[SerializeField] public float GroundCheckLenght;
+	[SerializeField] public float CooldownAfterEnd;
+
+	//|------------------------------------------------------------------------------------------|
+	[Header("Speed Settings: ")]
+	[SerializeField] public float WalkMaxSpeed;
 	[SerializeField] public float RunMaxSpeed;
-	[SerializeField] public float MaxJumpHight;
 
 	#region Momentum Settings:
+	//|------------------------------------------------------------------------------------------|
 	[Header("Momentum Settings:")]
 
 	#region Acceleration:
@@ -21,12 +39,12 @@ public class MovementController : MonoBehaviour
 	[Tooltip("how long you take to Accelerate")]
 	[SerializeField] public float AccelerationTime;
 	#endregion
-
+	//|------------------------------------------------------------------------------------------|
 	#region Deceleration:
 	[Tooltip("how you stop moving based on decelerationTime")]
 	[SerializeField] public AnimationCurve DecelerationCurve;
 
-	[Tooltip("how fast you decelerate over time")]
+	[Tooltip("how long you take to decelerate")]
 	[SerializeField] public float DecelerationTime;
 	#endregion
 
@@ -36,39 +54,53 @@ public class MovementController : MonoBehaviour
 	/*[HideInInspector]*/
 	//public float MomentumCounter, MomentumTimer; // whare you are inside one of the curves
 	[HideInInspector] public MovementStates CurrentState;
-	[HideInInspector] public float VelocityScale, LastSpeed;
+	/// <summary>
+	/// Velocity scalar (S)
+	/// </summary>
+	[HideInInspector] public float VelocityScalar = 0;
+	[HideInInspector] public float LastSpeed;
+	[HideInInspector] public float MaxSpeed;
 	[HideInInspector] public Vector3 MoveDir, LastDirection;
-	[HideInInspector] public bool IsJumping, isRunning;
-
+	[HideInInspector] public bool IsJumping, isRunning, isClimbing;
+	[HideInInspector] public Collider ClimbableObject;
 
 	private void Awake()
 	{
 		InputManager.MoveInputs(true);
 		InputManager.UiInputs(false);
 		InputManager.Inizialized();
+		MaxSpeed = WalkMaxSpeed;
+		isRunning = false;
 	}
+
 	private void OnEnable()
 	{
-		InputManager.OnMovement += Move;
 		InputManager.OnJump += Jump;
-		InputManager.OnStopMovement += StopMovement;
+		InputManager.OnRun += Running;
+	}
+
+	private void Running()
+	{
+		if (IsJumping)
+			return;
+
+		isRunning = !isRunning;
+		MaxSpeed = isRunning ? RunMaxSpeed : WalkMaxSpeed;
+		if (isRunning)
+			ChangeState(new RunState());
+		else
+			ChangeState(new WalkState());
 	}
 
 	private void OnDisable()
 	{
-		InputManager.OnMovement -= Move;
 		InputManager.OnJump -= Jump;
-		InputManager.OnStopMovement -= StopMovement;
+		InputManager.OnRun -= Running;
 	}
 
 	void Start()
 	{
 		Rb = GetComponent<Rigidbody>();
-		CurrentState = new IdleState();
-	}
-	private void StopMovement(Vector3 dir)
-	{
-		MoveDir = dir;
 		ChangeState(new IdleState());
 	}
 
@@ -78,24 +110,17 @@ public class MovementController : MonoBehaviour
 		ChangeState(new JumpState());
 	}
 
-	private void Move(Vector3 dir)
-	{
-		//! cambia qui il change state 
-		LastDirection = dir;
-		ChangeState(new WalkState());
-
-	}
-
-	private void MoveChange(Vector3 dir)
-	{
-		Move(dir);
-
-	}
-
 	void Update()
 	{
+		if (isClimbing == false && CheckLedge(transform.position + (Vector3.up * RaycastDetectionHeight), transform.forward))
+		{
+			ChangeState(new ClimbState());
+		}
+
 		CurrentState.Tick(this);
 	}
+
+	bool CheckLedge(Vector3 pos, Vector3 dir) => Physics.Raycast(pos, dir, RaycastDetectionLenght, ClimableLayers);
 
 	private void FixedUpdate()
 	{
@@ -107,4 +132,22 @@ public class MovementController : MonoBehaviour
 		CurrentState = newState;
 		CurrentState.Enter(this);
 	}
+
+	public IEnumerator CheckLedgeCooldown()
+	{
+		isClimbing = true;
+		yield return new WaitForSeconds(CooldownAfterEnd);
+		isClimbing = false;
+	}
+
+#if UNITY_EDITOR
+	private void OnDrawGizmos()
+	{
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawRay(transform.position + Vector3.up * RaycastDetectionHeight, transform.forward * RaycastDetectionLenght);
+
+		Gizmos.color = Color.red;
+		Gizmos.DrawRay(transform.position, -transform.up * GroundCheckLenght);
+	}
+#endif
 }

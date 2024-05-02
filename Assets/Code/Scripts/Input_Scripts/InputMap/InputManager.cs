@@ -15,7 +15,7 @@ public static class InputManager
 
 	private static Vector3 lastDir;
 
-	private static PlayerInputs inputActions;
+	public static PlayerInputs inputActions;
 
 	static InputManager()
 	{
@@ -35,10 +35,10 @@ public static class InputManager
 	}
 
 	public static Vector3 MovementDir => inputActions.Movement.Walk.ReadValue<Vector3>();
+	public static float ClimbUp => inputActions.Climb.Climb.ReadValue<float>();
 
 	public static void MoveInputs(bool ToActivate)
 	{
-		Debug.LogError("i'm inside " + ToActivate);
 		if (ToActivate)
 			inputActions.Movement.Enable();
 		else
@@ -51,6 +51,14 @@ public static class InputManager
 			inputActions.UI.Enable();
 		else
 			inputActions.UI.Disable();
+	}
+
+	public static void ClimbInputs(bool ToActivate)
+	{
+		if (ToActivate)
+			inputActions.Climb.Enable();
+		else
+			inputActions.Climb.Disable();
 	}
 
 	private static void PauseInput(InputAction.CallbackContext context)
@@ -70,36 +78,5 @@ public static class InputManager
 
 
 
-	/// <summary>
-	/// checks every frame if you pressed a movement button 
-	/// and then sends the Vector3 value with the OnMovement event
-	/// </summary>
-	public static void IsIdle(out Vector3 dir)
-	{
-		dir = MovementDir;
-
-		if (dir == Vector3.zero)
-		{
-			OnStopMovement?.Invoke(lastDir);
-		}
-		else
-		{
-			lastDir = dir;
-		}
-	}
-
-	/// <summary>
-	/// Check if player is moving
-	/// </summary>
-	/// <param name="dir"> this will become the controller's movement dir </param>
-	public static void IsMoving(out Vector3 dir)
-	{
-		dir = MovementDir;
-
-		if (dir != Vector3.zero)
-		{
-			OnMovement?.Invoke(dir);
-		}
-	}
 
 }
