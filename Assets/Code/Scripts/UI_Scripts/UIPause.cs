@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIPause : MonoBehaviour
 {
@@ -65,6 +66,8 @@ public class UIPause : MonoBehaviour
     public void OnAudioSettings() => ChangeState(UI_State.VolumeSettings);
     public void OnControlsSettings() => ChangeState(UI_State.ControlsSettings);
     public void OnVideoSettings() => ChangeState(UI_State.VideoSettings);
+    public void QuitApplication() => Application.Quit();
+    public void LoadTitleScreen() => SceneManager.LoadScene(0);
 
     private void OnEnable()
     {

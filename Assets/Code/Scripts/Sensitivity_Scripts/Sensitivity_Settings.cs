@@ -12,48 +12,37 @@ public class Sensitivity_Settings : ScriptableObject
     public float Sensitivity_Max { private set; get; } = 1000f;
     [SerializeField, Min(0.1f)] private float _Sensitivity_Max = 0.1f;
 
-    [HideInInspector] public float MouseSensitivity { private set; get; }
-    [HideInInspector] public float ControllerSensitivity_Vertical { private set; get; }
-    [HideInInspector] public float ControllerSensitivity_Horizontal { private set; get; }
-
     private void OnEnable()
     {
         Sensitivity_Min = _Sensitivity_Min;
         Sensitivity_Max = _Sensitivity_Max;
-        //Setup Mouse sens value
-        if (PlayerPrefs.HasKey("MouseSens"))
-            MouseSensitivity = PlayerPrefs.GetFloat("MouseSens");
-        else
+    }
+
+    public float GetMouseSens()
+    {
+        if (!PlayerPrefs.HasKey("MouseSens"))
             PlayerPrefs.SetFloat("MouseSens", Sensitivity_Default);
 
-        //Setup Controller v sens value
-        if (PlayerPrefs.HasKey("ControllerVSens"))
-            ControllerSensitivity_Vertical = PlayerPrefs.GetFloat("ControllerVSens");
-        else
-            PlayerPrefs.SetFloat("ControllerVSens", ControllerSensitivity_Vertical);
-        
-        //Setup Controller h sens value
-        if (PlayerPrefs.HasKey("ControllerHSens"))
-            ControllerSensitivity_Horizontal = PlayerPrefs.GetFloat("ControllerHSens");
-        else
-            PlayerPrefs.SetFloat("ControllerHSens", ControllerSensitivity_Horizontal);
+        return PlayerPrefs.GetFloat("MouseSens");
     }
 
-    public void SetMouseSens(float newSens)
+    public float GetControllerSens_Vertical()
     {
-        MouseSensitivity = newSens;
-        PlayerPrefs.SetFloat("MouseSens", MouseSensitivity);
+        if (!PlayerPrefs.HasKey("ControllerVSens"))
+            PlayerPrefs.SetFloat("ControllerVSens", Sensitivity_Default);
+
+        return PlayerPrefs.GetFloat("ControllerVSens");
     }
 
-    public void SetControllerVSens(float newSens)
+    public float GetControllerSens_Horizontal()
     {
-        ControllerSensitivity_Vertical = newSens;
-        PlayerPrefs.SetFloat("ControllerVSens", ControllerSensitivity_Vertical);
+        if (!PlayerPrefs.HasKey("ControllerHSens"))
+            PlayerPrefs.SetFloat("ControllerHSens", Sensitivity_Default);
+
+        return PlayerPrefs.GetFloat("ControllerHSens");
     }
 
-    public void SetControllerHSens(float newSens)
-    {
-        ControllerSensitivity_Horizontal = newSens;
-        PlayerPrefs.SetFloat("ControllerHSens", ControllerSensitivity_Horizontal);
-    }
+    public void SetMouseSens(float newSens) => PlayerPrefs.SetFloat("MouseSens", newSens);
+    public void SetControllerVSens(float newSens) => PlayerPrefs.SetFloat("ControllerVSens", newSens);
+    public void SetControllerHSens(float newSens) => PlayerPrefs.SetFloat("ControllerHSens", newSens);
 }
