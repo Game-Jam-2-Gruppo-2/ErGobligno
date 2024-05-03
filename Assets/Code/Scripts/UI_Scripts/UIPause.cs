@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIPause : MonoBehaviour
 {
@@ -10,6 +12,8 @@ public class UIPause : MonoBehaviour
     [SerializeField] private Canvas VolumeSettings_Canvas;
     [SerializeField] private Canvas ControlsSettings_Canvas;
     [SerializeField] private Canvas VideoSettings_Canvas;
+
+    [SerializeField] private Button DefaultSelectedOnController;
 
     private UI_State UI_CurrentState = UI_State.Default;
 
@@ -72,10 +76,13 @@ public class UIPause : MonoBehaviour
     private void OnEnable()
     {
         ChangeState(UI_State.Select);
+        if (InputManager.UsingController)
+            EventSystem.current.SetSelectedGameObject(DefaultSelectedOnController.gameObject);
     }
 
     private void OnDisable()
     {
         OnCloseMenu -= OnCloseMenu;
+        EventSystem.current.SetSelectedGameObject(null);
     }
 }

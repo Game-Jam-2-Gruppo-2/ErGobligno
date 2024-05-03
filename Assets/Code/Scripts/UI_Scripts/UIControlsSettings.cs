@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIControlsSettings : MonoBehaviour
@@ -34,10 +35,19 @@ public class UIControlsSettings : MonoBehaviour
 
     public void UpdateControllerHSensitivity() => m_SensitivitySettings.SetControllerHSens(m_ControllerHorizontalSensitivity_Slider.value);
 
+    public void SetControllerUsage(bool value) => InputManager.SetController(value);
+
     private void OnEnable()
     {
         m_MouseSensitivity_Slider.value = m_SensitivitySettings.GetMouseSens();
         m_ControllerVertical_SensitivitySlider.value = m_SensitivitySettings.GetControllerSens_Vertical();
         m_ControllerHorizontalSensitivity_Slider.value = m_SensitivitySettings.GetControllerSens_Horizontal();
+
+        if (InputManager.UsingController)
+            EventSystem.current.SetSelectedGameObject(m_MouseSensitivity_Slider.gameObject);
+    }
+    private void OnDisable()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
     }
 }

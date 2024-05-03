@@ -1,5 +1,7 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIAudioSettings : MonoBehaviour
@@ -62,6 +64,12 @@ public class UIAudioSettings : MonoBehaviour
             volume = PlayerPrefs.GetFloat("SFXVolume");
             SFX_AudioSlider.value = volume;
         }
-    }
 
+        if (InputManager.UsingController)
+            EventSystem.current.SetSelectedGameObject(Master_AudioSlider.gameObject);
+    }
+    private void OnDisable()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
+    }
 }

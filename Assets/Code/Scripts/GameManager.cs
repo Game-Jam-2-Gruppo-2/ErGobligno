@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
             Instance = this;
         else
         {
-            Debug.LogError("MULTIPLE GAMEMANAGER FOUND");
+            Debug.LogError("MULTIPLE GAME MANAGER FOUND");
             Destroy(this.gameObject);
             return;
         }

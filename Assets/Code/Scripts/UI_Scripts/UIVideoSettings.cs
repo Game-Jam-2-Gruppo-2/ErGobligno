@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UIVideoSettings : MonoBehaviour
 {
@@ -73,5 +74,16 @@ public class UIVideoSettings : MonoBehaviour
     public void ApplyResolution()
     {
         ChangeScreenResolution(ResolutionDropDown.value, ScreenTypeDropDown.value);
+    }
+
+    private void OnEnable()
+    {
+        if (InputManager.UsingController)
+            EventSystem.current.SetSelectedGameObject(ScreenTypeDropDown.gameObject);
+    }
+
+    private void OnDisable()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
     }
 }
