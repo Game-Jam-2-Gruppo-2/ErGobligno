@@ -17,8 +17,6 @@ public static class InputManager
 
 	private static PlayerInputs inputActions;
 
-	private static bool OnPause = false;
-
 	public static void Inizialize()
 	{
 		inputActions = new();
@@ -28,8 +26,8 @@ public static class InputManager
 		inputActions.Movement.Run.performed += RunInput;
 		inputActions.Movement.Pause.performed += PauseInput;
 		inputActions.UI.Pause.performed += PauseInput;
-		MoveInputs(!OnPause);
-		UiInputs(OnPause);
+		MoveInputs(true);
+		UiInputs(false);
     }
 
 	public static void MoveInputs(bool ToActivate)
@@ -50,11 +48,6 @@ public static class InputManager
 
 	private static void PauseInput(InputAction.CallbackContext context)
 	{
-		OnPause = !OnPause;
-
-        MoveInputs(OnPause);
-        UiInputs(!OnPause);
-
 		OnPauseGame?.Invoke();
     }
 

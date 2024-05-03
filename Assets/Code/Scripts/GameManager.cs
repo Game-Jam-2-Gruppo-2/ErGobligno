@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour
     public delegate void GamePaused();
     public static event GamePaused OnGamePause;
 
+    public delegate void GameEnded();
+    public static event GameEnded OnGameEnd;
+
     private GameState CurrentState = GameState.Menu;
     private bool m_InGame = false;
 
@@ -44,6 +47,8 @@ public class GameManager : MonoBehaviour
         switch (newState)
         {
             case GameState.Menu:
+                Time.timeScale = 1;
+                Time.timeScale = 1;
                 //TODO: Change State -> Menu
                 break;
 
@@ -54,7 +59,6 @@ public class GameManager : MonoBehaviour
                     m_InGame = true;
                     OnNewGame?.Invoke();
                 }
-                //TODO: Change State -> Game
                 Time.timeScale = 1;
                 CurrentState = newState;
                 break;
@@ -69,22 +73,41 @@ public class GameManager : MonoBehaviour
     private void PauseGame()
     {
         if(CurrentState == GameState.Game)
+        {
             ChangeState(GameState.Pause);
+            InputManager.MoveInputs(false);
+            InputManager.UiInputs(true);
+        }
         else
+        {
             ChangeState(GameState.Game);
+            InputManager.MoveInputs(true);
+            InputManager.UiInputs(false);
+        }
         OnGamePause?.Invoke();
     }
 
+    private void CheckNoise()
+    {
+        if(ScoreManager.IsNoiseOnMax())
+        {
+            OnGameEnd?.Invoke();
+        }
+    }
+    
     private void OnEnable()
     {
         InputManager.OnPauseGame += PauseGame;
+        ScoreManager.OnNoiseChanged += CheckNoise;
     }
 
     private void OnDisable()
     {
         InputManager.OnPauseGame -= PauseGame;
+        ScoreManager.OnNoiseChanged -= CheckNoise;
         OnNewGame -= OnNewGame;
         OnGamePause -= OnGamePause;
+        OnGameEnd -= OnGameEnd;
     }
 }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,10 @@ public class ScoreManager: MonoBehaviour
     private static ScoreManager Instance;
 
     [SerializeField] private ScoreManager_Settings m_Settings;
+
+    //Noise Action
+    public static Action<float> IncreaseNoise;
+    public static Action<int> IncreaseCoin;
 
     //Value Changed Event
     public delegate void ValueChanged();
@@ -21,10 +26,9 @@ public class ScoreManager: MonoBehaviour
     private static float GameTime;
     private static int CoinAmount;
     private static float NoiseAmount;
+    private static float MaxNoise;
     //Saved Scores
     private static List<RecordData> Records;
-    private static List<float> TimeRecords;
-    private static List<float> CoinRecords;
 
     //Coroutine
     private Coroutine TimerCoroutine;
@@ -69,6 +73,7 @@ public class ScoreManager: MonoBehaviour
             Records.Add(record);
         }
 
+        MaxNoise = m_Settings.MaxNoise;
         TimerCoroutine = null;
     }
 
@@ -97,7 +102,23 @@ public class ScoreManager: MonoBehaviour
             yield return null;
         }
     }
-    
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="amount"></param>
+    private void IncreaseNoiseAmount(float amount)
+    {
+        NoiseAmount += amount;
+        OnNoiseChanged?.Invoke();
+    }
+
+    private void IncreaseCoinAmount(int amount)
+    {
+        CoinAmount += amount;
+        OnCoinChanged?.Invoke();
+    }
+
     private void StartGame()
     {
         ResetValues();
@@ -126,6 +147,11 @@ public class ScoreManager: MonoBehaviour
         return GameTime;
     }
 
+    public static bool IsNoiseOnMax()
+    {
+        return NoiseAmount > MaxNoise;
+    }
+
     //public static List<float> GetRecords()
     //{
 
@@ -134,11 +160,15 @@ public class ScoreManager: MonoBehaviour
     private void OnEnable()
     {
         GameManager.OnNewGame += StartGame;
+        IncreaseNoise += IncreaseNoiseAmount;
+        IncreaseCoin += IncreaseCoinAmount;
     }
 
     private void OnDisable()
     {
         GameManager.OnNewGame -= StartGame;
+        IncreaseNoise -= IncreaseNoiseAmount;
+        IncreaseCoin -= IncreaseCoinAmount;
         OnCoinChanged -= OnCoinChanged;
         OnNoiseChanged -= OnNoiseChanged;
         OnGameTimeChanged -= OnGameTimeChanged;
