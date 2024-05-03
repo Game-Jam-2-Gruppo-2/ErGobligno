@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82d9cce7a8b6d0c4789505e2f0577a69, type: 3}
   m_Name: Sensitivity Settings
   m_EditorClassIdentifier: 
-  Sensitivity_Default: 500
+  Sensitivity_Default: 3.5
   _Sensitivity_Min: 0.1
-  _Sensitivity_Max: 0.1
+  _Sensitivity_Max: 5

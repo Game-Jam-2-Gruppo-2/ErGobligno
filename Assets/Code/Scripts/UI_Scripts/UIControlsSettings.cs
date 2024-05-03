@@ -17,15 +17,15 @@ public class UIControlsSettings : MonoBehaviour
         //Mouse sens slider
         m_MouseSensitivity_Slider.maxValue = m_SensitivitySettings.Sensitivity_Max;
         m_MouseSensitivity_Slider.minValue = m_SensitivitySettings.Sensitivity_Min;
-        m_MouseSensitivity_Slider.value = m_SensitivitySettings.MouseSensitivity;
+        m_MouseSensitivity_Slider.value = m_SensitivitySettings.GetMouseSens();
         //Controller V sens slider
         m_ControllerVertical_SensitivitySlider.maxValue = m_SensitivitySettings.Sensitivity_Max;
         m_ControllerVertical_SensitivitySlider.minValue = m_SensitivitySettings.Sensitivity_Min;
-        m_ControllerVertical_SensitivitySlider.value = m_SensitivitySettings.ControllerSensitivity_Vertical;
+        m_ControllerVertical_SensitivitySlider.value = m_SensitivitySettings.GetControllerSens_Vertical();
         //Controller H sens slider
         m_ControllerHorizontalSensitivity_Slider.maxValue = m_SensitivitySettings.Sensitivity_Max;
         m_ControllerHorizontalSensitivity_Slider.minValue = m_SensitivitySettings.Sensitivity_Min;
-        m_ControllerHorizontalSensitivity_Slider.value = m_SensitivitySettings.ControllerSensitivity_Horizontal;
+        m_ControllerHorizontalSensitivity_Slider.value = m_SensitivitySettings.GetControllerSens_Horizontal();
     }
 
     public void UpdateMouseSensitivity() => m_SensitivitySettings.SetMouseSens(m_MouseSensitivity_Slider.value);
@@ -36,8 +36,8 @@ public class UIControlsSettings : MonoBehaviour
 
     private void OnEnable()
     {
-        m_MouseSensitivity_Slider.value = m_SensitivitySettings.MouseSensitivity;
-        m_ControllerVertical_SensitivitySlider.value = m_SensitivitySettings.ControllerSensitivity_Vertical;
-        m_ControllerHorizontalSensitivity_Slider.value = m_SensitivitySettings.ControllerSensitivity_Horizontal;
+        m_MouseSensitivity_Slider.value = m_SensitivitySettings.GetMouseSens();
+        m_ControllerVertical_SensitivitySlider.value = m_SensitivitySettings.GetControllerSens_Vertical();
+        m_ControllerHorizontalSensitivity_Slider.value = m_SensitivitySettings.GetControllerSens_Horizontal();
     }
 }

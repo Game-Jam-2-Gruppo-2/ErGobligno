@@ -72,6 +72,9 @@ public class GameManager : MonoBehaviour
 
     private void PauseGame()
     {
+        if (CurrentState == GameState.Menu)
+            return;
+
         if(CurrentState == GameState.Game)
         {
             ChangeState(GameState.Pause);
