@@ -64,7 +64,7 @@ public class MovementController : MonoBehaviour
 	[HideInInspector] public float LastSpeed;
 	[HideInInspector] public float MaxSpeed;
 	[HideInInspector] public Vector3 MoveDir, LastDirection, Bounds;
-	[HideInInspector] public bool IsJumping, isRunning, isClimbing;
+	[HideInInspector] public bool IsAirBorne, isRunning, isClimbing;
 	[HideInInspector] public RaycastHit Hit;
 	[HideInInspector] public Collider ClimbableObject;
 
@@ -87,7 +87,7 @@ public class MovementController : MonoBehaviour
 
 	private void Running()
 	{
-		if (IsJumping)
+		if (IsAirBorne)
 			return;
 
 		isRunning = !isRunning;
@@ -108,13 +108,15 @@ public class MovementController : MonoBehaviour
 
 	private void Jump()
 	{
-		IsJumping = true;
+		if (IsAirBorne || isClimbing)
+			return;
+
+		IsAirBorne = true;
 		ChangeState(new JumpState());
 	}
 
 	void Update()
 	{
-
 		if (isClimbing == false && CheckLedge(transform.position + (Vector3.up * RaycastDetectionHeight), transform.forward))
 		{
 			ClimbableObject = Hit.transform.GetComponent<Collider>();
@@ -148,7 +150,7 @@ public class MovementController : MonoBehaviour
 
 	private void OnCollisionExit(Collision other)
 	{
-		if (IsJumping)
+		if (IsAirBorne)
 			return;
 
 		if (!CheckGround)

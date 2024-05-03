@@ -138,12 +138,12 @@ public class JumpState : MovementStates
 	public override void Enter(MovementController controller)
 	{
 		controller.Rb.AddForce(controller.transform.up * controller.JumpForce, ForceMode.Impulse);
-		controller.IsJumping = true;
+		controller.IsAirBorne = true;
 	}
 
 	public override void Exit(MovementController controller, MovementStates newState)
 	{
-		controller.IsJumping = false;
+		controller.IsAirBorne = false;
 		controller.ChangeState(newState);
 	}
 
@@ -177,7 +177,7 @@ public class ClimbState : MovementStates
 	{
 		controller.Rb.useGravity = false;
 		controller.isClimbing = true;
-		controller.IsJumping = false;
+		controller.IsAirBorne = false;
 
 		startpos = controller.transform.position;
 		endPos = startpos;
@@ -221,13 +221,13 @@ public class FallingState : MovementStates
 	float dur = 0.5f;
 	public override void Enter(MovementController controller)
 	{
-		controller.IsJumping = true;
+		controller.IsAirBorne = true;
 		Debug.Log("inside Falling");
 	}
 
 	public override void Exit(MovementController controller, MovementStates newState)
 	{
-		controller.IsJumping = false;
+		controller.IsAirBorne = false;
 		controller.ChangeState(newState);
 	}
 
