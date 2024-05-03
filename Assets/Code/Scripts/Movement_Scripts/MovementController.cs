@@ -1,18 +1,41 @@
-using System;
+using System.Collections;
+using Unity.Mathematics;
 using UnityEngine;
-
 public class MovementController : MonoBehaviour
 {
 	[Header("Serialize:")]
 	[SerializeField] public Rigidbody Rb;
-	[SerializeField] public LayerMask ClimableLayers;
+	[SerializeField] public Collider MyCollider;
 
-	[Header("Max Speed Settings: ")]
-	[SerializeField] public float MaxSpeed;
+	//|------------------------------------------------------------------------------------------|
+	[Header("Climb Settings:")]
+	[SerializeField] public LayerMask ClimableLayers;
+	[Tooltip("how far from the pivot in y is the raycast to detect ledges")]
+	[SerializeField] public float RaycastDetectionHeight;
+	[Tooltip("how long is the raycast to detect ledges")]
+	[SerializeField] public float RaycastDetectionLenght;
+	[SerializeField] public float ClimbDuration;
+
+	///<summary>the offset in y after you climed</summary>
+	[Tooltip("the offset in y after you climed")]
+	[SerializeField] public float ClimbOffset;
+
+	//|------------------------------------------------------------------------------------------|
+	[Header("Jump Settings:")]
+	[SerializeField] public float JumpForce;
+	[SerializeField] public LayerMask GroundLayer;
+
+	[Tooltip("how long is the raycast to detect the ground")]
+	[SerializeField] public float GroundCheckLenght;
+	[SerializeField] public float CooldownAfterEnd;
+
+	//|------------------------------------------------------------------------------------------|
+	[Header("Speed Settings: ")]
+	[SerializeField] public float WalkMaxSpeed;
 	[SerializeField] public float RunMaxSpeed;
-	[SerializeField] public float MaxJumpHight;
 
 	#region Momentum Settings:
+	//|------------------------------------------------------------------------------------------|
 	[Header("Momentum Settings:")]
 
 	#region Acceleration:
@@ -21,12 +44,12 @@ public class MovementController : MonoBehaviour
 	[Tooltip("how long you take to Accelerate")]
 	[SerializeField] public float AccelerationTime;
 	#endregion
-
+	//|------------------------------------------------------------------------------------------|
 	#region Deceleration:
 	[Tooltip("how you stop moving based on decelerationTime")]
 	[SerializeField] public AnimationCurve DecelerationCurve;
 
-	[Tooltip("how fast you decelerate over time")]
+	[Tooltip("how long you take to decelerate")]
 	[SerializeField] public float DecelerationTime;
 	#endregion
 
@@ -36,60 +59,76 @@ public class MovementController : MonoBehaviour
 	/*[HideInInspector]*/
 	//public float MomentumCounter, MomentumTimer; // whare you are inside one of the curves
 	[HideInInspector] public MovementStates CurrentState;
-	[HideInInspector] public float VelocityScale;
-	[HideInInspector] public Vector3 MoveDir;
-	[HideInInspector] public bool IsJumping, isRunning;
+	/// <summary>Velocity scalar (S)</summary>
+	[HideInInspector] public float VelocityScalar = 0;
+	[HideInInspector] public float LastSpeed;
+	[HideInInspector] public float MaxSpeed;
+	[HideInInspector] public Vector3 MoveDir, LastDirection, Bounds;
+	[HideInInspector] public bool IsAirBorne, isRunning, isClimbing;
+	[HideInInspector] public RaycastHit Hit;
+	[HideInInspector] public Collider ClimbableObject;
 
 
 	private void Awake()
 	{
 		InputManager.MoveInputs(true);
 		InputManager.UiInputs(false);
-		InputManager.Inizialize();
+		InputManager.Inizialized();
+		MaxSpeed = WalkMaxSpeed;
+		isRunning = false;
+		Bounds = new Vector3(MyCollider.bounds.extents.x * 2, 0.1f, MyCollider.bounds.extents.z * 2);
 	}
+
 	private void OnEnable()
 	{
-		InputManager.OnMovement += Move;
 		InputManager.OnJump += Jump;
-		InputManager.OnStopMovement += StopMovement;
+		InputManager.OnRun += Running;
+	}
+
+	private void Running()
+	{
+		if (IsAirBorne)
+			return;
+
+		isRunning = !isRunning;
+		MaxSpeed = isRunning ? RunMaxSpeed : WalkMaxSpeed;
 	}
 
 	private void OnDisable()
 	{
-		InputManager.OnMovement -= Move;
 		InputManager.OnJump -= Jump;
-		InputManager.OnStopMovement -= StopMovement;
-	}
-
-	private void StopMovement(Vector3 dir)
-	{
-		MoveDir = dir;
-		Debug.LogWarning("opsy");
-		ChangeState(new IdleState());
-	}
-
-	private void Jump()
-	{
-		IsJumping = true;
-		ChangeState(new JumpState());
-	}
-
-	private void Move(Vector3 dir)
-	{
-		MoveDir = dir;
-		ChangeState(new WalkState());
+		InputManager.OnRun -= Running;
 	}
 
 	void Start()
 	{
 		Rb = GetComponent<Rigidbody>();
-		CurrentState = new IdleState();
+		ChangeState(new IdleState());
+	}
+
+	private void Jump()
+	{
+		if (IsAirBorne || isClimbing)
+			return;
+
+		IsAirBorne = true;
+		ChangeState(new JumpState());
 	}
 
 	void Update()
 	{
+		if (isClimbing == false && CheckLedge(transform.position + (Vector3.up * RaycastDetectionHeight), transform.forward))
+		{
+			ClimbableObject = Hit.transform.GetComponent<Collider>();
+			ChangeState(new ClimbState());
+		}
+
 		CurrentState.Tick(this);
 	}
+
+	bool CheckLedge(Vector3 pos, Vector3 dir) => Physics.Raycast(pos, dir, out Hit, RaycastDetectionLenght, ClimableLayers);
+
+	public bool CheckGround => Physics.BoxCast(transform.position, Bounds, -transform.up, quaternion.identity, GroundCheckLenght, GroundLayer);
 
 	private void FixedUpdate()
 	{
@@ -101,4 +140,34 @@ public class MovementController : MonoBehaviour
 		CurrentState = newState;
 		CurrentState.Enter(this);
 	}
+
+	public IEnumerator CheckLedgeCooldown()
+	{
+		isClimbing = true;
+		yield return new WaitForSeconds(CooldownAfterEnd);
+		isClimbing = false;
+	}
+
+	private void OnCollisionExit(Collision other)
+	{
+		if (IsAirBorne)
+			return;
+
+		if (!CheckGround)
+		{
+			ChangeState(new FallingState());
+		}
+	}
+
+#if UNITY_EDITOR
+	private void OnDrawGizmos()
+	{
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawRay(transform.position + (Vector3.up * RaycastDetectionHeight), transform.forward * RaycastDetectionLenght);
+
+		Gizmos.color = Color.red;
+		Gizmos.DrawRay(transform.position, -transform.up * GroundCheckLenght);
+		Gizmos.DrawWireCube(transform.position - transform.up * GroundCheckLenght, new Vector3(MyCollider.bounds.extents.x * 2, 0.1f, MyCollider.bounds.extents.z * 2));
+	}
+#endif
 }

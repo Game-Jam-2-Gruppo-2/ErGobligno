@@ -15,20 +15,27 @@ public static class InputManager
 
 	private static Vector3 lastDir;
 
-	private static PlayerInputs inputActions;
+	public static PlayerInputs inputActions;
 
-	public static void Inizialize()
+	static InputManager()
 	{
+
 		inputActions = new();
-		inputActions.Movement.Walk.performed += WalkInput;
-		inputActions.Movement.Walk.canceled += StopWalkInput;
+		Inizialized();
+	}
+
+	public static void Inizialized()
+	{
+		// inputActions.Movement.Walk.performed += WalkInput;
+		// inputActions.Movement.Walk.canceled += StopWalkInput;
 		inputActions.Movement.Jump.performed += JumpInput;
 		inputActions.Movement.Run.performed += RunInput;
-		inputActions.Movement.Pause.performed += PauseInput;
 		inputActions.UI.Pause.performed += PauseInput;
-		MoveInputs(true);
-		UiInputs(false);
-    }
+		inputActions.Movement.Pause.performed += PauseInput;
+	}
+
+	public static Vector3 MovementDir => inputActions.Movement.Walk.ReadValue<Vector3>();
+	public static float ClimbUp => inputActions.Climb.Climb.ReadValue<float>();
 
 	public static void MoveInputs(bool ToActivate)
 	{
@@ -44,12 +51,11 @@ public static class InputManager
 			inputActions.UI.Enable();
 		else
 			inputActions.UI.Disable();
-    }
-
+	}
 	private static void PauseInput(InputAction.CallbackContext context)
 	{
 		OnPauseGame?.Invoke();
-    }
+	}
 
 	private static void RunInput(InputAction.CallbackContext context)
 	{
@@ -61,15 +67,7 @@ public static class InputManager
 		OnJump?.Invoke();
 	}
 
-	private static void StopWalkInput(InputAction.CallbackContext context)
-	{
-		OnStopMovement?.Invoke(lastDir);
-	}
 
-	private static void WalkInput(InputAction.CallbackContext context)
-	{
 
-		lastDir = context.ReadValue<Vector3>();
-		OnMovement?.Invoke(context.ReadValue<Vector3>());
-	}
+
 }
