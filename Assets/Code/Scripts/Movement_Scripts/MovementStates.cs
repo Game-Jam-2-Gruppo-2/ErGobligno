@@ -9,95 +9,63 @@ public abstract class MovementStates
 	public abstract void FixedTick(MovementController controller);
 	public abstract void Exit(MovementController controller, MovementStates newState);
 }
-
-
-public class WalkState : MovementStates
+public class AccelerationState : MovementStates
 {
-	float AccelerationTimer = 0;
-	float counter;
-
-	/// <summary>
-	/// Q
-	/// </summary>
-	float enterScalar = 0;
+	float accelerationTimer = 0;
+	float speed = 0;
+	Vector3 velocity;
 	public override void Enter(MovementController controller)
 	{
-		enterScalar = controller.VelocityScalar;
+
 	}
 
 	public override void Exit(MovementController controller, MovementStates newState)
 	{
+		controller.LastSpeed = speed;
 		controller.ChangeState(newState);
 	}
 
 	public override void FixedTick(MovementController controller)
 	{
+		float LerpSpeed(float curve) => Mathf.Lerp(controller.LastSpeed, controller.MaxSpeed, curve);
+		float curveValue() => controller.AccelerationCurve.Evaluate(accelerationTimer);
+
 		// get values:
-		AccelerationTimer += Time.fixedDeltaTime * (1 / controller.AccelerationTime);
 
-		var c = controller.AccelerationCurve.Evaluate(AccelerationTimer);
+		// check if last speed is higher then current max speed then it lerps it 
 
-		//Calculate velocity Scale
-		controller.VelocityScalar = enterScalar + (c * (1 - enterScalar));
 
-		controller.Rb.velocity = controller.VelocityScalar * controller.MaxSpeed * Time.fixedDeltaTime * controller.MoveDir;
-
-		// Debug.Log("A= " + AccelerationTimer);
-		// Debug.Log("Q = " + enterScalar + "\nC = " + c);
-
-	}
-
-	public override void Tick(MovementController controller)
-	{
-
-		if (InputManager.MovementDir == Vector3.zero)
+		if (controller.LastSpeed > controller.MaxSpeed) // if we are going from RunSpeed to WalkSpeed
 		{
-			Exit(controller, new IdleState());
-			return;
+			if (accelerationTimer > 0)
+				accelerationTimer -= Time.fixedDeltaTime * (1 / controller.AccelerationTime);
+			else
+				accelerationTimer = 0;
+
+			speed = LerpSpeed(curveValue());
+		}
+		else // we are going from Idle to Acceleration or from WalkSpeed to RunSpeed
+		{
+			if (accelerationTimer < controller.AccelerationTime)
+				accelerationTimer += Time.fixedDeltaTime * (1 / controller.AccelerationTime);
+			else
+				accelerationTimer = controller.AccelerationTime;
+
+			speed = LerpSpeed(curveValue());
 		}
 
-		controller.MoveDir = InputManager.MovementDir;
-	}
-}
-
-public class RunState : MovementStates
-{
-	float AccelerationTimer = 0;
-
-	/// <summary>
-	/// Q
-	/// </summary>
-	float enterScalar = 0;
-	public override void Enter(MovementController controller)
-	{
-		enterScalar = controller.VelocityScalar;
-	}
-
-	public override void Exit(MovementController controller, MovementStates newState)
-	{
-		controller.ChangeState(newState);
-	}
-
-	public override void FixedTick(MovementController controller)
-	{
-		// get values:
-		AccelerationTimer += Time.fixedDeltaTime * (1 / controller.AccelerationTime);
-
-		var c = controller.AccelerationCurve.Evaluate(AccelerationTimer);
 
 		//Calculate velocity Scale
-		controller.VelocityScalar = enterScalar + (c * (1 - enterScalar));
+		velocity = speed * Time.fixedDeltaTime * controller.MoveDir;
+		velocity.y = controller.Rb.velocity.y;
 
-		controller.Rb.velocity = controller.VelocityScalar * controller.MaxSpeed * Time.fixedDeltaTime * controller.MoveDir;
+		controller.Rb.velocity = velocity;
 
-		// Debug.Log("A= " + AccelerationTimer);
-		// Debug.Log("Q = " + enterScalar + "\nC = " + c);
 
 	}
 
 	public override void Tick(MovementController controller)
 	{
-
 		if (InputManager.MovementDir == Vector3.zero)
 		{
 			Exit(controller, new IdleState());
@@ -115,10 +83,12 @@ public class IdleState : MovementStates
 	/// <summary>
 	/// Q
 	/// </summary>
-	float enterScalar = 0;
+	float speed = 0;
+
+	Vector3 velocity;
 	public override void Enter(MovementController controller)
 	{
-		enterScalar = controller.VelocityScalar;
+
 	}
 
 	public override void Exit(MovementController controller, MovementStates newState)
@@ -132,16 +102,20 @@ public class IdleState : MovementStates
 			return;
 
 		// get values:
-		decelerationTimer += Time.fixedDeltaTime * (1 / controller.DecelerationTime);
+		if (decelerationTimer < controller.DecelerationTime)
+			decelerationTimer += Time.fixedDeltaTime * (1 / controller.DecelerationTime);
+		else
+			decelerationTimer = controller.DecelerationTime;
 
-		decelerationTimer = Mathf.Clamp01(decelerationTimer);
 
 		var c = controller.DecelerationCurve.Evaluate(decelerationTimer);
 
 		//Calculate velocity Scale
-		controller.VelocityScalar = enterScalar * c;
+		speed = Mathf.Lerp(0, controller.LastSpeed, c);
 
-		controller.Rb.velocity = controller.VelocityScalar * controller.MaxSpeed * Time.fixedDeltaTime * controller.MoveDir;
+		velocity = controller.VelocityScalar * controller.MaxSpeed * Time.fixedDeltaTime * controller.MoveDir;
+		velocity.y = controller.Rb.velocity.y;
+		controller.Rb.velocity = velocity;
 		// Debug.Log(decelerationTimer);
 		// Debug.Log("Q = " + enterScalar + "\nC = " + c);
 		// Debug.Log("S= " + controller.VelocityScale + "\nV= " + controller.Rb.velocity.magnitude);
@@ -151,7 +125,7 @@ public class IdleState : MovementStates
 	{
 		if (InputManager.MovementDir != Vector3.zero)
 		{
-			Exit(controller, new WalkState());
+			Exit(controller, new AccelerationState());
 		}
 
 
@@ -175,61 +149,98 @@ public class JumpState : MovementStates
 
 	public override void FixedTick(MovementController controller)
 	{
-
-	}
-
-	public override void Tick(MovementController controller)
-	{
 		if (timer < dur)
 		{
-			timer += Time.deltaTime;
+			timer += Time.fixedDeltaTime;
 			return;
 		}
 
 
-		if (Physics.Raycast(controller.transform.position, -controller.transform.up, controller.GroundCheckLenght, controller.GroundLayer))
+		if (controller.CheckGround)
 		{
 			Exit(controller, new IdleState());
 		}
 	}
-}
 
+	public override void Tick(MovementController controller)
+	{
+
+	}
+}
 public class ClimbState : MovementStates
 {
+	Vector3 startpos;
+	Vector3 endPos;
+	Vector3 lerpedPos;
+	float timer;
 	public override void Enter(MovementController controller)
 	{
-		InputManager.MoveInputs(false);
-		InputManager.ClimbInputs(true);
 		controller.Rb.useGravity = false;
 		controller.isClimbing = true;
 		controller.IsJumping = false;
+
+		startpos = controller.transform.position;
+		endPos = startpos;
+		endPos.y = controller.ClimbableObject.bounds.max.y + controller.MyCollider.bounds.extents.y + controller.ClimbOffset; // + controller.ClimbOffset
+		endPos.z = controller.ClimbableObject.transform.position.z;
+
+		controller.Rb.velocity = Vector3.zero;
 	}
 	public override void Exit(MovementController controller, MovementStates newState)
 	{
-		InputManager.MoveInputs(true);
-		InputManager.ClimbInputs(false);
 		controller.StartCoroutine(controller.CheckLedgeCooldown());
-		//|------------------------------------------------------------------------------------------|
+		controller.Rb.useGravity = true;
+
+		//|---------------------------------New-State----------------------------------------|
 		controller.ChangeState(newState);
 	}
 
 	public override void FixedTick(MovementController controller)
 	{
-
+		if (timer < controller.ClimbDuration)
+		{
+			timer += Time.fixedDeltaTime;
+			lerpedPos = Vector3.Lerp(startpos, endPos, timer / controller.ClimbDuration);
+			controller.Rb.MovePosition(lerpedPos);
+		}
+		else
+		{
+			controller.Rb.MovePosition(endPos);
+			Exit(controller, new IdleState());
+		}
 	}
 
 	public override void Tick(MovementController controller)
 	{
-		if (InputManager.ClimbUp > 0)
-		{
-			Vector3 pos = controller.transform.position;
-			pos.y = controller.ClimbableObject.bounds.extents.y;
-			pos.z = controller.ClimbableObject.transform.position.z;
-			pos.x = controller.ClimbableObject.transform.position.x;
-		}
-		else
+
+	}
+}
+public class FallingState : MovementStates
+{
+	float timer;
+	float dur = 0.5f;
+	public override void Enter(MovementController controller)
+	{
+		controller.IsJumping = true;
+		Debug.Log("inside Falling");
+	}
+
+	public override void Exit(MovementController controller, MovementStates newState)
+	{
+		controller.IsJumping = false;
+		controller.ChangeState(newState);
+	}
+
+	public override void FixedTick(MovementController controller)
+	{
+		if (controller.CheckGround)
 		{
 			Exit(controller, new IdleState());
 		}
+	}
+
+	public override void Tick(MovementController controller)
+	{
+
 	}
 }

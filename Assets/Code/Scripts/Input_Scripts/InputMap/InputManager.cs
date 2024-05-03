@@ -52,15 +52,6 @@ public static class InputManager
 		else
 			inputActions.UI.Disable();
 	}
-
-	public static void ClimbInputs(bool ToActivate)
-	{
-		if (ToActivate)
-			inputActions.Climb.Enable();
-		else
-			inputActions.Climb.Disable();
-	}
-
 	private static void PauseInput(InputAction.CallbackContext context)
 	{
 		OnPauseGame?.Invoke();

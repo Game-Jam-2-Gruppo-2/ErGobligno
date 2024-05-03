@@ -1,19 +1,24 @@
 using System.Collections;
+using Unity.Mathematics;
 using UnityEngine;
-
 public class MovementController : MonoBehaviour
 {
 	[Header("Serialize:")]
 	[SerializeField] public Rigidbody Rb;
+	[SerializeField] public Collider MyCollider;
 
 	//|------------------------------------------------------------------------------------------|
 	[Header("Climb Settings:")]
 	[SerializeField] public LayerMask ClimableLayers;
-	[Tooltip("how far from the center in y is the raycast to detect ledges")]
+	[Tooltip("how far from the pivot in y is the raycast to detect ledges")]
 	[SerializeField] public float RaycastDetectionHeight;
 	[Tooltip("how long is the raycast to detect ledges")]
 	[SerializeField] public float RaycastDetectionLenght;
-	[SerializeField] public float CheckCooldown = 0.3f;
+	[SerializeField] public float ClimbDuration;
+
+	///<summary>the offset in y after you climed</summary>
+	[Tooltip("the offset in y after you climed")]
+	[SerializeField] public float ClimbOffset;
 
 	//|------------------------------------------------------------------------------------------|
 	[Header("Jump Settings:")]
@@ -54,15 +59,15 @@ public class MovementController : MonoBehaviour
 	/*[HideInInspector]*/
 	//public float MomentumCounter, MomentumTimer; // whare you are inside one of the curves
 	[HideInInspector] public MovementStates CurrentState;
-	/// <summary>
-	/// Velocity scalar (S)
-	/// </summary>
+	/// <summary>Velocity scalar (S)</summary>
 	[HideInInspector] public float VelocityScalar = 0;
 	[HideInInspector] public float LastSpeed;
 	[HideInInspector] public float MaxSpeed;
-	[HideInInspector] public Vector3 MoveDir, LastDirection;
+	[HideInInspector] public Vector3 MoveDir, LastDirection, Bounds;
 	[HideInInspector] public bool IsJumping, isRunning, isClimbing;
+	[HideInInspector] public RaycastHit Hit;
 	[HideInInspector] public Collider ClimbableObject;
+
 
 	private void Awake()
 	{
@@ -71,6 +76,7 @@ public class MovementController : MonoBehaviour
 		InputManager.Inizialized();
 		MaxSpeed = WalkMaxSpeed;
 		isRunning = false;
+		Bounds = new Vector3(MyCollider.bounds.extents.x * 2, 0.1f, MyCollider.bounds.extents.z * 2);
 	}
 
 	private void OnEnable()
@@ -86,10 +92,6 @@ public class MovementController : MonoBehaviour
 
 		isRunning = !isRunning;
 		MaxSpeed = isRunning ? RunMaxSpeed : WalkMaxSpeed;
-		if (isRunning)
-			ChangeState(new RunState());
-		else
-			ChangeState(new WalkState());
 	}
 
 	private void OnDisable()
@@ -112,15 +114,19 @@ public class MovementController : MonoBehaviour
 
 	void Update()
 	{
+
 		if (isClimbing == false && CheckLedge(transform.position + (Vector3.up * RaycastDetectionHeight), transform.forward))
 		{
+			ClimbableObject = Hit.transform.GetComponent<Collider>();
 			ChangeState(new ClimbState());
 		}
 
 		CurrentState.Tick(this);
 	}
 
-	bool CheckLedge(Vector3 pos, Vector3 dir) => Physics.Raycast(pos, dir, RaycastDetectionLenght, ClimableLayers);
+	bool CheckLedge(Vector3 pos, Vector3 dir) => Physics.Raycast(pos, dir, out Hit, RaycastDetectionLenght, ClimableLayers);
+
+	public bool CheckGround => Physics.BoxCast(transform.position, Bounds, -transform.up, quaternion.identity, GroundCheckLenght, GroundLayer);
 
 	private void FixedUpdate()
 	{
@@ -140,14 +146,26 @@ public class MovementController : MonoBehaviour
 		isClimbing = false;
 	}
 
+	private void OnCollisionExit(Collision other)
+	{
+		if (IsJumping)
+			return;
+
+		if (!CheckGround)
+		{
+			ChangeState(new FallingState());
+		}
+	}
+
 #if UNITY_EDITOR
 	private void OnDrawGizmos()
 	{
 		Gizmos.color = Color.yellow;
-		Gizmos.DrawRay(transform.position + Vector3.up * RaycastDetectionHeight, transform.forward * RaycastDetectionLenght);
+		Gizmos.DrawRay(transform.position + (Vector3.up * RaycastDetectionHeight), transform.forward * RaycastDetectionLenght);
 
 		Gizmos.color = Color.red;
 		Gizmos.DrawRay(transform.position, -transform.up * GroundCheckLenght);
+		Gizmos.DrawWireCube(transform.position - transform.up * GroundCheckLenght, new Vector3(MyCollider.bounds.extents.x * 2, 0.1f, MyCollider.bounds.extents.z * 2));
 	}
 #endif
 }
