@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UIControlsSettings : MonoBehaviour
+public class UIControlsSettings : UIScreen
 {
     [Header("Sliders")]
     [SerializeField] private Slider m_MouseSensitivity_Slider;
@@ -30,24 +29,19 @@ public class UIControlsSettings : MonoBehaviour
     }
 
     public void UpdateMouseSensitivity() => m_SensitivitySettings.SetMouseSens(m_MouseSensitivity_Slider.value);
-
     public void UpdateControllerVSensitivity() => m_SensitivitySettings.SetControllerVSens(m_ControllerVertical_SensitivitySlider.value);
-
     public void UpdateControllerHSensitivity() => m_SensitivitySettings.SetControllerHSens(m_ControllerHorizontalSensitivity_Slider.value);
-
-    public void SetControllerUsage(bool value) => InputManager.SetController(value);
 
     private void OnEnable()
     {
+        base.Enable();
         m_MouseSensitivity_Slider.value = m_SensitivitySettings.GetMouseSens();
         m_ControllerVertical_SensitivitySlider.value = m_SensitivitySettings.GetControllerSens_Vertical();
         m_ControllerHorizontalSensitivity_Slider.value = m_SensitivitySettings.GetControllerSens_Horizontal();
-
-        if (InputManager.UsingController)
-            EventSystem.current.SetSelectedGameObject(m_MouseSensitivity_Slider.gameObject);
     }
+
     private void OnDisable()
     {
-        EventSystem.current.SetSelectedGameObject(null);
+        base.Disable();
     }
 }

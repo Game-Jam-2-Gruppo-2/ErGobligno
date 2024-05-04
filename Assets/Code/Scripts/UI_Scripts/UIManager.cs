@@ -7,7 +7,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
 
     [SerializeField] private UIGame Game_Canvas;
-    [SerializeField] private UIPause Pause_Canvas;
+    [SerializeField] private UIScreen Pause_Canvas;
 
     private bool IsPaused = false;
 
@@ -63,8 +63,7 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        ChangeState(UI_State.Game);
-        Pause_Canvas.OnCloseMenu += () => { ChangeState(UI_State.Game); };
+        GameCanvas();
         GameManager.OnGamePause += SwichState;
     }
 

@@ -4,7 +4,7 @@ using UnityEngine.Audio;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UIAudioSettings : MonoBehaviour
+public class UIAudioSettings : UIScreen
 {
     [SerializeField] private Slider Master_AudioSlider;
     [SerializeField] private Slider Music_AudioSlider;
@@ -45,6 +45,7 @@ public class UIAudioSettings : MonoBehaviour
 
     private void OnEnable()
     {
+        base.Enable();
         float volume;
         //Master
         if(PlayerPrefs.HasKey("MasterVolume"))
@@ -64,12 +65,10 @@ public class UIAudioSettings : MonoBehaviour
             volume = PlayerPrefs.GetFloat("SFXVolume");
             SFX_AudioSlider.value = volume;
         }
-
-        if (InputManager.UsingController)
-            EventSystem.current.SetSelectedGameObject(Master_AudioSlider.gameObject);
     }
+
     private void OnDisable()
     {
-        EventSystem.current.SetSelectedGameObject(null);
+        base.Disable();
     }
 }

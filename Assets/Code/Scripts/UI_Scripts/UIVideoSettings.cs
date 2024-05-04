@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class UIVideoSettings : MonoBehaviour
+public class UIVideoSettings : UIScreen
 {
     [SerializeField] private TMP_Dropdown ScreenTypeDropDown;
     [SerializeField] private TMP_Dropdown ResolutionDropDown;
@@ -78,12 +76,11 @@ public class UIVideoSettings : MonoBehaviour
 
     private void OnEnable()
     {
-        if (InputManager.UsingController)
-            EventSystem.current.SetSelectedGameObject(ScreenTypeDropDown.gameObject);
+        base.Enable();
     }
 
     private void OnDisable()
     {
-        EventSystem.current.SetSelectedGameObject(null);
+        base.Disable();
     }
 }

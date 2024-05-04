@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -25,13 +24,20 @@ public static class InputManager
 	public static void Inizialize()
 	{
 		inputActions = new();
+		//Movement Events
 		inputActions.Movement.Walk.performed += WalkInput;
+		inputActions.Movement.Walk.performed += CheckInputDevice;
 		inputActions.Movement.Walk.canceled += StopWalkInput;
-
+		inputActions.Movement.Walk.canceled += CheckInputDevice;
         inputActions.Movement.Jump.performed += JumpInput;
+        inputActions.Movement.Jump.performed += CheckInputDevice;
 		inputActions.Movement.Run.performed += RunInput;
+		inputActions.Movement.Run.performed += CheckInputDevice;
+		//Input Game Events
 		inputActions.Movement.Pause.performed += PauseInput;
+		inputActions.Movement.Pause.performed += CheckInputDevice;
 		inputActions.UI.Pause.performed += PauseInput;
+		inputActions.UI.Pause.performed += CheckInputDevice;
 		MoveInputs(true);
 		UiInputs(false);
     }
@@ -52,29 +58,34 @@ public static class InputManager
 			inputActions.UI.Disable();
     }
 
-	public static void SetController(bool x)
+	/// <summary>
+	/// Check if a controller is used for the input action
+	/// </summary>
+	/// <param name="context"></param>
+	private static void CheckInputDevice(InputAction.CallbackContext context)
 	{
-		if(!x)
-		{
-            inputActions.controlSchemes.First(x => x.name == "Keyboard");
-			Debug.LogWarning("Input changed to: Keyboard");
+		//Get controller names
+        var controllers = Input.GetJoystickNames();
+		//Check if the list is > than 0
+        if (!UsingController && controllers.Length > 0) //Connected
+        {
+            UsingController = true;
+            Debug.LogWarning(controllers[0]+" Connected");
         }
-		else
-		{
-            inputActions.controlSchemes.First(x => x.name == "Controller");
-            Debug.LogWarning("Input changed to: Controller");
+        else if (UsingController && controllers.Length == 0) //Disconnected
+        {
+            UsingController = false;
+            Debug.LogWarning("Controller Disconnected");
         }
-
-		UsingController = x;
     }
 
-	private static void PauseInput(InputAction.CallbackContext context) => OnPauseGame?.Invoke();
+    private static void PauseInput(InputAction.CallbackContext context) => OnPauseGame?.Invoke();
 	private static void RunInput(InputAction.CallbackContext context) => OnRun?.Invoke();
 	private static void JumpInput(InputAction.CallbackContext context) => OnJump?.Invoke();
 	private static void StopWalkInput(InputAction.CallbackContext context) => OnStopMovement?.Invoke(lastDir);
 	private static void WalkInput(InputAction.CallbackContext context)
 	{
-		lastDir = context.ReadValue<Vector3>();
+        lastDir = context.ReadValue<Vector3>();
 		OnMovement?.Invoke(context.ReadValue<Vector3>());
 	}
 }
