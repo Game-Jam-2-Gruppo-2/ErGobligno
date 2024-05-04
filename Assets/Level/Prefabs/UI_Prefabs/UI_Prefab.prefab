@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Game_Canvas: {fileID: 1427650128877365449}
-  Pause_Canvas: {fileID: 4420876626979122161}
+  Pause_Canvas: {fileID: 1114725195977533266}
 --- !u!1 &2434363068534468995
 GameObject:
   m_ObjectHideFlags: 0
@@ -1255,15 +1255,15 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 5023186927289872702}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4420876626979122161 stripped
+--- !u!114 &1114725195977533266 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8714441347061603023, guid: ae39dbca49de1374a9c7609ae5c55c10,
+  m_CorrespondingSourceObject: {fileID: 5390172470010746476, guid: ae39dbca49de1374a9c7609ae5c55c10,
     type: 3}
   m_PrefabInstance: {fileID: 5023186927289872702}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 830d5ba29414518458fd54bf8b32d836, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a0c49a1c6d958a43a9d0aa30314a4fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

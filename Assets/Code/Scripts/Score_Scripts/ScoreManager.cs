@@ -27,6 +27,7 @@ public class ScoreManager: MonoBehaviour
     private static int CoinAmount;
     private static float NoiseAmount;
     private static float MaxNoise;
+
     //Saved Scores
     private static List<RecordData> Records;
 
@@ -140,6 +141,11 @@ public class ScoreManager: MonoBehaviour
     public static float GetNoiseValue()
     {
         return NoiseAmount;
+    }
+
+    public static float GetMaxNoiseValue()
+    {
+        return MaxNoise;
     }
 
     public static float GetGameTimeValue()

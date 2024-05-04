@@ -65,18 +65,17 @@ public static class InputManager
 	/// <param name="context"></param>
 	private static void CheckInputDevice(InputAction.CallbackContext context)
 	{
-		//Get controller names
-        var controllers = Input.GetJoystickNames();
-		//Check if the list is > than 0
-        if (!UsingController && controllers.Length > 0) //Connected
-        {
-            UsingController = true;
-            Debug.LogWarning(controllers[0]+" Connected");
-        }
-        else if (UsingController && controllers.Length == 0) //Disconnected
+        Gamepad gamepad = Gamepad.current;
+
+		if(gamepad == null)//Disconnected
         {
             UsingController = false;
             Debug.LogWarning("Controller Disconnected");
+        }
+        else//Connected
+        {
+            UsingController = true;
+            Debug.LogWarning("Connected");
         }
     }
 

@@ -5,13 +5,14 @@ using UnityEngine;
 
 public class UIGame : MonoBehaviour
 {
-    [SerializeField] private TMP_Text NoiseText;
     [SerializeField] private TMP_Text TimerText;
     [SerializeField] private TMP_Text CoinText;
+    [SerializeField] private UINoiseIndicator NoiseIndicator = new UINoiseIndicator();
 
     private void UpdateNoise()
     {
-        NoiseText.text = ScoreManager.GetNoiseValue()+" db";
+        NoiseIndicator.SetNoiseBarValue(ScoreManager.GetNoiseValue()/ScoreManager.GetMaxNoiseValue());
+        NoiseIndicator.SetIndexValue((int)ScoreManager.GetNoiseValue());
     }
 
     private void UpdateCoin()
