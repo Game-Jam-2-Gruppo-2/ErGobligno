@@ -12,6 +12,7 @@ public class UIScreen : MonoBehaviour
 
     public void LoadScene(string sceneName) => SceneManager.LoadScene(sceneName);
     public void QuitGame() => Application.Quit();
+    public void ResetSelected() => Enable();
     private void OnEnable() => Enable();
     private void OnDisable() => Disable();
     protected void Enable()

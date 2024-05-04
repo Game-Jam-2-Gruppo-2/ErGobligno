@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class UIAudioSettings : UIScreen
 {
+    [Header("UI Audio")]
     [SerializeField] private Slider Master_AudioSlider;
     [SerializeField] private Slider Music_AudioSlider;
     [SerializeField] private Slider SFX_AudioSlider;

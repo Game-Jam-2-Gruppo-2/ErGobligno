@@ -3649,7 +3649,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
       value: 
-      objectReference: {fileID: 1775663382}
+      objectReference: {fileID: 0}
     - target: {fileID: 9081667719791878158, guid: ae39dbca49de1374a9c7609ae5c55c10,
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
@@ -3724,7 +3724,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Navigation.m_SelectOnDown
       value: 
-      objectReference: {fileID: 1488290814}
+      objectReference: {fileID: 1775663382}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4821,18 +4821,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1483332504}
   m_CullTransparentMesh: 1
---- !u!114 &1488290814 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3118585897133187283, guid: ae39dbca49de1374a9c7609ae5c55c10,
-    type: 3}
-  m_PrefabInstance: {fileID: 1147180699}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1527039941
 PrefabInstance:
   m_ObjectHideFlags: 0
