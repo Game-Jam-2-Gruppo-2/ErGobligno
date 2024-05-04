@@ -26,15 +26,14 @@ public class GameManager : MonoBehaviour
 			Instance = this;
 		else
 		{
-			Debug.LogError("MULTIPLE GAMEMANAGER FOUND");
+			Debug.LogError("MULTIPLE GAME MANAGER FOUND");
 			Destroy(this.gameObject);
 			return;
 		}
 
 		DontDestroyOnLoad(this.gameObject);
 
-		InputManager.MoveInputs(true);
-		InputManager.UiInputs(true);
+		InputManager.Initialize();
 	}
 
 	//TODO: REMOVE
@@ -48,7 +47,6 @@ public class GameManager : MonoBehaviour
 		switch (newState)
 		{
 			case GameState.Menu:
-				Time.timeScale = 1;
 				Time.timeScale = 1;
 				//TODO: Change State -> Menu
 				break;

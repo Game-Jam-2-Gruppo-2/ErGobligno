@@ -73,7 +73,6 @@ public class MovementController : MonoBehaviour
 	{
 		InputManager.MoveInputs(true);
 		InputManager.UiInputs(false);
-		InputManager.Inizialized();
 		MaxSpeed = WalkMaxSpeed;
 		isRunning = false;
 		Bounds = new Vector3(MyCollider.bounds.extents.x * 2, 0.1f, MyCollider.bounds.extents.z * 2);

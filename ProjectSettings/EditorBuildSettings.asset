@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Level/Scenes/GameScenes/TitleScreen_Scene.unity
     guid: 9a2838ed3d1e092448b05626cb289f92
   - enabled: 1
+    path: Assets/Level/Scenes/GameScenes/Lv1_Scene/LV1_Scene.unity
+    guid: d9c1e27aee7f8b34cabcb69e56e0fb8f
+  - enabled: 1
     path: Assets/Level/Scenes/FlavioTest/FlavioTestScene.unity
     guid: d5a8b6a72ca120647bb1c6d1694c3cf7
   m_configObjects:

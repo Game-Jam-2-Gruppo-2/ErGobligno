@@ -127,8 +127,6 @@ public class IdleState : MovementStates
 		{
 			Exit(controller, new AccelerationState());
 		}
-
-
 	}
 }
 public class JumpState : MovementStates

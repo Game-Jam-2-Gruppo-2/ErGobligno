@@ -1,4 +1,4 @@
-using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,29 +13,35 @@ public static class InputManager
 	public static event EmptyDelegate OnRun;
 	public static event EmptyDelegate OnPauseGame;
 
+	public delegate void InputSourceChanged();
+	public static InputSourceChanged OnInputSourceChanged;
+
 	private static Vector3 lastDir;
 
 	public static PlayerInputs inputActions;
 
-	static InputManager()
-	{
+    public static bool UsingController { get; private set; }
 
+	public static void Initialize()
+	{
 		inputActions = new();
-		Inizialized();
-	}
-
-	public static void Inizialized()
-	{
-		// inputActions.Movement.Walk.performed += WalkInput;
-		// inputActions.Movement.Walk.canceled += StopWalkInput;
-		inputActions.Movement.Jump.performed += JumpInput;
+		//Movement Events
+		inputActions.Movement.Walk.performed += WalkInput;
+		inputActions.Movement.Walk.performed += CheckInputDevice;
+		inputActions.Movement.Walk.canceled += StopWalkInput;
+		inputActions.Movement.Walk.canceled += CheckInputDevice;
+        inputActions.Movement.Jump.performed += JumpInput;
+        inputActions.Movement.Jump.performed += CheckInputDevice;
 		inputActions.Movement.Run.performed += RunInput;
-		inputActions.UI.Pause.performed += PauseInput;
+		inputActions.Movement.Run.performed += CheckInputDevice;
+		//Input Game Events
 		inputActions.Movement.Pause.performed += PauseInput;
-	}
-
-	public static Vector3 MovementDir => inputActions.Movement.Walk.ReadValue<Vector3>();
-	public static float ClimbUp => inputActions.Climb.Climb.ReadValue<float>();
+		inputActions.Movement.Pause.performed += CheckInputDevice;
+		inputActions.UI.Pause.performed += PauseInput;
+		inputActions.UI.Pause.performed += CheckInputDevice;
+		MoveInputs(true);
+		UiInputs(false);
+    }
 
 	public static void MoveInputs(bool ToActivate)
 	{
@@ -51,23 +57,37 @@ public static class InputManager
 			inputActions.UI.Enable();
 		else
 			inputActions.UI.Disable();
-	}
-	private static void PauseInput(InputAction.CallbackContext context)
+    }
+
+	/// <summary>
+	/// Check if a controller is used for the input action
+	/// </summary>
+	/// <param name="context"></param>
+	private static void CheckInputDevice(InputAction.CallbackContext context)
 	{
-		OnPauseGame?.Invoke();
-	}
+		//Get controller names
+        var controllers = Input.GetJoystickNames();
+		//Check if the list is > than 0
+        if (!UsingController && controllers.Length > 0) //Connected
+        {
+            UsingController = true;
+            Debug.LogWarning(controllers[0]+" Connected");
+        }
+        else if (UsingController && controllers.Length == 0) //Disconnected
+        {
+            UsingController = false;
+            Debug.LogWarning("Controller Disconnected");
+        }
+    }
 
-	private static void RunInput(InputAction.CallbackContext context)
+    public static Vector3 MovementDir => inputActions.Movement.Walk.ReadValue<Vector3>();
+    private static void PauseInput(InputAction.CallbackContext context) => OnPauseGame?.Invoke();
+	private static void RunInput(InputAction.CallbackContext context) => OnRun?.Invoke();
+	private static void JumpInput(InputAction.CallbackContext context) => OnJump?.Invoke();
+	private static void StopWalkInput(InputAction.CallbackContext context) => OnStopMovement?.Invoke(lastDir);
+	private static void WalkInput(InputAction.CallbackContext context)
 	{
-		OnRun?.Invoke();
+        lastDir = context.ReadValue<Vector3>();
+		OnMovement?.Invoke(context.ReadValue<Vector3>());
 	}
-
-	private static void JumpInput(InputAction.CallbackContext context)
-	{
-		OnJump?.Invoke();
-	}
-
-
-
-
 }

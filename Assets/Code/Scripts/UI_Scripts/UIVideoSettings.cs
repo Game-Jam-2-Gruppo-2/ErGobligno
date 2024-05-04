@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class UIVideoSettings : MonoBehaviour
+public class UIVideoSettings : UIScreen
 {
     [SerializeField] private TMP_Dropdown ScreenTypeDropDown;
     [SerializeField] private TMP_Dropdown ResolutionDropDown;
@@ -73,5 +72,15 @@ public class UIVideoSettings : MonoBehaviour
     public void ApplyResolution()
     {
         ChangeScreenResolution(ResolutionDropDown.value, ScreenTypeDropDown.value);
+    }
+
+    private void OnEnable()
+    {
+        base.Enable();
+    }
+
+    private void OnDisable()
+    {
+        base.Disable();
     }
 }
