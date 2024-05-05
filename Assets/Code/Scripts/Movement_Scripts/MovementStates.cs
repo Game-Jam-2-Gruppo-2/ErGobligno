@@ -11,12 +11,33 @@ public abstract class MovementStates
 }
 public class AccelerationState : MovementStates
 {
-	float accelerationTimer = 0;
+	float timer;
+	float duration;
 	float speed = 0;
+	float maxValue, minValue;
 	Vector3 velocity;
+	AnimationCurve curveUsed;
+	float LerpSpeed(float curve) => Mathf.Lerp(minValue, maxValue, curve);
+	float curveValue() => curveUsed.Evaluate(timer);
 	public override void Enter(MovementController controller)
 	{
+		timer = 0;
+		if (controller.LastSpeed > controller.MaxSpeed)
+		{
+			curveUsed = controller.DecelerationCurve;
+			duration = controller.DecelerationTime;
 
+			maxValue = controller.LastSpeed;
+			minValue = controller.MaxSpeed;
+		}
+		else
+		{
+			curveUsed = controller.AccelerationCurve;
+			duration = controller.AccelerationTime;
+
+			maxValue = controller.MaxSpeed;
+			minValue = controller.LastSpeed;
+		}
 	}
 
 	public override void Exit(MovementController controller, MovementStates newState)
@@ -27,41 +48,19 @@ public class AccelerationState : MovementStates
 
 	public override void FixedTick(MovementController controller)
 	{
-		float LerpSpeed(float curve) => Mathf.Lerp(controller.LastSpeed, controller.MaxSpeed, curve);
-		float curveValue() => controller.AccelerationCurve.Evaluate(accelerationTimer);
 
-		// get values:
+		if (timer < duration)
+			timer += Time.fixedDeltaTime * (1 / controller.AccelerationTime);
+		else
+			timer = controller.AccelerationTime;
 
-		// check if last speed is higher then current max speed then it lerps it 
-
-
-		if (controller.LastSpeed > controller.MaxSpeed) // if we are going from RunSpeed to WalkSpeed
-		{
-			if (accelerationTimer > 0)
-				accelerationTimer -= Time.fixedDeltaTime * (1 / controller.AccelerationTime);
-			else
-				accelerationTimer = 0;
-
-			speed = LerpSpeed(curveValue());
-		}
-		else // we are going from Idle to Acceleration or from WalkSpeed to RunSpeed
-		{
-			if (accelerationTimer < controller.AccelerationTime)
-				accelerationTimer += Time.fixedDeltaTime * (1 / controller.AccelerationTime);
-			else
-				accelerationTimer = controller.AccelerationTime;
-
-			speed = LerpSpeed(curveValue());
-		}
-
+		speed = LerpSpeed(curveValue());
 
 		//Calculate velocity Scale
 		velocity = speed * Time.fixedDeltaTime * controller.MoveDir;
 		velocity.y = controller.Rb.velocity.y;
 
 		controller.Rb.velocity = velocity;
-
-
 	}
 
 	public override void Tick(MovementController controller)

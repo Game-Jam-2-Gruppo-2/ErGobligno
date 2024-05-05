@@ -89,6 +89,7 @@ public class MovementController : MonoBehaviour
 		if (IsAirBorne)
 			return;
 
+		CurrentState.Exit(this, new AccelerationState());
 		isRunning = !isRunning;
 		MaxSpeed = isRunning ? RunMaxSpeed : WalkMaxSpeed;
 	}
