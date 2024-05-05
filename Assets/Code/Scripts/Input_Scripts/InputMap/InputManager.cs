@@ -70,12 +70,10 @@ public static class InputManager
 		if(gamepad == null)//Disconnected
         {
             UsingController = false;
-            Debug.LogWarning("Controller Disconnected");
         }
         else//Connected
         {
             UsingController = true;
-            Debug.LogWarning("Connected");
         }
     }
 

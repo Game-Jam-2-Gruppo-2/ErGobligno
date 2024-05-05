@@ -71,8 +71,8 @@ public class MovementController : MonoBehaviour
 
 	private void Awake()
 	{
-		InputManager.MoveInputs(true);
-		InputManager.UiInputs(false);
+		//InputManager.MoveInputs(true);
+		//InputManager.UiInputs(false);
 		MaxSpeed = WalkMaxSpeed;
 		isRunning = false;
 		Bounds = new Vector3(MyCollider.bounds.extents.x * 2, 0.1f, MyCollider.bounds.extents.z * 2);

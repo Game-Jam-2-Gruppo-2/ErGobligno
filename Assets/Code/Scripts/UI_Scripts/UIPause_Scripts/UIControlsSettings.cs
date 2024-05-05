@@ -28,9 +28,9 @@ public class UIControlsSettings : UIScreen
         m_ControllerHorizontalSensitivity_Slider.value = m_SensitivitySettings.GetControllerSens_Horizontal();
     }
 
-    public void UpdateMouseSensitivity() => m_SensitivitySettings.SetMouseSens(m_MouseSensitivity_Slider.value);
-    public void UpdateControllerVSensitivity() => m_SensitivitySettings.SetControllerVSens(m_ControllerVertical_SensitivitySlider.value);
-    public void UpdateControllerHSensitivity() => m_SensitivitySettings.SetControllerHSens(m_ControllerHorizontalSensitivity_Slider.value);
+    public void UpdateMouseSensitivity() => SensitivityManager.SetMouseSens(m_MouseSensitivity_Slider.value);
+    public void UpdateControllerVSensitivity() => SensitivityManager.SetControllerVSens(m_ControllerVertical_SensitivitySlider.value);
+    public void UpdateControllerHSensitivity() => SensitivityManager.SetControllerHSens(m_ControllerHorizontalSensitivity_Slider.value);
 
     private void OnEnable()
     {

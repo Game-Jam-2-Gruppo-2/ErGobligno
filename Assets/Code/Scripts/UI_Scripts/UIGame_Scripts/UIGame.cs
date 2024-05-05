@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class UIGame : MonoBehaviour
 {
@@ -32,6 +33,7 @@ public class UIGame : MonoBehaviour
 
     private void OnEnable()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         ScoreManager.OnGameTimeChanged += UpdateTimer;
         ScoreManager.OnCoinChanged += UpdateCoin;
         ScoreManager.OnNoiseChanged += UpdateNoise;
@@ -39,6 +41,7 @@ public class UIGame : MonoBehaviour
 
     private void OnDisable()
     {
+        Cursor.lockState = CursorLockMode.None;
         ScoreManager.OnGameTimeChanged -= UpdateTimer;
         ScoreManager.OnCoinChanged -= UpdateCoin;
         ScoreManager.OnNoiseChanged -= UpdateNoise;

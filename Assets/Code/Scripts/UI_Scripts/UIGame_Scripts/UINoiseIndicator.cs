@@ -22,7 +22,6 @@ public class UINoiseIndicator
             if (m_Index < m_Settings.ExpressionsList.Count)
                 m_FaceImage.sprite = m_Settings.ExpressionsList[m_Index];
         }
-        Debug.Log(m_Index);
     }
 
     public void SetIndexValue(int value)
