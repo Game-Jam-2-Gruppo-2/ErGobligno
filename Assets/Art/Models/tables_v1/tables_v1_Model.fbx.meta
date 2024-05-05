@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f5979084f35c61046a7d7af9593f35e4
+guid: 74a054fb6f3cbc94aa2e6b1d14d3ce9c
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,8 +7,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: tables_model_1
-    second: {fileID: 2100000, guid: 35799453dfb50724a9e04e456e13d2d8, type: 2}
+      name: rectangular_table_v1
+    second: {fileID: 2100000, guid: 544d1081841717a44a19b0a1dbc650c8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: round_table_v1
+    second: {fileID: 2100000, guid: fb6140db36222734b878a972a0e47330, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: square_table_v1
+    second: {fileID: 2100000, guid: 0927f633ea10f954aa06abdb212f7183, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
