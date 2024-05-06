@@ -41,13 +41,11 @@ public class AccelerationState : MomentumStates
 
 	public override void Enter(MovementController controller)
 	{
-		Debug.LogWarning("hello a");
 		timer = 0;
 		curveUsed = controller.AccelerationCurve;
 		duration = controller.AccelerationTime;
 		maxValue = controller.MaxSpeed;
 		minValue = controller.LastSpeed;
-
 	}
 
 	public override void Exit(MovementController controller, MomentumStates state)
@@ -71,7 +69,7 @@ public class AccelerationState : MomentumStates
 		controller.Rb.velocity = myVel;
 
 	}
-	//, MomentumStates state
+	// MomentumStates state
 	public override void Tick(MovementController controller)
 	{
 		controller.LastDot = Vector3.Dot(InputManager.MovementDir, controller.MoveDir);
@@ -82,7 +80,7 @@ public class AccelerationState : MomentumStates
 		}
 		else if (controller.LastDot < controller.maxDotProduct)
 		{
-			Debug.Log("last dot = " + controller.LastDot + "\n" + controller.CurrentState);
+
 			controller.MoveDir = InputManager.MovementDir;
 			controller.CurrentState.Exit(controller, new MovingState());
 			return;
@@ -109,21 +107,21 @@ public class DecellerationState : MomentumStates
 	#endregion variables
 	public override void Enter(MovementController controller)
 	{
-		Debug.LogWarning("hi d");
+
 		timer = 0;
 		curveUsed = controller.DecelerationCurve;
 		duration = controller.DecelerationTime;
 
 		maxValue = controller.LastSpeed;
 		if (controller.LastDot < controller.maxDotProduct)
-			minValue = 0;
+			minValue = controller.LastSpeed / controller.ChangeDirSpeedDivident;
 		else
 			minValue = controller.MaxSpeed;
 	}
 
 	public override void Exit(MovementController controller, MomentumStates state)
 	{
-		Debug.Log("decelerationFinished");
+
 		controller.LastSpeed = minValue;
 		controller.ChangeMomentum(new AccelerationState());
 	}
@@ -134,11 +132,11 @@ public class DecellerationState : MomentumStates
 			timer += Time.fixedDeltaTime * (1 / duration);
 		else
 		{
-			Debug.LogError("you Enter In MyHouse");
+
 			timer = duration;
 			Exit(controller, new AccelerationState());
 		}
-		Debug.LogError(timer);
+
 
 		speed = LerpSpeed(curveValue);
 
@@ -159,7 +157,6 @@ public class DecellerationState : MomentumStates
 		}
 		else if (controller.LastDot < controller.maxDotProduct)
 		{
-			Debug.Log("last dot = " + controller.LastDot + "\n" + controller.CurrentState);
 			controller.MoveDir = InputManager.MovementDir;
 			controller.CurrentState.Exit(controller, new MovingState());
 			return;
@@ -169,10 +166,8 @@ public class DecellerationState : MomentumStates
 }
 public class MovingState : MovementStates
 {
-
 	public override void Enter(MovementController controller)
 	{
-
 		if (controller.LastSpeed > controller.MaxSpeed || controller.LastDot < controller.maxDotProduct)
 		{
 			controller.ChangeMomentum(new DecellerationState());
@@ -272,12 +267,6 @@ public class JumpState : MovementStates
 			timer += Time.fixedDeltaTime;
 			return;
 		}
-
-
-		if (controller.CheckGround)
-		{
-			Exit(controller, new IdleState());
-		}
 	}
 
 	public override void Tick(MovementController controller)
@@ -293,6 +282,7 @@ public class ClimbState : MovementStates
 	float timer;
 	public override void Enter(MovementController controller)
 	{
+		controller.MyCollider.enabled = false;
 		controller.Rb.useGravity = false;
 		controller.isClimbing = true;
 		controller.IsAirBorne = false;
@@ -306,6 +296,7 @@ public class ClimbState : MovementStates
 	}
 	public override void Exit(MovementController controller, MovementStates newState)
 	{
+		controller.MyCollider.enabled = true;
 		controller.StartCoroutine(controller.CheckLedgeCooldown());
 		controller.Rb.useGravity = true;
 
@@ -318,7 +309,7 @@ public class ClimbState : MovementStates
 		if (timer < controller.ClimbDuration)
 		{
 			timer += Time.fixedDeltaTime;
-			lerpedPos = Vector3.Slerp(startpos, endPos, timer / controller.ClimbDuration);
+			lerpedPos = Vector3.Lerp(startpos, endPos, timer / controller.ClimbDuration);
 			controller.Rb.MovePosition(lerpedPos);
 		}
 		else
@@ -338,7 +329,6 @@ public class FallingState : MovementStates
 	public override void Enter(MovementController controller)
 	{
 		controller.IsAirBorne = true;
-
 	}
 
 	public override void Exit(MovementController controller, MovementStates newState)
@@ -349,10 +339,7 @@ public class FallingState : MovementStates
 
 	public override void FixedTick(MovementController controller)
 	{
-		if (controller.CheckGround)
-		{
-			Exit(controller, new IdleState());
-		}
+
 	}
 
 	public override void Tick(MovementController controller)

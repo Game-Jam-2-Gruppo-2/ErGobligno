@@ -23,20 +23,22 @@ public class MovementController : MonoBehaviour
 	//|------------------------------------------------------------------------------------------|
 	[Header("Jump Settings:")]
 	[SerializeField] public float JumpForce;
-	[SerializeField] public LayerMask GroundLayer;
 
 	[Tooltip("how long is the raycast to detect the ground")]
 	[SerializeField] public float GroundCheckLenght;
+	[SerializeField] public float GroundCheckRadius;
 	[SerializeField] public float CooldownAfterEnd;
 
 	//|------------------------------------------------------------------------------------------|
 	[Header("Speed Settings: ")]
 	[SerializeField] public float WalkMaxSpeed;
 	[SerializeField] public float RunMaxSpeed;
+	[SerializeField] public float ChangeDirSpeedDivident;
 
 	#region Momentum Settings:
 	//|------------------------------------------------------------------------------------------|
 	[Header("Momentum Settings:")]
+
 	[Tooltip("this number checks if you are changing direction DRAMATICALLY from before\n(default: 0.7 witch is equal to 45° angle)")]
 	//(have you moved direction? will you move direction? when will you move direction?)
 	[SerializeField] public float maxDotProduct = 0.7f;
@@ -66,12 +68,13 @@ public class MovementController : MonoBehaviour
 	[HideInInspector] public float VelocityScalar = 0;
 	[HideInInspector] public float LastSpeed;
 	[HideInInspector] public float MaxSpeed;
-	[HideInInspector] public Vector3 MoveDir, LastDirection, Bounds;
+	[HideInInspector] public Vector3 MoveDir, LastDirection, BoundsGroundCheck, BoundsWallCheck;
 	[HideInInspector] public bool IsAirBorne, isRunning, isClimbing;
 	[HideInInspector] public RaycastHit Hit;
 	[HideInInspector] public Collider ClimbableObject;
 	[HideInInspector] public MomentumStates Momentumstate;
 	[HideInInspector] public float LastDot;
+	[HideInInspector] public Ray GroundRay;
 
 
 	public void ChangeMomentum(MomentumStates newState)
@@ -84,9 +87,11 @@ public class MovementController : MonoBehaviour
 	{
 		//InputManager.MoveInputs(true);
 		//InputManager.UiInputs(false);
+		GroundRay = new(transform.position, -transform.up);
 		MaxSpeed = WalkMaxSpeed;
 		isRunning = false;
-		Bounds = new Vector3(MyCollider.bounds.extents.x * 2, 0.1f, MyCollider.bounds.extents.z * 2);
+		BoundsGroundCheck = new Vector3(MyCollider.bounds.extents.x * 2, 0.1f, MyCollider.bounds.extents.z * 2);
+		BoundsWallCheck = new Vector3(0.1f, MyCollider.bounds.extents.y * 2, MyCollider.bounds.extents.z * 2);
 	}
 
 	private void OnEnable()
@@ -139,8 +144,7 @@ public class MovementController : MonoBehaviour
 
 	bool CheckLedge(Vector3 pos, Vector3 dir) => Physics.Raycast(pos, dir, out Hit, RaycastDetectionLenght, ClimableLayers);
 
-	public bool CheckGround => Physics.BoxCast(transform.position, Bounds, -transform.up, quaternion.identity, GroundCheckLenght, GroundLayer);
-
+	//public bool CheckGround => Physics.BoxCast(transform.position, BoundsGroundCheck, -transform.up, quaternion.identity, GroundCheckLenght, GroundLayer);
 	private void FixedUpdate()
 	{
 		CurrentState.FixedTick(this);
@@ -159,14 +163,28 @@ public class MovementController : MonoBehaviour
 		isClimbing = false;
 	}
 
+	public bool CheckGround => Physics.SphereCast(GroundRay, GroundCheckRadius, GroundCheckLenght);
 	private void OnCollisionExit(Collision other)
 	{
 		if (IsAirBorne)
 			return;
-
-		if (!CheckGround)
-		{
+		if (CheckGround == false)
 			ChangeState(new FallingState());
+	}
+
+	private void OnCollisionEnter(Collision other)
+	{
+		Vector3 dir = (other.transform.position - transform.position).normalized;
+
+		// if the direction that i'm moving in is the 
+		if (IsAirBorne && Vector3.Dot(Rb.velocity, dir) < -0.7)
+			CurrentState.Exit(this, new IdleState());
+
+		// if the direction that i'm moving in is the same as the direction twoards the collided object then stop moving
+		if (MoveDir != Vector3.zero && Vector3.Dot(MoveDir, dir) > 0.7f)
+		{
+			Vector3 stopVector = new(0, Rb.velocity.y, 0);
+			Rb.velocity = stopVector;
 		}
 	}
 
@@ -178,7 +196,7 @@ public class MovementController : MonoBehaviour
 
 		Gizmos.color = Color.red;
 		Gizmos.DrawRay(transform.position, -transform.up * GroundCheckLenght);
-		Gizmos.DrawWireCube(transform.position - transform.up * GroundCheckLenght, new Vector3(MyCollider.bounds.extents.x * 2, 0.1f, MyCollider.bounds.extents.z * 2));
+		Gizmos.DrawWireSphere(transform.position - transform.up * GroundCheckLenght, GroundCheckRadius);
 	}
 #endif
 }

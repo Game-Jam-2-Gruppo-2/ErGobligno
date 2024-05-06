@@ -160,15 +160,17 @@ MonoBehaviour:
   RaycastDetectionHeight: 0.5
   RaycastDetectionLenght: 1
   ClimbDuration: 2
-  ClimbOffset: 0.01
+  ClimbOffset: 1
   JumpForce: 10
   GroundLayer:
     serializedVersion: 2
     m_Bits: 256
   GroundCheckLenght: 0.6
+  WallCheckLenght: 0
   CooldownAfterEnd: 0.3
-  WalkMaxSpeed: 10
+  WalkMaxSpeed: 500
   RunMaxSpeed: 700
+  ChangeDirSpeedDivident: 2
   maxDotProduct: 0.1
   AccelerationCurve:
     serializedVersion: 2
@@ -194,7 +196,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  AccelerationTime: 0.3
+  AccelerationTime: 1
   DecelerationCurve:
     serializedVersion: 2
     m_Curve:
@@ -225,7 +227,8 @@ MonoBehaviour:
   MaxSpeed: 1000
   MoveDir: {x: 0, y: 0, z: 0}
   LastDirection: {x: 0, y: 0, z: 0}
-  Bounds: {x: 0, y: 0, z: 0}
+  BoundsGroundCheck: {x: 0, y: 0, z: 0}
+  BoundsWallCheck: {x: 0, y: 0, z: 0}
   IsAirBorne: 0
   isRunning: 0
   isClimbing: 0

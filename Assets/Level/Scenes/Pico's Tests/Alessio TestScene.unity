@@ -634,13 +634,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
-      propertyPath: ClimbOffset
-      value: 1
+      propertyPath: WallCheckLenght
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
-      propertyPath: AccelerationTime
-      value: 1
+      propertyPath: GroundCheckRadius
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4142155317967305753, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
