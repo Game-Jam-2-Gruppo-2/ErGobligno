@@ -1,6 +1,7 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 
 public static class InputManager
 {
@@ -22,25 +23,25 @@ public static class InputManager
 
     public static bool UsingController { get; private set; }
 
+	private static Vector2 CameraDelta;
+
 	public static void Initialize()
 	{
 		inputActions = new();
 		//Movement Events
 		inputActions.Movement.Walk.performed += WalkInput;
-		inputActions.Movement.Walk.performed += CheckInputDevice;
 		inputActions.Movement.Walk.canceled += StopWalkInput;
-		inputActions.Movement.Walk.canceled += CheckInputDevice;
         inputActions.Movement.Jump.performed += JumpInput;
-        inputActions.Movement.Jump.performed += CheckInputDevice;
 		inputActions.Movement.Run.performed += RunInput;
-		inputActions.Movement.Run.performed += CheckInputDevice;
 		//Input Game Events
 		inputActions.Movement.Pause.performed += PauseInput;
-		inputActions.Movement.Pause.performed += CheckInputDevice;
 		inputActions.UI.Pause.performed += PauseInput;
-		inputActions.UI.Pause.performed += CheckInputDevice;
-		MoveInputs(true);
+        //Enable for Game
+        MoveInputs(true);
 		UiInputs(false);
+        EnabledCameraInput(true);
+		//Set Up Camera Delta
+		CameraDelta = Vector2.zero;
     }
 
 	public static void MoveInputs(bool ToActivate)
@@ -59,23 +60,51 @@ public static class InputManager
 			inputActions.UI.Disable();
     }
 
-	/// <summary>
-	/// Check if a controller is used for the input action
-	/// </summary>
-	/// <param name="context"></param>
-	private static void CheckInputDevice(InputAction.CallbackContext context)
+    #region Camera Functions
+	public static Vector2 GetCameraDelta()
 	{
-        Gamepad gamepad = Gamepad.current;
+        CameraDelta = Vector2.zero;
 
-		if(gamepad == null)//Disconnected
-        {
+        //ReadMouse delta
+        Vector2 mouseDelta;
+        mouseDelta.x = inputActions.MouseCamera_Actions.CameraX.ReadValue<float>();
+        mouseDelta.y = inputActions.MouseCamera_Actions.CameraY.ReadValue<float>();
+        if (mouseDelta != Vector2.zero)
+		{
             UsingController = false;
+			CameraDelta = mouseDelta;
+		}
+
+		//Read Controller delta
+		Vector2 controllerDelta;
+		controllerDelta.x = inputActions.ControllerCamera_Actions.CameraX.ReadValue<float>();
+		controllerDelta.y = inputActions.ControllerCamera_Actions.CameraY.ReadValue<float>();
+		if (controllerDelta != Vector2.zero)
+		{
+            CameraDelta = controllerDelta;
+			UsingController = true;
         }
-        else//Connected
-        {
-            UsingController = true;
-        }
-    }
+
+		Debug.Log(UsingController);
+
+        return CameraDelta;
+	}
+
+	public static void EnabledCameraInput(bool x)
+	{
+		if(x)
+		{
+			inputActions.ControllerCamera_Actions.Enable();
+			inputActions.MouseCamera_Actions.Enable();
+		}
+		else
+		{
+			inputActions.ControllerCamera_Actions.Disable();
+			inputActions.MouseCamera_Actions.Disable();
+		}
+	}
+
+    #endregion
 
     public static Vector3 MovementDir => inputActions.Movement.Walk.ReadValue<Vector3>();
     private static void PauseInput(InputAction.CallbackContext context) => OnPauseGame?.Invoke();

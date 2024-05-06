@@ -36,10 +36,9 @@ public class GameManager : MonoBehaviour
 		InputManager.Initialize();
 	}
 
-	//TODO: REMOVE
 	private void Start()
 	{
-		ChangeState(GameState.Game);
+		ChangeState(GameState.Menu);
 	}
 
 	private void ChangeState(GameState newState)

@@ -11,17 +11,12 @@ public class SensitivityManager: MonoBehaviour
         Settings = m_Settings;
     }
 
-    public static Vector2 SensitivityValue()
+    public static Vector2 GetSensitivityValue()
     {
         if (InputManager.UsingController)
-        {
             return new Vector2(Settings.GetControllerSens_Horizontal(), Settings.GetControllerSens_Vertical());
-        }
         else
-        {
-            Debug.Log("USING MOUSE");
             return new Vector2(Settings.GetMouseSens(), Settings.GetMouseSens());
-        }
     }
 
     public static void SetMouseSens(float newSens) => Settings.SetMouseSens(newSens);
