@@ -38,7 +38,8 @@ public class GameManager : MonoBehaviour
 
 	private void Start()
 	{
-		ChangeState(GameState.Menu);
+		//TODO: Swicth to gamestate game when scene is loaded
+		ChangeState(GameState.Game);
 	}
 
 	private void ChangeState(GameState newState)

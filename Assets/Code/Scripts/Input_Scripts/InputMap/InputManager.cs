@@ -85,8 +85,6 @@ public static class InputManager
 			UsingController = true;
         }
 
-		Debug.Log(UsingController);
-
         return CameraDelta;
 	}
 

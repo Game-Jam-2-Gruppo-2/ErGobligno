@@ -7,8 +7,8 @@ using static InputManager;
 public class Sensitivity_Settings : ScriptableObject
 {
     [SerializeField] private float Mouse_Sensitivity_Default = 5f;
-    [SerializeField] private float ControllerV_Sensitivity_Default = 15f;
-    [SerializeField] private float ControllerH_Sensitivity_Default = 15f;
+    [SerializeField] private float ControllerV_Sensitivity_Default = 50f;
+    [SerializeField] private float ControllerH_Sensitivity_Default = 50f;
 
     public float Sensitivity_Min { private set; get; }
     [SerializeField, Min(0f)] private float _Sensitivity_Min = 0.1f;
