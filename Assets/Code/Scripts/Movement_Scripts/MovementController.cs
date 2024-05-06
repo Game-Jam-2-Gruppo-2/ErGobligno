@@ -95,20 +95,20 @@ public class MovementController : MonoBehaviour
 		InputManager.OnRun += Running;
 	}
 
+	private void OnDisable()
+	{
+		InputManager.OnJump -= Jump;
+		InputManager.OnRun -= Running;
+	}
+
 	private void Running()
 	{
 		if (IsAirBorne)
 			return;
 
-		CurrentState.Exit(this, new MovingState());
 		isRunning = !isRunning;
 		MaxSpeed = isRunning ? RunMaxSpeed : WalkMaxSpeed;
-	}
-
-	private void OnDisable()
-	{
-		InputManager.OnJump -= Jump;
-		InputManager.OnRun -= Running;
+		CurrentState.Exit(this, new MovingState());
 	}
 
 	void Start()

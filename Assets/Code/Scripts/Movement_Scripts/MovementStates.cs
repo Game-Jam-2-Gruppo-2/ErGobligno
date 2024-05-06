@@ -68,7 +68,7 @@ public class AccelerationState : MomentumStates
 		myVel = speed * Time.fixedDeltaTime * controller.MoveDir;
 		myVel = myVel.z * controller.transform.forward + controller.transform.right * myVel.x;
 		myVel.y = controller.Rb.velocity.y;
-		controller.Rb.velocity = velocity;
+		controller.Rb.velocity = myVel;
 
 	}
 	//, MomentumStates state
@@ -115,12 +115,16 @@ public class DecellerationState : MomentumStates
 		duration = controller.DecelerationTime;
 
 		maxValue = controller.LastSpeed;
-		minValue = controller.MaxSpeed;
+		if (controller.LastDot < controller.maxDotProduct)
+			minValue = 0;
+		else
+			minValue = controller.MaxSpeed;
 	}
 
 	public override void Exit(MovementController controller, MomentumStates state)
 	{
 		Debug.Log("decelerationFinished");
+		controller.LastSpeed = minValue;
 		controller.ChangeMomentum(new AccelerationState());
 	}
 
@@ -130,9 +134,11 @@ public class DecellerationState : MomentumStates
 			timer += Time.fixedDeltaTime * (1 / duration);
 		else
 		{
+			Debug.LogError("you Enter In MyHouse");
 			timer = duration;
 			Exit(controller, new AccelerationState());
 		}
+		Debug.LogError(timer);
 
 		speed = LerpSpeed(curveValue);
 
@@ -140,7 +146,7 @@ public class DecellerationState : MomentumStates
 		myVel = speed * Time.fixedDeltaTime * controller.MoveDir;
 		myVel = myVel.z * controller.transform.forward + controller.transform.right * myVel.x;
 		myVel.y = controller.Rb.velocity.y;
-		controller.Rb.velocity = velocity;
+		controller.Rb.velocity = myVel;
 	}
 
 	public override void Tick(MovementController controller)
