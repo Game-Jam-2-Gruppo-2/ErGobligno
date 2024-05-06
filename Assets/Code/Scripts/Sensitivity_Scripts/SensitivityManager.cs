@@ -19,6 +19,7 @@ public class SensitivityManager: MonoBehaviour
         }
         else
         {
+            Debug.Log("USING MOUSE");
             return new Vector2(Settings.GetMouseSens(), Settings.GetMouseSens());
         }
     }
