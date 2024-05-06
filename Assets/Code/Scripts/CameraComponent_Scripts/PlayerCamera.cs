@@ -36,8 +36,12 @@ public class PlayerCamera : MonoBehaviour
         float deltaX = m_Actions.CameraMovement.Direction_X.ReadValue<float>();
         float deltaY = m_Actions.CameraMovement.Direction_Y.ReadValue<float>();
         
-        m_Direction.x = Mathf.SmoothDamp(m_Direction.x, deltaY, ref m_Speed.x, m_Settings.SmootTime, SensitivityManager.SensitivityValue().x, Time.deltaTime);
-        m_Direction.y = Mathf.SmoothDamp(m_Direction.y, deltaX, ref m_Speed.y, m_Settings.SmootTime, SensitivityManager.SensitivityValue().y, Time.deltaTime);
+        m_Direction.x = deltaY;
+        m_Direction.y = deltaX;
+
+        m_Direction.x = Mathf.Lerp(m_Direction.x, deltaY, SensitivityManager.SensitivityValue().x * Time.deltaTime);
+        m_Direction.y = Mathf.Lerp(m_Direction.y, deltaX, SensitivityManager.SensitivityValue().y * Time.deltaTime);
+
         //Update Rotation
         Quaternion rotation = Quaternion.Euler(-m_Direction.x, m_Direction.y, 0);
         transform.rotation *= rotation;
@@ -58,24 +62,21 @@ public class PlayerCamera : MonoBehaviour
         }
 
         newRotation.z = 0;
-        Debug.Log(newRotation);
+        //Debug.Log(newRotation);
         //Apply Clamped Rotation
-        transform.rotation = Quaternion.Euler(newRotation);
+        m_Camera.transform.rotation = Quaternion.Euler(newRotation);
         //Rotate Parent
-        transform.parent.rotation *= Quaternion.Euler(newRotation.y * Vector3.up);
+        Quaternion parentRotation = Quaternion.Euler(0f, m_Direction.y, 0f);
+        //transform.parent.rotation *= parentRotation;
     }
 
     private void ResumeRotation()
     {
-        m_Direction = Vector2.zero;
-        m_Speed = Vector2.zero;
         m_Actions.Enable();
     }
 
     private void StopRotation()
     {
-        m_Direction = Vector2.zero;
-        m_Speed = Vector2.zero;
         m_Actions.Disable();
 
         if(m_Paused)
