@@ -632,11 +632,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1637768627203328695, guid: ce4840c7e9cfa614bba18901c4365496,
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 23225b70d9d7f1548b1996f97ac0f89b, type: 2}
+      propertyPath: ClimbOffset
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4142155317967305753, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
       propertyPath: m_Name
