@@ -9,72 +9,190 @@ public abstract class MovementStates
 	public abstract void FixedTick(MovementController controller);
 	public abstract void Exit(MovementController controller, MovementStates newState);
 }
-public class AccelerationState : MovementStates
+
+public abstract class MomentumStates
 {
-	float timer;
-	float duration;
-	float speed = 0;
-	float maxValue, minValue;
-	Vector3 velocity;
-	AnimationCurve curveUsed;
+	protected abstract float timer { get; set; }
+	public abstract float duration { get; set; }
+	public abstract float speed { get; set; }
+	public abstract float maxValue { get; set; }
+	public abstract float minValue { get; set; }
+	public abstract Vector3 velocity { get; set; }
+	public abstract AnimationCurve curveUsed { get; set; }
+
+	public abstract void Enter(MovementController controller);
+	public abstract void Tick(MovementController controller);
+	public abstract void FixedTick(MovementController controller);
+	public abstract void Exit(MovementController controller, MomentumStates state);
+}
+
+public class AccelerationState : MomentumStates
+{
 	float LerpSpeed(float curve) => Mathf.Lerp(minValue, maxValue, curve);
-	float curveValue() => curveUsed.Evaluate(timer);
+	float curveValue => curveUsed.Evaluate(timer);
+	public override float duration { get; set; }
+	public override float speed { get; set; }
+	public override float maxValue { get; set; }
+	public override float minValue { get; set; }
+	public override Vector3 velocity { get => myVel; set => myVel = value; }
+	public Vector3 myVel;
+	public override AnimationCurve curveUsed { get; set; }
+	protected override float timer { get; set; }
+
 	public override void Enter(MovementController controller)
 	{
+		Debug.LogWarning("hello a");
 		timer = 0;
-		if (controller.LastSpeed > controller.MaxSpeed)
-		{
-			curveUsed = controller.DecelerationCurve;
-			duration = controller.DecelerationTime;
+		curveUsed = controller.AccelerationCurve;
+		duration = controller.AccelerationTime;
+		maxValue = controller.MaxSpeed;
+		minValue = controller.LastSpeed;
 
-			maxValue = controller.LastSpeed;
-			minValue = controller.MaxSpeed;
-		}
-		else
-		{
-			curveUsed = controller.AccelerationCurve;
-			duration = controller.AccelerationTime;
-
-			maxValue = controller.MaxSpeed;
-			minValue = controller.LastSpeed;
-		}
 	}
 
-	public override void Exit(MovementController controller, MovementStates newState)
+	public override void Exit(MovementController controller, MomentumStates state)
 	{
-		controller.LastSpeed = speed;
-		controller.ChangeState(newState);
+
 	}
 
 	public override void FixedTick(MovementController controller)
 	{
-
 		if (timer < duration)
-			timer += Time.fixedDeltaTime * (1 / controller.AccelerationTime);
+			timer += Time.fixedDeltaTime * (1 / duration);
 		else
-			timer = controller.AccelerationTime;
+			timer = duration;
 
-		speed = LerpSpeed(curveValue());
+		speed = LerpSpeed(curveValue);
 
 		//Calculate velocity Scale
-		velocity = speed * Time.fixedDeltaTime * controller.MoveDir;
-		velocity.y = controller.Rb.velocity.y;
+		myVel = speed * Time.fixedDeltaTime * controller.MoveDir;
+		myVel = myVel.z * controller.transform.forward + controller.transform.right * myVel.x;
+		myVel.y = controller.Rb.velocity.y;
+		controller.Rb.velocity = velocity;
 
+	}
+	//, MomentumStates state
+	public override void Tick(MovementController controller)
+	{
+		controller.LastDot = Vector3.Dot(InputManager.MovementDir, controller.MoveDir);
+		if (InputManager.MovementDir == Vector3.zero)
+		{
+			controller.CurrentState.Exit(controller, new IdleState());
+			return;
+		}
+		else if (controller.LastDot < controller.maxDotProduct)
+		{
+			Debug.Log("last dot = " + controller.LastDot + "\n" + controller.CurrentState);
+			controller.MoveDir = InputManager.MovementDir;
+			controller.CurrentState.Exit(controller, new MovingState());
+			return;
+		}
+		controller.MoveDir = InputManager.MovementDir;
+	}
+}
+
+public class DecellerationState : MomentumStates
+{
+	public float LerpSpeed(float curve) => Mathf.Lerp(minValue, maxValue, curve);
+	public float curveValue => curveUsed.Evaluate(timer);
+
+	#region variables
+	public override float duration { get; set; }
+	public override float speed { get; set; }
+	public override float maxValue { get; set; }
+	public override float minValue { get; set; }
+	public override Vector3 velocity { get => myVel; set => myVel = value; }
+	public Vector3 myVel;
+	public override AnimationCurve curveUsed { get; set; }
+	protected override float timer { get; set; }
+
+	#endregion variables
+	public override void Enter(MovementController controller)
+	{
+		Debug.LogWarning("hi d");
+		timer = 0;
+		curveUsed = controller.DecelerationCurve;
+		duration = controller.DecelerationTime;
+
+		maxValue = controller.LastSpeed;
+		minValue = controller.MaxSpeed;
+	}
+
+	public override void Exit(MovementController controller, MomentumStates state)
+	{
+		Debug.Log("decelerationFinished");
+		controller.ChangeMomentum(new AccelerationState());
+	}
+
+	public override void FixedTick(MovementController controller)
+	{
+		if (timer < duration)
+			timer += Time.fixedDeltaTime * (1 / duration);
+		else
+		{
+			timer = duration;
+			Exit(controller, new AccelerationState());
+		}
+
+		speed = LerpSpeed(curveValue);
+
+		//Calculate velocity Scale
+		myVel = speed * Time.fixedDeltaTime * controller.MoveDir;
+		myVel = myVel.z * controller.transform.forward + controller.transform.right * myVel.x;
+		myVel.y = controller.Rb.velocity.y;
 		controller.Rb.velocity = velocity;
 	}
 
 	public override void Tick(MovementController controller)
 	{
+		controller.LastDot = Vector3.Dot(InputManager.MovementDir, controller.MoveDir);
 		if (InputManager.MovementDir == Vector3.zero)
 		{
-			Exit(controller, new IdleState());
+			controller.CurrentState.Exit(controller, new IdleState());
 			return;
 		}
-
+		else if (controller.LastDot < controller.maxDotProduct)
+		{
+			Debug.Log("last dot = " + controller.LastDot + "\n" + controller.CurrentState);
+			controller.MoveDir = InputManager.MovementDir;
+			controller.CurrentState.Exit(controller, new MovingState());
+			return;
+		}
 		controller.MoveDir = InputManager.MovementDir;
 	}
 }
+public class MovingState : MovementStates
+{
 
+	public override void Enter(MovementController controller)
+	{
+
+		if (controller.LastSpeed > controller.MaxSpeed || controller.LastDot < controller.maxDotProduct)
+		{
+			controller.ChangeMomentum(new DecellerationState());
+		}
+		else
+		{
+			controller.ChangeMomentum(new AccelerationState());
+		}
+	}
+
+	public override void Exit(MovementController controller, MovementStates newState)
+	{
+		controller.LastSpeed = controller.Momentumstate.speed;
+		controller.ChangeState(newState);
+	}
+
+	public override void FixedTick(MovementController controller)
+	{
+		controller.Momentumstate.FixedTick(controller);
+	}
+
+	public override void Tick(MovementController controller)
+	{
+		controller.Momentumstate.Tick(controller);
+	}
+}
 public class IdleState : MovementStates
 {
 	float decelerationTimer = 0;
@@ -115,16 +233,13 @@ public class IdleState : MovementStates
 		velocity = controller.VelocityScalar * controller.MaxSpeed * Time.fixedDeltaTime * controller.MoveDir;
 		velocity.y = controller.Rb.velocity.y;
 		controller.Rb.velocity = velocity;
-		// Debug.Log(decelerationTimer);
-		// Debug.Log("Q = " + enterScalar + "\nC = " + c);
-		// Debug.Log("S= " + controller.VelocityScale + "\nV= " + controller.Rb.velocity.magnitude);
 	}
 
 	public override void Tick(MovementController controller)
 	{
 		if (InputManager.MovementDir != Vector3.zero)
 		{
-			Exit(controller, new AccelerationState());
+			Exit(controller, new MovingState());
 		}
 	}
 }
@@ -197,7 +312,7 @@ public class ClimbState : MovementStates
 		if (timer < controller.ClimbDuration)
 		{
 			timer += Time.fixedDeltaTime;
-			lerpedPos = Vector3.Lerp(startpos, endPos, timer / controller.ClimbDuration);
+			lerpedPos = Vector3.Slerp(startpos, endPos, timer / controller.ClimbDuration);
 			controller.Rb.MovePosition(lerpedPos);
 		}
 		else
@@ -214,12 +329,10 @@ public class ClimbState : MovementStates
 }
 public class FallingState : MovementStates
 {
-	float timer;
-	float dur = 0.5f;
 	public override void Enter(MovementController controller)
 	{
 		controller.IsAirBorne = true;
-		Debug.Log("inside Falling");
+
 	}
 
 	public override void Exit(MovementController controller, MovementStates newState)

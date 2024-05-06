@@ -37,6 +37,9 @@ public class MovementController : MonoBehaviour
 	#region Momentum Settings:
 	//|------------------------------------------------------------------------------------------|
 	[Header("Momentum Settings:")]
+	[Tooltip("this number checks if you are changing direction DRAMATICALLY from before\n(default: 0.7 witch is equal to 45° angle)")]
+	//(have you moved direction? will you move direction? when will you move direction?)
+	[SerializeField] public float maxDotProduct = 0.7f;
 
 	#region Acceleration:
 	[SerializeField] public AnimationCurve AccelerationCurve; // how fast you XLR8
@@ -67,7 +70,15 @@ public class MovementController : MonoBehaviour
 	[HideInInspector] public bool IsAirBorne, isRunning, isClimbing;
 	[HideInInspector] public RaycastHit Hit;
 	[HideInInspector] public Collider ClimbableObject;
+	[HideInInspector] public MomentumStates Momentumstate;
+	[HideInInspector] public float LastDot;
 
+
+	public void ChangeMomentum(MomentumStates newState)
+	{
+		Momentumstate = newState;
+		Momentumstate.Enter(this);
+	}
 
 	private void Awake()
 	{
@@ -89,7 +100,7 @@ public class MovementController : MonoBehaviour
 		if (IsAirBorne)
 			return;
 
-		CurrentState.Exit(this, new AccelerationState());
+		CurrentState.Exit(this, new MovingState());
 		isRunning = !isRunning;
 		MaxSpeed = isRunning ? RunMaxSpeed : WalkMaxSpeed;
 	}
