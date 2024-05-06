@@ -6,10 +6,12 @@ using static InputManager;
 [CreateAssetMenu(fileName = "New Sensitivity Settings", menuName = "Settings/Other/Sensitivity")]
 public class Sensitivity_Settings : ScriptableObject
 {
-    [SerializeField] private float Sensitivity_Default = 500f;
+    [SerializeField] private float Mouse_Sensitivity_Default = 5f;
+    [SerializeField] private float ControllerV_Sensitivity_Default = 50f;
+    [SerializeField] private float ControllerH_Sensitivity_Default = 50f;
 
     public float Sensitivity_Min { private set; get; }
-    [SerializeField, Min(0.1f)] private float _Sensitivity_Min = 0.1f;
+    [SerializeField, Min(0f)] private float _Sensitivity_Min = 0.1f;
     public float Sensitivity_Max { private set; get; } = 1000f;
     [SerializeField, Min(0.1f)] private float _Sensitivity_Max = 0.1f;
 
@@ -22,7 +24,7 @@ public class Sensitivity_Settings : ScriptableObject
     public float GetMouseSens()
     {
         if (!PlayerPrefs.HasKey("MouseSens"))
-            PlayerPrefs.SetFloat("MouseSens", Sensitivity_Default);
+            PlayerPrefs.SetFloat("MouseSens", Mouse_Sensitivity_Default);
 
         return PlayerPrefs.GetFloat("MouseSens");
     }
@@ -30,7 +32,7 @@ public class Sensitivity_Settings : ScriptableObject
     public float GetControllerSens_Vertical()
     {
         if (!PlayerPrefs.HasKey("ControllerVSens"))
-            PlayerPrefs.SetFloat("ControllerVSens", Sensitivity_Default);
+            PlayerPrefs.SetFloat("ControllerVSens", ControllerV_Sensitivity_Default);
 
         return PlayerPrefs.GetFloat("ControllerVSens");
     }
@@ -38,7 +40,7 @@ public class Sensitivity_Settings : ScriptableObject
     public float GetControllerSens_Horizontal()
     {
         if (!PlayerPrefs.HasKey("ControllerHSens"))
-            PlayerPrefs.SetFloat("ControllerHSens", Sensitivity_Default);
+            PlayerPrefs.SetFloat("ControllerHSens", ControllerH_Sensitivity_Default);
 
         return PlayerPrefs.GetFloat("ControllerHSens");
     }

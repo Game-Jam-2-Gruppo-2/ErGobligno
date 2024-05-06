@@ -36,9 +36,9 @@ public class GameManager : MonoBehaviour
 		InputManager.Initialize();
 	}
 
-	//TODO: REMOVE
 	private void Start()
 	{
+		//TODO: Swicth to gamestate game when scene is loaded
 		ChangeState(GameState.Game);
 	}
 

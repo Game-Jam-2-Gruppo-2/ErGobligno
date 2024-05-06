@@ -430,6 +430,102 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "ControllerCamera_Actions",
+            "id": "8ce8561e-8bf4-4831-bd4f-049235910df6",
+            "actions": [
+                {
+                    "name": "CameraX",
+                    "type": "Value",
+                    "id": "e351a130-7d0f-46d8-9c03-e507a13ba9f2",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "CameraY",
+                    "type": "Value",
+                    "id": "81d79536-9888-4e39-8ad4-1eeeed36626a",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "c5be99dd-2564-496b-85b5-c0abb4a2301e",
+                    "path": "<Gamepad>/rightStick/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraX",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1cb4f031-1928-43c8-82c2-6697090dec22",
+                    "path": "<Gamepad>/rightStick/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraY",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "MouseCamera_Actions",
+            "id": "336a45c9-467f-46c3-936e-01e257e02aad",
+            "actions": [
+                {
+                    "name": "CameraX",
+                    "type": "Value",
+                    "id": "61f96116-515a-4b6a-92d0-a786689a8a02",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "CameraY",
+                    "type": "Value",
+                    "id": "065dc477-46a8-4576-99b7-e98a42e851ff",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3bad426d-b57c-4886-b073-898a69187fc3",
+                    "path": "<Mouse>/delta/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraX",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "70408e50-9ec3-4857-9c6e-fa62ee1d8d7f",
+                    "path": "<Mouse>/delta/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraY",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

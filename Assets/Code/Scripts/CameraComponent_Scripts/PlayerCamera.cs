@@ -33,14 +33,10 @@ public class PlayerCamera : MonoBehaviour
 
     private void RotateCamera()
     {
-        float deltaX = m_Actions.CameraMovement.Direction_X.ReadValue<float>();
-        float deltaY = m_Actions.CameraMovement.Direction_Y.ReadValue<float>();
-        
-        m_Direction.x = deltaY;
-        m_Direction.y = deltaX;
+        Vector2 delta = InputManager.GetCameraDelta();
 
-        m_Direction.x = Mathf.Lerp(m_Direction.x, deltaY, SensitivityManager.SensitivityValue().x * Time.deltaTime);
-        m_Direction.y = Mathf.Lerp(m_Direction.y, deltaX, SensitivityManager.SensitivityValue().y * Time.deltaTime);
+        m_Direction.x = Mathf.Lerp(0f, delta.y, SensitivityManager.GetSensitivityValue().x * 1/m_Settings.SmootTime * Time.deltaTime);
+        m_Direction.y = Mathf.Lerp(0f, delta.x, SensitivityManager.GetSensitivityValue().y * 1/m_Settings.SmootTime * Time.deltaTime);
 
         //Update Rotation
         Quaternion rotation = Quaternion.Euler(-m_Direction.x, m_Direction.y, 0);
@@ -67,19 +63,10 @@ public class PlayerCamera : MonoBehaviour
         m_Camera.transform.rotation = Quaternion.Euler(newRotation);
     }
 
-    private void ResumeRotation()
-    {
-        m_Actions.Enable();
-    }
-
     private void StopRotation()
     {
-        m_Actions.Disable();
-
-        if(m_Paused)
-            ResumeRotation();
-
         m_Paused = !m_Paused;
+        InputManager.EnabledCameraInput(!m_Paused);
     }
 
     private void OnEnable()
