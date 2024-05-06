@@ -62,12 +62,9 @@ public class PlayerCamera : MonoBehaviour
         }
 
         newRotation.z = 0;
-        //Debug.Log(newRotation);
+        
         //Apply Clamped Rotation
         m_Camera.transform.rotation = Quaternion.Euler(newRotation);
-        //Rotate Parent
-        Quaternion parentRotation = Quaternion.Euler(0f, m_Direction.y, 0f);
-        //transform.parent.rotation *= parentRotation;
     }
 
     private void ResumeRotation()
