@@ -577,6 +577,126 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: WalkMaxSpeed
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: maxDotProduct
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationCurve.m_Curve.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationCurve.m_Curve.Array.data[1].time
+      value: 0.7775304
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationCurve.m_Curve.Array.data[2].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationCurve.m_Curve.Array.data[1].value
+      value: 0.4511276
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationCurve.m_Curve.Array.data[2].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationCurve.m_Curve.Array.data[0].inSlope
+      value: 0.58020574
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationCurve.m_Curve.Array.data[1].inSlope
+      value: 1.5236924
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationCurve.m_Curve.Array.data[2].inSlope
+      value: 2.467179
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: DecelerationCurve.m_Curve.Array.data[0].inSlope
+      value: -0.17957911
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: DecelerationCurve.m_Curve.Array.data[1].inSlope
+      value: -3.2734118
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationCurve.m_Curve.Array.data[0].outSlope
+      value: 0.58020574
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationCurve.m_Curve.Array.data[1].inWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationCurve.m_Curve.Array.data[1].outSlope
+      value: 1.5236924
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationCurve.m_Curve.Array.data[2].inWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationCurve.m_Curve.Array.data[2].outSlope
+      value: 2.467179
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: DecelerationCurve.m_Curve.Array.data[0].outSlope
+      value: -0.17957911
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: DecelerationCurve.m_Curve.Array.data[1].inWeight
+      value: 0.025217474
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: DecelerationCurve.m_Curve.Array.data[1].outSlope
+      value: -3.2734118
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationCurve.m_Curve.Array.data[0].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationCurve.m_Curve.Array.data[1].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: DecelerationCurve.m_Curve.Array.data[0].outWeight
+      value: 0.38086954
+      objectReference: {fileID: 0}
+    - target: {fileID: 2234447335697597734, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AccelerationCurve.m_Curve.Array.data[2].tangentMode
+      value: 34
+      objectReference: {fileID: 0}
     - target: {fileID: 3532421206966400684, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
       propertyPath: m_Name
@@ -1470,11 +1590,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bottle_Prefab_9
       objectReference: {fileID: 0}
-    - target: {fileID: 839753268234146724, guid: 8cf946ccb5cb4274f9e663af898ba570,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1825,7 +1940,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1913688072}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.49, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1940,6 +2055,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Settings: {fileID: 11400000, guid: 2d9bb7d7acbab0c42a4eac0ffe1844f5, type: 2}
+  m_FollowTransform: {fileID: 929220711}
+  m_CameraOffset: {x: 0, y: 0.5, z: 0}
 --- !u!1001 &1991998862
 PrefabInstance:
   m_ObjectHideFlags: 0

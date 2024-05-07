@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class PlayerCamera : MonoBehaviour
 {
     [SerializeField] private PlayerCamera_Settings m_Settings;
+
     private CameraActions m_Actions;
     private Camera m_Camera;
 
@@ -39,12 +40,12 @@ public class PlayerCamera : MonoBehaviour
         m_Direction.y = Mathf.Lerp(0f, delta.x, SensitivityManager.GetSensitivityValue().y * 1/m_Settings.SmootTime * Time.deltaTime);
 
         //Update Rotation
-        Quaternion rotation = Quaternion.Euler(-m_Direction.x, m_Direction.y, 0);
-        transform.rotation *= rotation;
+        Quaternion cameraRotation = Quaternion.Euler(-m_Direction.x, 0, 0);
+        transform.rotation *= cameraRotation;
+        
         //Clamp Rotation
         Vector3 newRotation = transform.rotation.eulerAngles;
-
-        if(newRotation.x < 360 - m_Settings.MaxAngleX && newRotation.x > 180)
+        if (newRotation.x < 360 - m_Settings.MaxAngleX && newRotation.x > 180)
         {
             newRotation.x = 360 - m_Settings.MaxAngleX;
             m_Direction.x = 0f;
@@ -56,11 +57,16 @@ public class PlayerCamera : MonoBehaviour
             m_Direction.x = 0f;
             m_Speed.x = 0f;
         }
-
+        
         newRotation.z = 0;
         
         //Apply Clamped Rotation
         m_Camera.transform.rotation = Quaternion.Euler(newRotation);
+        //Rotate Parent
+        Quaternion parentRotation = Quaternion.Euler(0, m_Direction.y, 0);
+        transform.parent.rotation *= parentRotation;
+        Debug.Log(newRotation);
+
     }
 
     private void StopRotation()
