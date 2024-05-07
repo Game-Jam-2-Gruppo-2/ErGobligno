@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.Mathematics;
 using UnityEngine;
 public class MovementController : MonoBehaviour
 {
@@ -68,13 +67,14 @@ public class MovementController : MonoBehaviour
 	[HideInInspector] public float VelocityScalar = 0;
 	[HideInInspector] public float LastSpeed;
 	[HideInInspector] public float MaxSpeed;
-	[HideInInspector] public Vector3 MoveDir, LastDirection, BoundsGroundCheck, BoundsWallCheck;
+	[HideInInspector] public Vector3 MoveDir, LastDirection, BoundsGroundCheck, BoundsWallCheck, CollisionMoveDir;
 	[HideInInspector] public bool IsAirBorne, isRunning, isClimbing;
 	[HideInInspector] public RaycastHit Hit;
 	[HideInInspector] public Collider ClimbableObject;
 	[HideInInspector] public MomentumStates Momentumstate;
 	[HideInInspector] public float LastDot;
 	[HideInInspector] public Ray GroundRay;
+	[HideInInspector] public Vector3 CollisionDir = new();
 
 
 	public void ChangeMomentum(MomentumStates newState)
@@ -133,12 +133,6 @@ public class MovementController : MonoBehaviour
 
 	void Update()
 	{
-		if (isClimbing == false && CheckLedge(transform.position + (Vector3.up * RaycastDetectionHeight), transform.forward))
-		{
-			ClimbableObject = Hit.transform.GetComponent<Collider>();
-			ChangeState(new ClimbState());
-		}
-
 		CurrentState.Tick(this);
 	}
 
@@ -147,6 +141,12 @@ public class MovementController : MonoBehaviour
 	//public bool CheckGround => Physics.BoxCast(transform.position, BoundsGroundCheck, -transform.up, quaternion.identity, GroundCheckLenght, GroundLayer);
 	private void FixedUpdate()
 	{
+		if (isClimbing == false && CheckLedge(transform.position + (Vector3.up * RaycastDetectionHeight), transform.forward))
+		{
+			ClimbableObject = Hit.transform.GetComponent<Collider>();
+			ChangeState(new ClimbState());
+		}
+
 		CurrentState.FixedTick(this);
 	}
 
@@ -168,25 +168,40 @@ public class MovementController : MonoBehaviour
 	{
 		if (IsAirBorne)
 			return;
+
 		if (CheckGround == false)
 			ChangeState(new FallingState());
 	}
 
 	private void OnCollisionEnter(Collision other)
 	{
-		Vector3 dir = (other.transform.position - transform.position).normalized;
-
-		// if the direction that i'm moving in is the 
-		if (IsAirBorne && Vector3.Dot(Rb.velocity, dir) < -0.7)
-			CurrentState.Exit(this, new IdleState());
-
-		// if the direction that i'm moving in is the same as the direction twoards the collided object then stop moving
-		if (MoveDir != Vector3.zero && Vector3.Dot(MoveDir, dir) > 0.7f)
+		if (other.contacts[0].normal.x != 0 || other.contacts[0].normal.z != 0)
 		{
-			Vector3 stopVector = new(0, Rb.velocity.y, 0);
-			Rb.velocity = stopVector;
+			CollisionMoveDir = MoveDir;
+			CollisionDir = other.contacts[0].normal;
+			Debug.DrawRay(other.contacts[0].point, CollisionDir * 10, Color.yellow, 999);
+		}
+		else
+			Debug.DrawRay(other.contacts[0].point, CollisionDir * 10, Color.red, 999);
+
+		// if the direction that i'm moving in is the opposite form the object
+		if (IsAirBorne && CollisionDir.y > 0)
+		{
+			CurrentState.Exit(this, new IdleState());
+			Debug.Log("Stop Falling");
 		}
 	}
+
+	// private void OnCollisionStay(Collision other)
+	// {
+	// 	if (other.contacts[0].normal != CollisionDir)
+	// 	{
+	// 		CollisionMoveDir = MoveDir;
+	// 		CollisionDir = other.contacts[0].normal;
+	// 		CollisionDir.y = 0;
+	// 		Debug.Log("ColDir= " + CollisionDir.normalized + "\n" + (MoveDir.normalized + CollisionDir.normalized));
+	// 	}
+	// }
 
 #if UNITY_EDITOR
 	private void OnDrawGizmos()
