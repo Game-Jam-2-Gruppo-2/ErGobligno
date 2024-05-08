@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f2ecd186c9185341977e24eb60d6b84, type: 3}
   m_Name: Player Camera Settings
   m_EditorClassIdentifier: 
-  SmootTime: 0.25
+  SmootTime: 0.1
   MaxAngleX: 70

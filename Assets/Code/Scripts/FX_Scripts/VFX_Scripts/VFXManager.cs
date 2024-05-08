@@ -47,7 +47,7 @@ public class VFXManager : MonoBehaviour
             if(!m_VFXPool[i].gameObject.activeInHierarchy)
             {
                 //TODO: Fix this thing
-                //m_VFXPool[i] = VFX;
+                m_VFXPool[i] = VFX;
                 m_VFXPool[i].transform.position = position;
                 m_VFXPool[i].transform.rotation = rotation;
 

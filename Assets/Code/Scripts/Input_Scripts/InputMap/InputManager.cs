@@ -67,8 +67,10 @@ public static class InputManager
 
         //ReadMouse delta
         Vector2 mouseDelta;
+
         mouseDelta.x = inputActions.MouseCamera_Actions.CameraX.ReadValue<float>();
         mouseDelta.y = inputActions.MouseCamera_Actions.CameraY.ReadValue<float>();
+
         if (mouseDelta != Vector2.zero)
 		{
             UsingController = false;
@@ -77,14 +79,15 @@ public static class InputManager
 
 		//Read Controller delta
 		Vector2 controllerDelta;
+
 		controllerDelta.x = inputActions.ControllerCamera_Actions.CameraX.ReadValue<float>();
 		controllerDelta.y = inputActions.ControllerCamera_Actions.CameraY.ReadValue<float>();
+
 		if (controllerDelta != Vector2.zero)
 		{
             CameraDelta = controllerDelta;
 			UsingController = true;
         }
-
         return CameraDelta;
 	}
 
