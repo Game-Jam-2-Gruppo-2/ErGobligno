@@ -14,7 +14,7 @@ public class PlayerCamera : MonoBehaviour
 
     private bool m_Paused = false;
 
-    private void Update()
+    private void LateUpdate()
     {
         RotateCamera();
         transform.position = m_FollowTarget.position + m_CameraOffset;
@@ -24,8 +24,11 @@ public class PlayerCamera : MonoBehaviour
     {
         Vector2 delta = InputManager.GetCameraDelta();
 
-        m_Direction.x = Mathf.Lerp(0f, delta.y, SensitivityManager.GetSensitivityValue().x * 1 / m_Settings.SmootTime * Time.deltaTime);
-        m_Direction.y = Mathf.Lerp(0f, delta.x, SensitivityManager.GetSensitivityValue().y * 1 / m_Settings.SmootTime * Time.deltaTime);
+        m_Direction.x = delta.y * SensitivityManager.GetSensitivityValue().x;
+        m_Direction.y = delta.x * SensitivityManager.GetSensitivityValue().y;
+
+        //m_Direction.x = Mathf.Lerp(0f, delta.y, SensitivityManager.GetSensitivityValue().x * 1 / m_Settings.SmootTime * Time.deltaTime);
+        //m_Direction.y = Mathf.Lerp(0f, delta.x, SensitivityManager.GetSensitivityValue().y * 1 / m_Settings.SmootTime * Time.deltaTime);
 
         //Update Rotation
         Quaternion cameraRotation = Quaternion.Euler(-m_Direction.x, m_Direction.y, 0);
