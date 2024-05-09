@@ -6,6 +6,7 @@ using UnityEngine;
 public class ScoreManager_Settings : ScriptableObject
 {
     [SerializeField, Min(0f)] public float MaxNoise = 1.0f;
+    [SerializeField, Min(0f)] public List<float> DecreaseTime = new List<float> { 5f };
     [Tooltip("Amount of scores saved in player prefs")]
     [SerializeField, Min(1)] public int SavedScoreCount = 5;
 }

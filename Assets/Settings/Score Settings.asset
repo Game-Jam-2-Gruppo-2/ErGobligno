@@ -13,4 +13,8 @@ MonoBehaviour:
   m_Name: Score Settings
   m_EditorClassIdentifier: 
   MaxNoise: 3
+  DecreaseTime:
+  - 2.5
+  - 5
+  - 10
   SavedScoreCount: 5

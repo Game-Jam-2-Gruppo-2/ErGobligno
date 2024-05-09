@@ -7,25 +7,19 @@ public class UINoiseIndicator
     [SerializeField] private Image m_NoiseBar;
     [SerializeField] private Image m_FaceImage;
     [SerializeField] private NoiseScore_Settings m_Settings;
-
-    private int m_Index = 0;
-
-    public void SetNoiseBarValue(float value)
+    
+    public void UpdateIndicator(float percentage, int noiseValue)
     {
-        if (m_NoiseBar.fillAmount != value)
-        {
-            m_NoiseBar.fillAmount = value;
-            //Update color
-            if (m_Index < m_Settings.ColorList.Count)
-                m_NoiseBar.color = m_Settings.ColorList[m_Index];
-            //Update Sprite
-            if (m_Index < m_Settings.ExpressionsList.Count)
-                m_FaceImage.sprite = m_Settings.ExpressionsList[m_Index];
-        }
-    }
+        //Update noise Bar
+        if (m_NoiseBar.fillAmount != percentage)
+            m_NoiseBar.fillAmount = percentage;
+        
+        //Update color
+        if (noiseValue < m_Settings.ColorList.Count)
+            m_NoiseBar.color = m_Settings.ColorList[noiseValue];
 
-    public void SetIndexValue(int value)
-    {
-        m_Index = value;
+        //Update Sprite
+        if (noiseValue < m_Settings.ExpressionsList.Count)
+            m_FaceImage.sprite = m_Settings.ExpressionsList[noiseValue];
     }
 }

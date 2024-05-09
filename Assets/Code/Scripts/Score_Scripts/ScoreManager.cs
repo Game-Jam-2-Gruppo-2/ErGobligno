@@ -33,6 +33,7 @@ public class ScoreManager: MonoBehaviour
 
     //Coroutine
     private Coroutine TimerCoroutine;
+    private Stack<IEnumerator> DecreaseTimerStack;
 
     private void Awake()
     {
@@ -76,6 +77,7 @@ public class ScoreManager: MonoBehaviour
 
         MaxNoise = m_Settings.MaxNoise;
         TimerCoroutine = null;
+        DecreaseTimerStack = new Stack<IEnumerator>();
     }
 
     private void ResetValues()
@@ -104,6 +106,37 @@ public class ScoreManager: MonoBehaviour
         }
     }
 
+    private void DecreaseNoiseProcedure()
+    {
+        if (NoiseAmount <= 0)
+        {
+            NoiseAmount = 0;
+            return;
+        }
+
+        //Stop First Coroutine
+        if(DecreaseTimerStack.Count > 0)
+            StopCoroutine(DecreaseTimerStack.Peek());
+        //Add a elemt inside the Stack
+        DecreaseTimerStack.Push(DecreaseNoise(m_Settings.DecreaseTime[(int)NoiseAmount - 1]));
+        //Start Stack coroutine
+        StartCoroutine(DecreaseTimerStack.Peek());
+    }
+
+    private IEnumerator DecreaseNoise(float time)
+    {
+        //Wait and decrease
+        yield return new WaitForSeconds(time);
+        NoiseAmount -= 1;
+        OnNoiseChanged?.Invoke();
+        
+        //Remove Current Coroutine
+        DecreaseTimerStack.Pop();
+
+        //Start Following element of Stack
+        DecreaseNoiseProcedure();
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -111,7 +144,9 @@ public class ScoreManager: MonoBehaviour
     private void IncreaseNoiseAmount(float amount)
     {
         NoiseAmount += amount;
+        NoiseAmount = Mathf.Clamp(NoiseAmount, 0, MaxNoise);
         OnNoiseChanged?.Invoke();
+        DecreaseNoiseProcedure();
     }
 
     private void IncreaseCoinAmount(int amount)

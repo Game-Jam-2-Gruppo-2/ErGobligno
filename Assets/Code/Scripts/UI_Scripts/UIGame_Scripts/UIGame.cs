@@ -12,8 +12,7 @@ public class UIGame : MonoBehaviour
 
     private void UpdateNoise()
     {
-        NoiseIndicator.SetNoiseBarValue(ScoreManager.GetNoiseValue()/ScoreManager.GetMaxNoiseValue());
-        NoiseIndicator.SetIndexValue((int)ScoreManager.GetNoiseValue());
+        NoiseIndicator.UpdateIndicator(ScoreManager.GetNoiseValue()/ScoreManager.GetMaxNoiseValue(), (int)ScoreManager.GetNoiseValue());
     }
 
     private void UpdateCoin()
