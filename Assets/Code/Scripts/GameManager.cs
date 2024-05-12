@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -69,7 +70,7 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	private void PauseGame()
+	private void PauseGame(UnityEngine.InputSystem.InputAction.CallbackContext context)
 	{
 		if (CurrentState == GameState.Menu)
 			return;
@@ -99,13 +100,13 @@ public class GameManager : MonoBehaviour
 
 	private void OnEnable()
 	{
-		InputManager.OnPauseGame += PauseGame;
+		InputManager.inputActions.UI.Pause.performed += PauseGame;
 		ScoreManager.OnNoiseChanged += CheckNoise;
 	}
 
 	private void OnDisable()
 	{
-		InputManager.OnPauseGame -= PauseGame;
+		InputManager.inputActions.UI.Pause.performed -= PauseGame;
 		ScoreManager.OnNoiseChanged -= CheckNoise;
 		OnNewGame -= OnNewGame;
 		OnGamePause -= OnGamePause;
