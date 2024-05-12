@@ -21,8 +21,8 @@ public class CinemachinePOVExtention : CinemachineExtension
             if(stage == CinemachineCore.Stage.Aim)
             {
                 Vector2 deltaInput = InputManager.GetCameraDelta();
-                m_StartingRotation.x += deltaInput.x * SensitivityManager.GetSensitivityValue().x * Time.deltaTime;
-                m_StartingRotation.y += deltaInput.y * SensitivityManager.GetSensitivityValue().y * Time.deltaTime;
+                m_StartingRotation.x += deltaInput.y * SensitivityManager.GetSensitivityValue().x * Time.deltaTime;
+                m_StartingRotation.y += deltaInput.x * SensitivityManager.GetSensitivityValue().y * Time.deltaTime;
                 m_StartingRotation.y = Mathf.Clamp(m_StartingRotation.y, -m_ClampAngle, m_ClampAngle);
                 state.RawOrientation = Quaternion.Euler(m_StartingRotation.y, m_StartingRotation.x, 0f);
                 m_Target.rotation = Quaternion.Euler(0f, m_StartingRotation.x, 0f);
