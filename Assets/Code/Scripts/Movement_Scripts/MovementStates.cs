@@ -19,8 +19,9 @@ public class MovingState : MovementStates
 	float speed;
 	float minSpeed, maxSpeed;
 	float timer = 0, lastTimer = 0;
+	float timerIdle = 0, lastInputDuration;
 	float duration;
-	Vector3 vel, lastVel;
+	Vector3 vel, lastDir;
 	bool HasToFinish;
 
 	public enum MomentumType
@@ -86,17 +87,19 @@ public class MovingState : MovementStates
 	{
 		Debug.Log("i entered movingstate");
 		Controller = controller;
+		lastInputDuration = controller.IdleInputTime;
 		IdleDecelerationSettings();
 	}
 
 	public override void FixedTick()
 	{
-		if (timer < duration)
+		if (TimerUpdate(ref timerIdle, lastInputDuration))
 		{
-			timer += Time.fixedDeltaTime;
-			lastTimer = timer;
+			timerIdle = 0;
+			lastDir = GetMoveDir;
 		}
-		else
+
+		if (TimerUpdate(ref timer, duration, ref lastTimer))
 		{
 			timer = duration;
 			lastTimer = timer;
@@ -107,6 +110,7 @@ public class MovingState : MovementStates
 		{
 			GetMoveDir = GetInputDir;
 		}
+
 		GetLastDot = Vector3.Dot(GetInputDir, GetMoveDir);
 
 		speed = GetSpeed;
@@ -125,6 +129,7 @@ public class MovingState : MovementStates
 		}
 		Controller.Rb.velocity = vel;
 	}
+
 
 	public override void Tick()
 	{
@@ -155,6 +160,40 @@ public class MovingState : MovementStates
 	}
 
 	/// <summary>
+	/// returns true if the timer is higher or equalt then duration
+	/// </summary>
+	bool TimerUpdate(ref float timer, float duration)
+	{
+		if (timer < duration)
+		{
+			timer += Time.deltaTime;
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	/// <summary>
+	/// returns true if the timer is higher or equalt then duration
+	/// <para>
+	///	also saves the last timer value 
+	/// </para>
+	/// </summary>
+	bool TimerUpdate(ref float timer, float duration, ref float lastTimer)
+	{
+		if (timer < duration)
+		{
+			timer += Time.deltaTime;
+			lastTimer = timer;
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	/// <summary>
 	/// checks if you have to accelerate or decelerate
 	/// and then it applaies the correct settings
 	/// </summary>
@@ -171,6 +210,7 @@ public class MovingState : MovementStates
 		else if (GetInputDir == Vector3.zero)
 		{
 			//idle 
+			lastDir = GetMoveDir;
 			Debug.Log("Idle");
 			currentMomentum = MomentumType.Idle;
 			IdleDecelerationSettings();
@@ -207,9 +247,7 @@ public class MovingState : MovementStates
 
 	void IdleDecelerationSettings()
 	{
-		Vector3 mDir = GetMoveDir;
-
-		Debug.LogWarning("Normal= " + Normal + "\nmDir= " + mDir);
+		Vector3 mDir = lastDir;
 		if (Normal != Vector3.zero)
 		{
 			if (Normal.z != 0 && Mathf.Abs(Normal.z - GetMoveDir.z) > Mathf.Abs(Normal.z))
@@ -220,12 +258,12 @@ public class MovingState : MovementStates
 			{
 				mDir.x = 0;
 			}
-			GetMoveDir = mDir;
 			Normal = Vector3.zero;
 		}
 
+		GetMoveDir = mDir;
+
 		Debug.LogError("move dir= " + GetMoveDir);
-		timer = 0;
 		usedCurve = Controller.DecelerationCurve;
 		duration = Controller.DecelerationTime;
 		minSpeed = 0;
@@ -233,6 +271,10 @@ public class MovingState : MovementStates
 		if (currentMomentum == lastMomentum)
 		{
 			timer = lastTimer;
+		}
+		else
+		{
+			timer = 0;
 		}
 	}
 	/// <summary>
@@ -253,6 +295,10 @@ public class MovingState : MovementStates
 	{
 		RunDecelerationSettings();
 		minSpeed = GetLastSpeed / Controller.ChangeDirSpeedDivident;
+		if (minSpeed < Controller.MinSpeed)
+		{
+			minSpeed = Controller.MinSpeed;
+		}
 	}
 
 	void AirborneAccelerationSettings()
@@ -266,7 +312,11 @@ public class MovingState : MovementStates
 		timer = 0;
 		usedCurve = Controller.AccelerationCurve;
 		duration = Controller.AccelerationTime;
+
 		minSpeed = GetLastSpeed;
+		if (minSpeed < Controller.MinSpeed)
+			minSpeed = Controller.MinSpeed;
+
 		maxSpeed = GetMaxSpeed;
 		//Debug.Log("last speed= " + GetLastSpeed + "\nMaxSpeed = " + GetMaxSpeed);
 	}
@@ -394,8 +444,8 @@ public class ClimbState : MovementStates
 
 		startpos = Controller.transform.position;
 		endPos = startpos;
-		endPos.y = Controller.ClimbableObject.bounds.max.y + Controller.MyCollider.bounds.extents.y + Controller.ClimbOffset; // + controller.ClimbOffset
-		endPos.z = Controller.ClimbableObject.transform.position.z;
+		endPos.y = Controller.ClimbableObject.bounds.max.y + Controller.MyCollider.bounds.extents.y + Controller.ClimbOffsetY; // + controller.ClimbOffset
+		endPos.z = controller.transform.position.z + Controller.ClimbOffsetZ;
 
 		Controller.Rb.velocity = Vector3.zero;
 	}

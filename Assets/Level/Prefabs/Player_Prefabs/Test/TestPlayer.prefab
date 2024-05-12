@@ -43,8 +43,8 @@ GameObject:
   - component: {fileID: 8150140563545553127}
   - component: {fileID: 1637768627203328695}
   - component: {fileID: 676803681816234455}
-  - component: {fileID: 2234447335697597734}
   - component: {fileID: 5455788610137237893}
+  - component: {fileID: 523868490282131359}
   m_Layer: 0
   m_Name: TestPlayer
   m_TagString: Untagged
@@ -140,100 +140,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2234447335697597734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4142155317967305753}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5af619e7badb8374b80d4d373197f61a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Rb: {fileID: 5455788610137237893}
-  MyCollider: {fileID: 676803681816234455}
-  ClimableLayers:
-    serializedVersion: 2
-    m_Bits: 128
-  RaycastDetectionHeight: 0.5
-  RaycastDetectionLenght: 1
-  ClimbDuration: 2
-  ClimbOffset: 1
-  JumpForce: 10
-  GroundLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  GroundCheckLenght: 0.6
-  WallCheckLenght: 0
-  CooldownAfterEnd: 0.3
-  WalkMaxSpeed: 500
-  RunMaxSpeed: 700
-  ChangeDirSpeedDivident: 2
-  maxDotProduct: 0.1
-  AccelerationCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  AccelerationTime: 1
-  DecelerationCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: -1.8203056
-      outSlope: -1.8203056
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.061720725
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  DecelerationTime: 0.3
-  VelocityScalar: 0
-  LastSpeed: 0
-  MaxSpeed: 1000
-  MoveDir: {x: 0, y: 0, z: 0}
-  LastDirection: {x: 0, y: 0, z: 0}
-  BoundsGroundCheck: {x: 0, y: 0, z: 0}
-  BoundsWallCheck: {x: 0, y: 0, z: 0}
-  IsAirBorne: 0
-  isRunning: 0
-  isClimbing: 0
-  ClimbableObject: {fileID: 0}
-  LastDot: 0
 --- !u!54 &5455788610137237893
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -261,6 +167,110 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &523868490282131359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4142155317967305753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ffeb89815d402e40af51c49fabde9a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Rb: {fileID: 0}
+  MyCollider: {fileID: 0}
+  ClimableLayers:
+    serializedVersion: 2
+    m_Bits: 128
+  RaycastDetectionHeight: 0.5
+  RaycastDetectionLenght: 0.6
+  ClimbDuration: 0.5
+  CooldownAfterEnd: 0.2
+  ClimbOffsetY: 0
+  ClimbOffsetZ: 0
+  JumpForce: 10
+  LayerPlayer:
+    serializedVersion: 2
+    m_Bits: 64
+  GroundCheckLenght: 0.55
+  WalkMaxSpeed: 500
+  RunMaxSpeed: 700
+  ChangeDirSpeedDivident: 3
+  AirborneSpeed: 300
+  maxDotProduct: 0.7
+  AccelerationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  AccelerationTime: 0.8
+  AccelerationAirborneTime: 1
+  DecelerationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.11167526
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  DecelerationTime: 0.4
+  MaxSpeed: 0
+  LastDot: 0
+  LastSpeed: 0
+  MoveDir: {x: 0, y: 0, z: 0}
+  CollisionNormal: {x: 0, y: 0, z: 0}
+  CollisionDir: {x: 0, y: 0, z: 0}
+  ClimbableObject: {fileID: 0}
+  IsAirborne: 0
+  isPaused: 0
+  isRunning: 0
+  isClimbing: 0
 --- !u!1 &4410807568379065654
 GameObject:
   m_ObjectHideFlags: 0

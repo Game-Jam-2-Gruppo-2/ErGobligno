@@ -18,7 +18,7 @@ public class MovementController : MonoBehaviour
 	[SerializeField] public float CooldownAfterEnd;
 	///<summary>the offset in y after you climed</summary>
 	[Tooltip("the offset in y after you climed")]
-	[SerializeField] public float ClimbOffset;
+	[SerializeField] public float ClimbOffsetY, ClimbOffsetZ;
 	//|------------------------------------------------------------------------------------------|
 	[Header("Jump Settings:")]
 	[SerializeField] public float JumpForce;
@@ -30,6 +30,7 @@ public class MovementController : MonoBehaviour
 	[Header("Speed Settings: ")]//|------------------------------------------------------------------------------------------|
 	[SerializeField] public float WalkMaxSpeed;
 	[SerializeField] public float RunMaxSpeed;
+	[SerializeField] public float MinSpeed;
 	[SerializeField] public float ChangeDirSpeedDivident;
 	[SerializeField] public float AirborneSpeed;
 
@@ -51,6 +52,8 @@ public class MovementController : MonoBehaviour
 
 	[Tooltip("how long you take to decelerate")]
 	[SerializeField] public float DecelerationTime;
+	[Tooltip("time that it takes to save the last given input")]
+	[SerializeField] public float IdleInputTime;
 	//|------------------------------------------------------------------------------------------|
 	[HideInInspector] public MovementStates CurrentState;
 	[HideInInspector] public float MaxSpeed, LastDot, LastSpeed;
