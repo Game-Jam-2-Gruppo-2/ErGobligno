@@ -35,7 +35,9 @@ public class GameManager : MonoBehaviour
 		DontDestroyOnLoad(this.gameObject);
 
 		InputManager.Initialize();
-	}
+        InputManager.inputActions.Movement.Pause.performed += PauseGame;
+        InputManager.inputActions.UI.Pause.performed += PauseGame;
+    }
 
 	private void Start()
 	{
@@ -100,14 +102,14 @@ public class GameManager : MonoBehaviour
 
 	private void OnEnable()
 	{
-		InputManager.inputActions.UI.Pause.performed += PauseGame;
 		ScoreManager.OnNoiseChanged += CheckNoise;
 	}
 
 	private void OnDisable()
 	{
 		InputManager.inputActions.UI.Pause.performed -= PauseGame;
-		ScoreManager.OnNoiseChanged -= CheckNoise;
+        InputManager.inputActions.Movement.Pause.performed -= PauseGame;
+        ScoreManager.OnNoiseChanged -= CheckNoise;
 		OnNewGame -= OnNewGame;
 		OnGamePause -= OnGamePause;
 		OnGameEnd -= OnGameEnd;
