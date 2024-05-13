@@ -85,7 +85,6 @@ public class MovingState : MovementStates
 	#endregion
 	public override void Enter(MovementController controller)
 	{
-		Debug.Log("i entered movingstate");
 		Controller = controller;
 		lastInputDuration = controller.IdleInputTime;
 		IdleDecelerationSettings();
@@ -125,7 +124,6 @@ public class MovingState : MovementStates
 				vel.z = 0;
 			else if (Normal.x != 0 && Mathf.Abs(Normal.x - vel.x) > Mathf.Abs(Normal.x))
 				vel.x = 0;
-			Debug.LogWarning("Vel= " + vel);
 		}
 		Controller.Rb.velocity = vel;
 	}
@@ -204,14 +202,12 @@ public class MovingState : MovementStates
 		{
 			// airborn 
 			currentMomentum = MomentumType.Airborne;
-			Debug.Log("airborne");
 			AirborneAccelerationSettings();
 		}
 		else if (GetInputDir == Vector3.zero)
 		{
 			//idle 
 			lastDir = GetMoveDir;
-			Debug.Log("Idle");
 			currentMomentum = MomentumType.Idle;
 			IdleDecelerationSettings();
 			return;
@@ -219,14 +215,12 @@ public class MovingState : MovementStates
 		else if (GetLastSpeed > GetMaxSpeed)
 		{
 			// from run to walk 
-			Debug.Log("Run to walk");
 			currentMomentum = MomentumType.RunToWalk;
 			RunDecelerationSettings();
 		}
 		else if (GetLastDot < GetMaxDot && speed != 0)
 		{
-			// from 1 dir to another 
-			Debug.Log("turning decel");
+			// from 1 dir to another
 			currentMomentum = MomentumType.Turn;
 			HasToFinish = true;
 			TurnDecelerationSettings();
@@ -234,7 +228,6 @@ public class MovingState : MovementStates
 		else if (HasToFinish == false)
 		{
 			// acceleration
-			Debug.Log("Acceleration");
 			currentMomentum = MomentumType.Accelleration;
 			AccelerationSettings();
 		}
@@ -263,7 +256,6 @@ public class MovingState : MovementStates
 
 		GetMoveDir = mDir;
 
-		Debug.LogError("move dir= " + GetMoveDir);
 		usedCurve = Controller.DecelerationCurve;
 		duration = Controller.DecelerationTime;
 		minSpeed = 0;
