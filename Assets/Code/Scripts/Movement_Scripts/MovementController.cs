@@ -100,6 +100,13 @@ public class MovementController : MonoBehaviour
 		CurrentState.Tick();
 	}
 
+	private void OnTriggerEnter(Collider other)
+	{
+		if (other.transform.TryGetComponent(out ICollectible collectable))
+		{
+			collectable.Collect();
+		}
+	}
 	private void OnCollisionEnter(Collision other)
 	{
 		CurrentState.Collision(other);
