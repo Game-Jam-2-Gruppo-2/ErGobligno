@@ -16,7 +16,7 @@ public class AudioManager : MonoBehaviour
     [Header("SFX Manager Settings")]
     [SerializeField] private SFXManager_Settings m_SFX_Settings;
     //SFX Events
-    public static Action<AudioClip, Vector3> Request3DSFX = (AudioClip clip, Vector3 pos) => { };
+    public static Action<AudioClip, Vector3, float> Request3DSFX = (AudioClip clip, Vector3 pos, float pitch) => { };
     public static Action<AudioClip, Vector3> Request2DSFX = (AudioClip clip, Vector3 pos) => { };
     //SFX Lists
     private List<SFXEffect> Sources_3D = new List<SFXEffect>();
@@ -39,6 +39,7 @@ public class AudioManager : MonoBehaviour
         Request3DSFX += Request3D_SFX;
         Request2DSFX += Request2D_SFX;
     }
+
     #region Audio Manager
     private void SetUpAudio()
     {
@@ -105,7 +106,7 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     /// <param name="clip"></param>
     /// <param name="position"></param>
-    public void Request3D_SFX(AudioClip clip, Vector3 position)
+    public void Request3D_SFX(AudioClip clip, Vector3 position, float pitch)
     {
         if (clip == null)
             return;
@@ -115,6 +116,7 @@ public class AudioManager : MonoBehaviour
             if (!Sources_3D[i].gameObject.activeInHierarchy)
             {
                 Sources_3D[i].gameObject.SetActive(true);
+                Sources_3D[i].SetPitch(pitch);
                 Sources_3D[i].PlaySound(position, clip);
                 return;
             }
