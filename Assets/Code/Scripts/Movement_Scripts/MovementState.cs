@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class MovementStates : State
+public class MovementState : State
 {
 	[Header("settings:")]
 
@@ -38,15 +38,14 @@ public class MovementStates : State
 	float timer = 0, lastTimer = 0;
 	float duration;
 	Vector3 vel, lastDir, MoveDir;
-	private void Awake()
+	protected override void Awake()
 	{
 		base.Awake();
 	}
 
 	private void OnEnable()
 	{
-		if (InputManager.inputActions == null)
-			InputManager.Initialize();
+
 		InputManager.inputActions.Movement.Jump.performed += Jump;
 	}
 

@@ -6,7 +6,7 @@ public class JumpState : State
 {
 	[Header("Jump Settings:")]
 	[SerializeField] public float JumpForce;
-	private void Awake()
+	protected override void Awake()
 	{
 		base.Awake();
 	}

@@ -9,6 +9,11 @@ public static class InputManager
 	private static Vector2 CameraDelta;
 	public static Vector3 MovementDir => inputActions.Movement.Walk.ReadValue<Vector3>();
 
+	static InputManager()
+    {
+		Initialize();
+	}
+
 	public static void Initialize()
 	{
 		inputActions = new();

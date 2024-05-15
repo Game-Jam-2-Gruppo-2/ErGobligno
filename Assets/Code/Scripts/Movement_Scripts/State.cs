@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class State : MonoBehaviour
 {
-	[HideInInspector] public Rigidbody Rb;
-	[HideInInspector] public Collider MyCollider;
-	[HideInInspector] public MovementController controller;
+	[HideInInspector] protected Rigidbody Rb;
+	[HideInInspector] protected Collider MyCollider;
+	[HideInInspector] protected MovementController controller;
 
-	protected void Awake()
+	protected virtual void Awake()
 	{
-		this.Rb = GetComponent<Rigidbody>();
-		this.MyCollider = GetComponent<Collider>();
-		this.controller = GetComponent<MovementController>();
+		Rb = GetComponent<Rigidbody>();
+		MyCollider = GetComponent<Collider>();
+		controller = GetComponent<MovementController>();
 	}
 
 }

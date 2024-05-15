@@ -21,14 +21,14 @@ public class MovementController : MonoBehaviour
 
 	ClimbState climbState;
 	JumpState jumpState;
-	MovementStates movementState;
+	MovementState movementState;
 	IdleState idleState;
 
 	State CurrentState;
 	private void Awake()
 	{
 		idleState = GetComponent<IdleState>();
-		movementState = GetComponent<MovementStates>();
+		movementState = GetComponent<MovementState>();
 		jumpState = GetComponent<JumpState>();
 		climbState = GetComponent<ClimbState>();
 		ChangeState(States.IDLE);

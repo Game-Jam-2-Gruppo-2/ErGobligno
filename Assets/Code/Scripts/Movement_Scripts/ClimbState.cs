@@ -18,7 +18,7 @@ public class ClimbState : State
 	Vector3 lerpedPos;
 	float timer;
 	Collider HitCollider;
-	private void Awake()
+	protected override void Awake()
 	{
 		base.Awake();
 	}

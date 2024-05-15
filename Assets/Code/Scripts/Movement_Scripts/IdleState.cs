@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class IdleState : State
 {
-	private void Awake()
+	protected override void Awake()
 	{
 		base.Awake();
 	}
@@ -13,11 +13,14 @@ public class IdleState : State
 
 	private void OnEnable()
 	{
-		if (InputManager.inputActions == null)
-			InputManager.Initialize();
 		InputManager.inputActions.Movement.Walk.performed += MoveExit;
 		InputManager.inputActions.Movement.Jump.performed += JumpExit;
 		Rb.velocity = Vector3.zero;
+	}
+	private void OnDisable()
+	{
+		InputManager.inputActions.Movement.Walk.performed -= MoveExit;
+		InputManager.inputActions.Movement.Jump.performed -= JumpExit;
 	}
 
 	private void JumpExit(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -30,10 +33,5 @@ public class IdleState : State
 		controller.ChangeState(States.MOVE);
 	}
 
-	private void OnDisable()
-	{
-		InputManager.inputActions.Movement.Walk.performed -= MoveExit;
-		InputManager.inputActions.Movement.Jump.performed -= JumpExit;
-	}
 
 }

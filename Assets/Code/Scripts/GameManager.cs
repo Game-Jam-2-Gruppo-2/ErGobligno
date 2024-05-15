@@ -34,8 +34,8 @@ public class GameManager : MonoBehaviour
 
 		DontDestroyOnLoad(this.gameObject);
 
-		if (InputManager.inputActions == null)
-			InputManager.Initialize();
+		//if (InputManager.inputActions == null)
+		//	InputManager.Initialize();
 		InputManager.inputActions.Movement.Pause.performed += PauseGame;
 		InputManager.inputActions.UI.Pause.performed += PauseGame;
 	}
