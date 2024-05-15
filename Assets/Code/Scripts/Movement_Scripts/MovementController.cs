@@ -61,6 +61,7 @@ public class MovementController : MonoBehaviour
 	[HideInInspector] public Collider ClimbableObject;
 	[HideInInspector] public RaycastHit Hit;
 	[HideInInspector] public bool IsAirborne, isPaused, isRunning, isClimbing;
+	public static Action climb;
 	bool CheckLedge(Vector3 pos, Vector3 dir) => Physics.Raycast(pos, dir, out Hit, RaycastDetectionLenght, ClimableLayers);
 	private void Awake()
 	{

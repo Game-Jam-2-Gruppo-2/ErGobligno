@@ -3,479 +3,343 @@ using UnityEngine;
 
 public abstract class MovementStates
 {
-	public abstract MovementController Controller { get; set; }
-	public abstract void Enter(MovementController controller);
-	public abstract void Tick();
-	public abstract void FixedTick();
-	public abstract void Exit();
-	public abstract void Collision(Collision other);
-	public abstract void CollisionExit(Collision other);
+    public abstract MovementController Controller { get; set; }
+    public abstract void Enter(MovementController controller);
+    public abstract void Tick();
+    public abstract void FixedTick();
+    public abstract void Exit();
+    public abstract void Collision(Collision other);
+    public abstract void CollisionExit(Collision other);
 }
 
-public class MovingState : MovementStates
+public class MoveState : MovementStates
 {
-	public override MovementController Controller { get; set; }
-	AnimationCurve usedCurve;
-	float speed;
-	float minSpeed, maxSpeed;
-	float timer = 0, lastTimer = 0;
-	float timerIdle = 0, lastInputDuration;
-	float duration;
-	Vector3 vel, lastDir;
-	bool HasToFinish;
+    public override MovementController Controller { get; set; }
+    protected AnimationCurve usedCurve;
+    protected float speed;
+    protected float minSpeed, maxSpeed;
+    protected float timer = 0, lastTimer = 0;
+    protected float timerIdle = 0, lastInputDuration;
+    protected float duration;
+    protected Vector3 vel, lastDir;
+    protected bool HasToFinish;
 
-	public enum MomentumType
-	{
-		Airborne = 0,
-		Idle = 1,
-		RunToWalk = 2,
-		Turn = 3,
-		Accelleration = 4
-	}
-	MomentumType currentMomentum, lastMomentum;
-
-	#region shortcuts
-	/// <summary>
-	/// usedCurve.Evaluate(timer)
-	/// </summary>
-	float CurveValue => usedCurve.Evaluate(timer);
-
-	/// <summary>
-	/// Mathf.Lerp(minSpeed, maxSpeed, CurveValue)
-	/// </summary>
-	float GetSpeed => Mathf.Lerp(minSpeed, maxSpeed, CurveValue);
-
-	/// <summary>
-	/// get => Controller.MoveDir; 
-	/// set => Controller.MoveDir = value;
-	/// </summary>
-	Vector3 GetMoveDir { get => Controller.MoveDir; set => Controller.MoveDir = value; }
-
-	/// <summary>
-	/// InputManager.MovementDir
-	/// </summary>
-	Vector3 GetInputDir => InputManager.MovementDir;
-
-	/// <summary>
-	/// Controller.LastSpeed
-	/// </summary>
-	float GetLastSpeed => Controller.LastSpeed;
-
-	/// <summary>
-	/// Controller.MaxSpeed
-	/// </summary>
-	float GetMaxSpeed => Controller.MaxSpeed;
-
-	/// <summary>
-	/// get => Controller.LastDot;
-	/// set => Controller.LastDot = value;
-	/// </summary>
-	float GetLastDot { get => Controller.LastDot; set => Controller.LastDot = value; }
-
-	/// <summary>
-	/// Controller.maxDotProduct
-	/// </summary>
-	float GetMaxDot => Controller.maxDotProduct;
-
-	/// <summary>
-	/// get => Controller.CollisionNormal; 
-	/// set => Controller.CollisionNormal = value;
-	/// </summary>
-	Vector3 Normal { get => Controller.CollisionNormal; set => Controller.CollisionNormal = value; }
-	#endregion
-	public override void Enter(MovementController controller)
-	{
-		Controller = controller;
-		lastInputDuration = controller.IdleInputTime;
-		IdleDecelerationSettings();
-	}
-
-	public override void FixedTick()
-	{
-		if (TimerUpdate(ref timerIdle, lastInputDuration))
-		{
-			timerIdle = 0;
-			lastDir = GetMoveDir;
-		}
-
-		if (TimerUpdate(ref timer, duration, ref lastTimer))
-		{
-			timer = duration;
-			lastTimer = timer;
-			HasToFinish = false;
-		}
-
-		if (currentMomentum != MomentumType.Idle)
-		{
-			GetMoveDir = GetInputDir;
-		}
-
-		GetLastDot = Vector3.Dot(GetInputDir, GetMoveDir);
-
-		speed = GetSpeed;
-		Controller.LastSpeed = speed;
-
-		vel = speed * Time.fixedDeltaTime * GetMoveDir;
-		vel = vel.x * Controller.transform.right + Controller.transform.forward * vel.z;
-		vel.y = Controller.Rb.velocity.y;
-		if (Normal != Vector3.zero)
-		{
-			if (Normal.z != 0 && Mathf.Abs(Normal.z - vel.z) > Mathf.Abs(Normal.z))
-				vel.z = 0;
-			else if (Normal.x != 0 && Mathf.Abs(Normal.x - vel.x) > Mathf.Abs(Normal.x))
-				vel.x = 0;
-		}
-		Controller.Rb.velocity = vel;
-	}
+    public MoveState(float minSpeed, float maxSpeed, float duration, bool HasToFinish, AnimationCurve usedCurve)
+    {
+        this.minSpeed = minSpeed;
+        this.maxSpeed = maxSpeed;
+        this.duration = duration;
+        this.usedCurve = usedCurve;
+        this.HasToFinish = HasToFinish;
+    }
 
 
-	public override void Tick()
-	{
-		if (HasToFinish)
-			return;
+    #region shortcuts
+    /// <summary>
+    /// usedCurve.Evaluate(timer)
+    /// </summary>
+    protected float CurveValue => usedCurve.Evaluate(timer);
+
+    /// <summary>
+    /// Mathf.Lerp(minSpeed, maxSpeed, CurveValue)
+    /// </summary>
+    protected float GetSpeed => Mathf.Lerp(minSpeed, maxSpeed, CurveValue);
+
+    /// <summary>
+    /// get => Controller.MoveDir; 
+    /// set => Controller.MoveDir = value;
+    /// </summary>
+    protected Vector3 GetMoveDir { get => Controller.MoveDir; set => Controller.MoveDir = value; }
+
+    /// <summary>
+    /// InputManager.MovementDir
+    /// </summary>
+    protected Vector3 GetInputDir => InputManager.MovementDir;
+
+    /// <summary>
+    ///  get => Controller.LastSpeed; set => Controller.LastSpeed = value;
+    /// </summary>
+    protected float GetLastSpeed { get => Controller.LastSpeed; set => Controller.LastSpeed = value; }
+
+    /// <summary>
+    /// Controller.MaxSpeed
+    /// </summary>
+    protected float GetMaxSpeed => Controller.MaxSpeed;
+
+    /// <summary>
+    /// get => Controller.LastDot;
+    /// set => Controller.LastDot = value;
+    /// </summary>
+    protected float GetLastDot { get => Controller.LastDot; set => Controller.LastDot = value; }
+
+    /// <summary>
+    /// Controller.maxDotProduct
+    /// </summary>
+    protected float GetMaxDot => Controller.maxDotProduct;
+
+    /// <summary>
+    /// get => Controller.CollisionNormal; 
+    /// set => Controller.CollisionNormal = value;
+    /// </summary>
+    protected Vector3 Normal { get => Controller.CollisionNormal; set => Controller.CollisionNormal = value; }
+    #endregion
+
+    public override void Enter(MovementController controller)
+    {
+
+    }
+
+    public override void FixedTick()
+    {
+        if (GetLastDot < GetMaxDot) //Turn check
+        {
+            Controller.ChangeState
+            (
+                new MoveState
+                (
+                    GetLastSpeed / Controller.ChangeDirSpeedDivident,
+                    GetLastSpeed,
+                    Controller.DecelerationTime,
+                    true,
+                    Controller.DecelerationCurve
+                 )
+            );
+        }
+    }
+    public override void Tick()
+    {
+        GetLastDot = Vector3.Dot(InputManager.MovementDir, GetMoveDir);
+    }
 
 
-		CheckMomentumType();
-	}
-	public override void Collision(Collision other)
-	{
-		Normal = other.contacts[0].normal;
-		Debug.DrawRay(other.contacts[0].point, Normal * 10, Color.yellow, 10f);
-		Debug.DrawRay(Controller.transform.position, Controller.Rb.velocity.normalized * 5, Color.red, 10f);
+    public override void Exit()
+    {
+        GetLastSpeed = speed;
+    }
 
-		if (Normal.y > 0)
-		{
-			Controller.IsAirborne = false;
-		}
-	}
-	public override void CollisionExit(Collision other)
-	{
-		Normal = Vector3.zero;
-	}
-	public override void Exit()
-	{
-		Controller.LastSpeed = speed;
-	}
+    public override void Collision(Collision other)
+    {
 
-	/// <summary>
-	/// returns true if the timer is higher or equalt then duration
-	/// </summary>
-	bool TimerUpdate(ref float timer, float duration)
-	{
-		if (timer < duration)
-		{
-			timer += Time.deltaTime;
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-	/// <summary>
-	/// returns true if the timer is higher or equalt then duration
-	/// <para>
-	///	also saves the last timer value 
-	/// </para>
-	/// </summary>
-	bool TimerUpdate(ref float timer, float duration, ref float lastTimer)
-	{
-		if (timer < duration)
-		{
-			timer += Time.deltaTime;
-			lastTimer = timer;
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-	/// <summary>
-	/// checks if you have to accelerate or decelerate
-	/// and then it applaies the correct settings
-	/// </summary>
-	void CheckMomentumType()
-	{
-		lastMomentum = currentMomentum;
-		if (Controller.IsAirborne)
-		{
-			// airborn 
-			currentMomentum = MomentumType.Airborne;
-			AirborneAccelerationSettings();
-		}
-		else if (GetInputDir == Vector3.zero)
-		{
-			//idle 
-			lastDir = GetMoveDir;
-			currentMomentum = MomentumType.Idle;
-			IdleDecelerationSettings();
-			return;
-		}
-		else if (GetLastSpeed > GetMaxSpeed)
-		{
-			// from run to walk 
-			currentMomentum = MomentumType.RunToWalk;
-			RunDecelerationSettings();
-		}
-		else if (GetLastDot < GetMaxDot && speed != 0)
-		{
-			// from 1 dir to another
-			currentMomentum = MomentumType.Turn;
-			HasToFinish = true;
-			TurnDecelerationSettings();
-		}
-		else if (HasToFinish == false)
-		{
-			// acceleration
-			currentMomentum = MomentumType.Accelleration;
-			AccelerationSettings();
-		}
+    }
 
-		if (lastMomentum == currentMomentum)
-		{
-			timer = lastTimer;
-		}
-	}
+    public override void CollisionExit(Collision other)
+    {
 
-	void IdleDecelerationSettings()
-	{
-		Vector3 mDir = lastDir;
-		if (Normal != Vector3.zero)
-		{
-			if (Normal.z != 0 && Mathf.Abs(Normal.z - GetMoveDir.z) > Mathf.Abs(Normal.z))
-			{
-				mDir.z = 0;
-			}
-			else if (Normal.x != 0 && Mathf.Abs(Normal.x - GetMoveDir.x) > Mathf.Abs(Normal.x))
-			{
-				mDir.x = 0;
-			}
-			Normal = Vector3.zero;
-		}
+    }
 
-		GetMoveDir = mDir;
+}
 
-		usedCurve = Controller.DecelerationCurve;
-		duration = Controller.DecelerationTime;
-		minSpeed = 0;
-		maxSpeed = GetLastSpeed;
-		if (currentMomentum == lastMomentum)
-		{
-			timer = lastTimer;
-		}
-		else
-		{
-			timer = 0;
-		}
-	}
-	/// <summary>
-	/// this settings are used when you are running and then go back to walking
-	/// </summary>
-	void RunDecelerationSettings()
-	{
-		timer = 0;
-		usedCurve = Controller.DecelerationCurve;
-		duration = Controller.DecelerationTime;
-		minSpeed = GetMaxSpeed;
-		maxSpeed = GetLastSpeed;
-	}
-	/// <summary>
-	/// this settings are used when you change direction too quiclky
-	/// </summary>
-	void TurnDecelerationSettings()
-	{
-		RunDecelerationSettings();
-		minSpeed = GetLastSpeed / Controller.ChangeDirSpeedDivident;
-		if (minSpeed < Controller.MinSpeed)
-		{
-			minSpeed = Controller.MinSpeed;
-		}
-	}
+public class WalkState : MoveState
+{
 
-	void AirborneAccelerationSettings()
-	{
-		AccelerationSettings();
-		duration = Controller.AccelerationAirborneTime;
-	}
+    public WalkState(float minSpeed, float maxSpeed, float duration, bool HasToFinish, AnimationCurve usedCurve) : base(minSpeed, maxSpeed, duration, HasToFinish, usedCurve)
+    {
+        
+    }
+    public override MovementController Controller { get => base.Controller; set => base.Controller = value; }
+    public override void Enter(MovementController controller)
+    {
+        if (GetLastSpeed > maxSpeed)
+        {
+            usedCurve = controller.DecelerationCurve;
+            duration = controller.DecelerationTime;
+            minSpeed = maxSpeed;
+            maxSpeed = GetLastSpeed;
+        }
+    }
 
-	void AccelerationSettings()
-	{
-		timer = 0;
-		usedCurve = Controller.AccelerationCurve;
-		duration = Controller.AccelerationTime;
+    public override void FixedTick()
+    {
+        base.FixedTick();
+        GetMoveDir = GetInputDir;
+    }
 
-		minSpeed = GetLastSpeed;
-		if (minSpeed < Controller.MinSpeed)
-			minSpeed = Controller.MinSpeed;
+    public override void Tick()
+    {
+       
 
-		maxSpeed = GetMaxSpeed;
-		//Debug.Log("last speed= " + GetLastSpeed + "\nMaxSpeed = " + GetMaxSpeed);
-	}
+        base.Tick();
+    }
+
+    public override void Collision(Collision other)
+    {
+        base.Collision(other);
+    }
+
+    public override void CollisionExit(Collision other)
+    {
+        base.CollisionExit(other);
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+    }
+
 }
 
 public class JumpState : MovementStates
 {
-	public override MovementController Controller { get; set; }
+    public override MovementController Controller { get; set; }
 
-	/// <summary>
-	/// get => Controller.CollisionNormal; 
-	/// set => Controller.CollisionNormal = value;
-	/// </summary>
-	Vector3 Normal { get => Controller.CollisionNormal; set => Controller.CollisionNormal = value; }
-	public override void Enter(MovementController controller)
-	{
-		Controller = controller;
-		controller.Rb.AddForce(controller.transform.up * controller.JumpForce, ForceMode.Impulse);
-		controller.IsAirborne = true;
-	}
+    /// <summary>
+    /// get => Controller.CollisionNormal; 
+    /// set => Controller.CollisionNormal = value;
+    /// </summary>
+    Vector3 Normal { get => Controller.CollisionNormal; set => Controller.CollisionNormal = value; }
+    public override void Enter(MovementController controller)
+    {
+        Controller = controller;
+        controller.Rb.AddForce(controller.transform.up * controller.JumpForce, ForceMode.Impulse);
+        controller.IsAirborne = true;
+    }
 
-	public override void FixedTick()
-	{
+    public override void FixedTick()
+    {
 
-	}
+    }
 
-	public override void Tick()
-	{
-		if (Normal.y > 0)
-		{
-			Controller.ChangeState(new MovingState());
-		}
-	}
+    public override void Tick()
+    {
+        if (Normal.y > 0)
+        {
+            Controller.ChangeState(new MovingState());
+        }
+    }
 
-	public override void Collision(Collision other)
-	{
-		Normal = other.contacts[0].normal;
-		if (Normal.y > 0)
-			Controller.ChangeState(new MovingState());
-	}
+    public override void Collision(Collision other)
+    {
+        Normal = other.contacts[0].normal;
+        if (Normal.y > 0)
+            Controller.ChangeState(new MovingState());
+    }
 
-	public override void CollisionExit(Collision other)
-	{
+    public override void CollisionExit(Collision other)
+    {
 
-	}
+    }
 
-	public override void Exit()
-	{
-		Controller.IsAirborne = false;
-	}
+    public override void Exit()
+    {
+        Controller.IsAirborne = false;
+    }
 }
 
 public class FallingState : MovementStates
 {
-	public override MovementController Controller { get; set; }
+    public override MovementController Controller { get; set; }
 
-	/// <summary>
-	/// get => Controller.CollisionNormal; 
-	/// set => Controller.CollisionNormal = value;
-	/// </summary>
-	Vector3 Normal { get => Controller.CollisionNormal; set => Controller.CollisionNormal = value; }
+    /// <summary>
+    /// get => Controller.CollisionNormal; 
+    /// set => Controller.CollisionNormal = value;
+    /// </summary>
+    Vector3 Normal { get => Controller.CollisionNormal; set => Controller.CollisionNormal = value; }
 
-	/// <summary>
-	/// InputManager.MovementDir
-	/// </summary>
-	Vector3 GetInputDir => InputManager.MovementDir;
+    /// <summary>
+    /// InputManager.MovementDir
+    /// </summary>
+    Vector3 GetInputDir => InputManager.MovementDir;
 
-	public override void Enter(MovementController controller)
-	{
-		Controller = controller;
-		controller.IsAirborne = true;
-	}
+    public override void Enter(MovementController controller)
+    {
+        Controller = controller;
+        controller.IsAirborne = true;
+    }
 
-	public override void FixedTick()
-	{
+    public override void FixedTick()
+    {
 
-	}
+    }
 
-	public override void Tick()
-	{
-		if (Normal.y > 0)
-		{
-			Controller.IsAirborne = false;
-			Controller.ChangeState(new MovingState());
-		}
-		else if (GetInputDir != Vector3.zero)
-		{
-			Controller.MaxSpeed = Controller.AirborneSpeed;
+    public override void Tick()
+    {
+        if (Normal.y > 0)
+        {
+            Controller.IsAirborne = false;
+            Controller.ChangeState(new MovingState());
+        }
+        else if (GetInputDir != Vector3.zero)
+        {
+            Controller.MaxSpeed = Controller.AirborneSpeed;
 
-			Controller.ChangeState(new MovingState());
-		}
-	}
+            Controller.ChangeState(new MovingState());
+        }
+    }
 
-	public override void Collision(Collision other)
-	{
-		Normal = other.contacts[0].normal;
-	}
+    public override void Collision(Collision other)
+    {
+        Normal = other.contacts[0].normal;
+    }
 
-	public override void CollisionExit(Collision other)
-	{
-		Normal = new();
-	}
+    public override void CollisionExit(Collision other)
+    {
+        Normal = new();
+    }
 
-	public override void Exit()
-	{
+    public override void Exit()
+    {
 
-	}
+    }
 }
 
 public class ClimbState : MovementStates
 {
-	public override MovementController Controller { get; set; }
-	Vector3 startpos;
-	Vector3 endPos = new();
-	Vector3 lerpedPos;
-	float timer;
+    public override MovementController Controller { get; set; }
+    Vector3 startpos;
+    Vector3 endPos = new();
+    Vector3 lerpedPos;
+    float timer;
 
-	public override void Enter(MovementController controller)
-	{
-		Controller = controller;
-		Controller.MyCollider.enabled = false;
-		Controller.Rb.useGravity = false;
-		Controller.isClimbing = true;
-		Controller.IsAirborne = false;
+    public override void Enter(MovementController controller)
+    {
+        Controller = controller;
+        Controller.MyCollider.enabled = false;
+        Controller.Rb.useGravity = false;
+        Controller.isClimbing = true;
+        Controller.IsAirborne = false;
 
-		startpos = Controller.transform.position;
-		endPos = startpos;
-		endPos.y = Controller.ClimbableObject.bounds.max.y + Controller.MyCollider.bounds.extents.y + Controller.ClimbOffsetY; // + controller.ClimbOffset
-		endPos.z = controller.transform.position.z + Controller.ClimbOffsetZ;
+        startpos = Controller.transform.position;
+        endPos = startpos;
+        endPos.y = Controller.ClimbableObject.bounds.max.y + Controller.MyCollider.bounds.extents.y + Controller.ClimbOffsetY; // + controller.ClimbOffset
+        endPos.z = controller.transform.position.z + Controller.ClimbOffsetZ;
 
-		Controller.Rb.velocity = Vector3.zero;
-	}
-	public override void FixedTick()
-	{
-		if (timer < Controller.ClimbDuration)
-		{
-			timer += Time.fixedDeltaTime;
-			lerpedPos = Vector3.Lerp(startpos, endPos, timer / Controller.ClimbDuration);
-			Controller.Rb.MovePosition(lerpedPos);
-		}
-		else
-		{
-			Controller.Rb.MovePosition(endPos);
-			Controller.ChangeState(new MovingState());
-		}
-	}
+        Controller.Rb.velocity = Vector3.zero;
+        MovementController.climb?.Invoke();
+    }
+    public override void FixedTick()
+    {
+        if (timer < Controller.ClimbDuration)
+        {
+            timer += Time.fixedDeltaTime;
+            lerpedPos = Vector3.Lerp(startpos, endPos, timer / Controller.ClimbDuration);
+            Controller.Rb.MovePosition(lerpedPos);
+        }
+        else
+        {
+            Controller.Rb.MovePosition(endPos);
+            Controller.ChangeState(new MovingState());
+        }
+    }
 
-	public override void Tick()
-	{
+    public override void Tick()
+    {
 
-	}
-	public override void Collision(Collision other)
-	{
+    }
+    public override void Collision(Collision other)
+    {
 
-	}
+    }
 
-	public override void CollisionExit(Collision other)
-	{
+    public override void CollisionExit(Collision other)
+    {
 
-	}
+    }
 
 
-	public override void Exit()
-	{
-		Controller.MyCollider.enabled = true;
-		Controller.Rb.useGravity = true;
-		Controller.StartCoroutine(Controller.CheckLedgeCooldown());
-	}
-
+    public override void Exit()
+    {
+        Controller.MyCollider.enabled = true;
+        Controller.Rb.useGravity = true;
+        Controller.StartCoroutine(Controller.CheckLedgeCooldown());
+    }
 }
