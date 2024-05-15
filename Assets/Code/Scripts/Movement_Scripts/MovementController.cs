@@ -5,164 +5,194 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
-	[HideInInspector] public Rigidbody Rb;
-	[HideInInspector] public Collider MyCollider;
-	//|------------------------------------------------------------------------------------------|
-	[Header("Climb Settings:")]
-	[SerializeField] public LayerMask ClimableLayers;
-	[Tooltip("how far from the pivot in y is the raycast to detect ledges")]
-	[SerializeField] public float RaycastDetectionHeight;
-	[Tooltip("how long is the raycast to detect ledges")]
-	[SerializeField] public float RaycastDetectionLenght;
-	[SerializeField] public float ClimbDuration;
-	[SerializeField] public float CooldownAfterEnd;
-	///<summary>the offset in y after you climed</summary>
-	[Tooltip("the offset in y after you climed")]
-	[SerializeField] public float ClimbOffsetY, ClimbOffsetZ;
-	//|------------------------------------------------------------------------------------------|
-	[Header("Jump Settings:")]
-	[SerializeField] public float JumpForce;
+	// 	[HideInInspector] public Rigidbody Rb;
+	// 	[HideInInspector] public Collider MyCollider;
+	// 	//|------------------------------------------------------------------------------------------|
 
-	[Header("Falling Settings")]//|------------------------------------------------------------------------------------------|
-	[SerializeField] public LayerMask LayerPlayer;
-	[SerializeField] public float GroundCheckLenght;
+	// 	//|------------------------------------------------------------------------------------------|
 
-	[Header("Speed Settings: ")]//|------------------------------------------------------------------------------------------|
-	[SerializeField] public float WalkMaxSpeed;
-	[SerializeField] public float RunMaxSpeed;
-	[SerializeField] public float MinSpeed;
-	[SerializeField] public float ChangeDirSpeedDivident;
-	[SerializeField] public float AirborneSpeed;
+	// 	[Header("Falling Settings")]//|------------------------------------------------------------------------------------------|
+	// 	[SerializeField] public LayerMask LayerPlayer;
+	// 	[SerializeField] public float GroundCheckLenght;
+	[SerializeField] float ClimbCheckLenght;
+	[SerializeField] float ClimbCheckHight;
+	[SerializeField] LayerMask ClimbLayer;
+	[HideInInspector] public RaycastHit HitObject;
 
+	ClimbState climbState;
+	JumpState jumpState;
+	MovementStates movementState;
+	IdleState idleState;
 
-	[Header("Momentum Settings:")]//|------------------------------------------------------------------------------------------|
-
-	[Tooltip("this number checks if you are changing direction DRAMATICALLY from before\n(default: 0.7 witch is equal to 45° angle)")]
-	//(have you moved direction? will you move direction? when will you move direction?)
-	[SerializeField] public float maxDotProduct = 0.7f;
-
-	[SerializeField] public AnimationCurve AccelerationCurve; // how fast you XLR8
-
-	[Tooltip("how long you take to Accelerate")]
-	[SerializeField] public float AccelerationTime;
-	[SerializeField] public float AccelerationAirborneTime;
-
-	[Tooltip("how you stop moving based on decelerationTime")]
-	[SerializeField] public AnimationCurve DecelerationCurve;
-
-	[Tooltip("how long you take to decelerate")]
-	[SerializeField] public float DecelerationTime;
-	[Tooltip("time that it takes to save the last given input")]
-	[SerializeField] public float IdleInputTime;
-	//|------------------------------------------------------------------------------------------|
-	[HideInInspector] public MovementStates CurrentState;
-	[HideInInspector] public float MaxSpeed, LastDot, LastSpeed;
-	[HideInInspector] public Vector3 MoveDir, CollisionNormal, CollisionDir;
-	[HideInInspector] public Collider ClimbableObject;
-	[HideInInspector] public RaycastHit Hit;
-	[HideInInspector] public bool IsAirborne, isPaused, isRunning, isClimbing;
-	bool CheckLedge(Vector3 pos, Vector3 dir) => Physics.Raycast(pos, dir, out Hit, RaycastDetectionLenght, ClimableLayers);
+	State CurrentState;
 	private void Awake()
 	{
-		InputManager.Initialize();
-		Rb = GetComponent<Rigidbody>();
-		MyCollider = GetComponent<Collider>();
-		MaxSpeed = WalkMaxSpeed;
-		ChangeState(new MovingState());
+		idleState = GetComponent<IdleState>();
+		movementState = GetComponent<MovementStates>();
+		jumpState = GetComponent<JumpState>();
+		climbState = GetComponent<ClimbState>();
+		ChangeState(States.IDLE);
 	}
 
-	private void OnEnable()
+	public void ChangeState(States state)
 	{
-		InputManager.inputActions.Movement.Jump.performed += OnJump;
-		InputManager.inputActions.Movement.Run.performed += OnRun;
-		InputManager.inputActions.Movement.Pause.performed += OnPause;
-		InputManager.inputActions.UI.Pause.performed += OnPause;
-	}
-	private void OnDisable()
-	{
-		InputManager.inputActions.Movement.Jump.performed -= OnJump;
-		InputManager.inputActions.Movement.Run.performed -= OnRun;
-		InputManager.inputActions.Movement.Pause.performed -= OnPause;
-		InputManager.inputActions.UI.Pause.performed -= OnPause;
-	}
-
-	private void FixedUpdate()
-	{
-		if (isClimbing == false && CheckLedge(transform.position + Vector3.up * RaycastDetectionHeight, transform.forward))
+		switch (state)
 		{
-			ClimbableObject = Hit.collider;
-			ChangeState(new ClimbState());
+			case States.IDLE:
+				movementState.enabled = false;
+				jumpState.enabled = false;
+				climbState.enabled = false;
+				idleState.enabled = true;
+				break;
+
+			case States.JUMP:
+				movementState.enabled = false;
+				jumpState.enabled = true;
+				climbState.enabled = false;
+				idleState.enabled = false;
+				break;
+
+			case States.MOVE:
+				movementState.enabled = true;
+				jumpState.enabled = false;
+				climbState.enabled = false;
+				idleState.enabled = false;
+				break;
+
+			case States.CLIMB:
+				movementState.enabled = false;
+				jumpState.enabled = false;
+				climbState.enabled = true;
+				idleState.enabled = false;
+				break;
+
+			default:
+				movementState.enabled = false;
+				jumpState.enabled = false;
+				climbState.enabled = false;
+				idleState.enabled = true;
+				break;
 		}
-		CurrentState.FixedTick();
+		Debug.Log(state.ToString());
 	}
-	void Update()
-	{
-		CurrentState.Tick();
-	}
+	public bool CheckClimb() => Physics.Raycast(transform.position + Vector3.up * ClimbCheckHight, transform.forward, out HitObject, ClimbCheckLenght, ClimbLayer);
 
-	private void OnTriggerEnter(Collider other)
-	{
-		if (other.transform.TryGetComponent(out ICollectible collectable))
-		{
-			collectable.Collect();
-		}
-	}
-	private void OnCollisionEnter(Collision other)
-	{
-		CurrentState.Collision(other);
-	}
-	private void OnCollisionExit(Collision other)
-	{
-		CurrentState.CollisionExit(other);
-		if (Physics.SphereCast(transform.position, 0.5f, Vector3.down, out _, RaycastDetectionLenght, LayerPlayer))
-			ChangeState(new FallingState());
-	}
+	// 	//|------------------------------------------------------------------------------------------|
+	// 	[HideInInspector] public State CurrentState;
+	// 	[HideInInspector] public float MaxSpeed, LastDot, LastSpeed;
+	// 	[HideInInspector] public Vector3 MoveDir, CollisionNormal, CollisionDir;
+	// 	[HideInInspector] public Collider ClimbableObject;
+	// 	[HideInInspector] public RaycastHit Hit;
+	// 	[HideInInspector] public bool IsAirborne, isPaused, isRunning, isClimbing;
+	// 	bool CheckLedge(Vector3 pos, Vector3 dir) => Physics.Raycast(pos, dir, out Hit, RaycastDetectionLenght, ClimableLayers);
+	// 	private void Awake()
+	// 	{
+	// 		InputManager.Initialize();
+	// 		Rb = GetComponent<Rigidbody>();
+	// 		MyCollider = GetComponent<Collider>();
+	// 		MaxSpeed = WalkMaxSpeed;
+	// 		ChangeState(new MovingState());
+	// 	}
 
-	private void OnPause(UnityEngine.InputSystem.InputAction.CallbackContext context)
-	{
-		if (isPaused)
-		{
-			// unpause
-			isPaused = false;
-		}
-		else
-		{
-			// pause
-			isPaused = true;
-		}
-	}
+	// 	private void OnEnable()
+	// 	{
+	// 		InputManager.inputActions.Movement.Jump.performed += OnJump;
+	// 		InputManager.inputActions.Movement.Run.performed += OnRun;
+	// 		InputManager.inputActions.Movement.Pause.performed += OnPause;
+	// 		InputManager.inputActions.UI.Pause.performed += OnPause;
+	// 	}
+	// 	private void OnDisable()
+	// 	{
+	// 		InputManager.inputActions.Movement.Jump.performed -= OnJump;
+	// 		InputManager.inputActions.Movement.Run.performed -= OnRun;
+	// 		InputManager.inputActions.Movement.Pause.performed -= OnPause;
+	// 		InputManager.inputActions.UI.Pause.performed -= OnPause;
+	// 	}
 
-	private void OnRun(UnityEngine.InputSystem.InputAction.CallbackContext context)
-	{
-		if (IsAirborne || isClimbing)
-			return;
+	// 	private void FixedUpdate()
+	// 	{
+	// 		if (isClimbing == false && CheckLedge(transform.position + Vector3.up * RaycastDetectionHeight, transform.forward))
+	// 		{
+	// 			ClimbableObject = Hit.collider;
+	// 			ChangeState(new ClimbState());
+	// 		}
+	// 		CurrentState.FixedTick();
+	// 	}
+	// 	void Update()
+	// 	{
+	// 		CurrentState.Tick();
+	// 	}
 
-		MaxSpeed = isRunning ? RunMaxSpeed : WalkMaxSpeed;
-		isRunning = !isRunning;
-	}
+	// 	private void OnTriggerEnter(Collider other)
+	// 	{
+	// 		if (other.transform.TryGetComponent(out ICollectible collectable))
+	// 		{
+	// 			collectable.Collect();
+	// 		}
+	// 	}
+	// 	private void OnCollisionEnter(Collision other)
+	// 	{
+	// 		CurrentState.Collision(other);
+	// 	}
+	// 	private void OnCollisionExit(Collision other)
+	// 	{
+	// 		CurrentState.CollisionExit(other);
+	// 		if (Physics.SphereCast(transform.position, 0.5f, Vector3.down, out _, RaycastDetectionLenght, LayerPlayer))
+	// 			ChangeState(new FallingState());
+	// 	}
 
-	private void OnJump(UnityEngine.InputSystem.InputAction.CallbackContext context)
-	{
-		if (IsAirborne || isClimbing)
-			return;
+	// 	private void OnPause(UnityEngine.InputSystem.InputAction.CallbackContext context)
+	// 	{
+	// 		if (isPaused)
+	// 		{
+	// 			// unpause
+	// 			isPaused = false;
+	// 		}
+	// 		else
+	// 		{
+	// 			// pause
+	// 			isPaused = true;
+	// 		}
+	// 	}
 
-		IsAirborne = true;
-		ChangeState(new JumpState());
-	}
+	// 	private void OnRun(UnityEngine.InputSystem.InputAction.CallbackContext context)
+	// 	{
+	// 		if (IsAirborne || isClimbing)
+	// 			return;
 
-	public void ChangeState(MovementStates newState)
-	{
-		if (CurrentState != null)
-			CurrentState.Exit();
+	// 		MaxSpeed = isRunning ? RunMaxSpeed : WalkMaxSpeed;
+	// 		isRunning = !isRunning;
+	// 	}
 
-		CurrentState = newState;
-		CurrentState.Enter(this);
-	}
+	// 	private void OnJump(UnityEngine.InputSystem.InputAction.CallbackContext context)
+	// 	{
+	// 		if (IsAirborne || isClimbing)
+	// 			return;
 
-	public IEnumerator CheckLedgeCooldown()
-	{
-		isClimbing = true;
-		yield return new WaitForSeconds(CooldownAfterEnd);
-		isClimbing = false;
-	}
+	// 		IsAirborne = true;
+	// 		ChangeState(new JumpState());
+	// 	}
+
+	// 	public void ChangeState(State newState)
+	// 	{
+	// 		if (CurrentState != null)
+	// 			CurrentState.Exit();
+
+	// 		CurrentState = newState;
+	// 		CurrentState.Enter(this);
+	// 	}
+
+	// 	public IEnumerator CheckLedgeCooldown()
+	// 	{
+	// 		isClimbing = true;
+	// 		yield return new WaitForSeconds(CooldownAfterEnd);
+	// 		isClimbing = false;
+	// 	}
+}
+public enum States
+{
+	IDLE,
+	JUMP,
+	MOVE,
+	CLIMB
 }
