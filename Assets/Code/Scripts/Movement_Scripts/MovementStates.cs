@@ -86,9 +86,29 @@ public class MoveState : MovementStates
 	protected Vector3 Normal { get => Controller.CollisionNormal; set => Controller.CollisionNormal = value; }
 	#endregion
 
+	private void OnRun(UnityEngine.InputSystem.InputAction.CallbackContext context)
+	{
+		if (Controller.IsAirborne || Controller.isClimbing)
+			return;
+
+		Controller.MaxSpeed = Controller.isRunning ? Controller.RunMaxSpeed : Controller.WalkMaxSpeed;
+		Controller.isRunning = !Controller.isRunning;
+		Controller.ChangeState(new MoveState());
+	}
+	private void OnJump(UnityEngine.InputSystem.InputAction.CallbackContext context)
+	{
+		if (Controller.IsAirborne || Controller.isClimbing)
+			return;
+
+		Controller.IsAirborne = true;
+		Controller.ChangeState(new JumpState());
+	}
+
 	public override void Enter(MovementController controller)
 	{
 		Controller = controller;
+		InputManager.inputActions.Movement.Run.performed += OnRun;
+		InputManager.inputActions.Movement.Jump.performed += OnJump;
 
 		if (GetMaxSpeed < GetLastSpeed)
 		{
@@ -243,6 +263,7 @@ public class IdleState : MovementStates
 
 	private void JumpExit(UnityEngine.InputSystem.InputAction.CallbackContext context)
 	{
+		Controller.IsAirborne = true;
 		Controller.ChangeState(new JumpState());
 	}
 
@@ -258,7 +279,12 @@ public class IdleState : MovementStates
 
 	public override void Collision(Collision other)
 	{
+		Vector3 Normal = other.contacts[0].normal;
 
+		if (Controller.IsAirborne && Normal.y > 0)
+		{
+			Controller.ChangeState(new IdleState());
+		}
 	}
 
 	public override void CollisionExit(Collision other)
@@ -268,8 +294,11 @@ public class IdleState : MovementStates
 
 	public override void Exit()
 	{
+		Controller.isRunning = false;
+		Controller.MaxSpeed = Controller.WalkMaxSpeed;
 		Controller.LastSpeed = 0;
 		Controller.MoveDir = Vector3.zero;
+		Controller.LastDot = 0;
 	}
 
 }

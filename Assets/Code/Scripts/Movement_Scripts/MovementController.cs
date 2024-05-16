@@ -78,14 +78,14 @@ public class MovementController : MonoBehaviour
 	private void OnEnable()
 	{
 		InputManager.inputActions.Movement.Jump.performed += OnJump;
-		InputManager.inputActions.Movement.Run.performed += OnRun;
+
 		InputManager.inputActions.Movement.Pause.performed += OnPause;
 		InputManager.inputActions.UI.Pause.performed += OnPause;
 	}
 	private void OnDisable()
 	{
 		InputManager.inputActions.Movement.Jump.performed -= OnJump;
-		InputManager.inputActions.Movement.Run.performed -= OnRun;
+
 		InputManager.inputActions.Movement.Pause.performed -= OnPause;
 		InputManager.inputActions.UI.Pause.performed -= OnPause;
 	}
@@ -136,14 +136,6 @@ public class MovementController : MonoBehaviour
 		}
 	}
 
-	private void OnRun(UnityEngine.InputSystem.InputAction.CallbackContext context)
-	{
-		if (IsAirborne || isClimbing)
-			return;
-
-		MaxSpeed = isRunning ? RunMaxSpeed : WalkMaxSpeed;
-		isRunning = !isRunning;
-	}
 
 	private void OnJump(UnityEngine.InputSystem.InputAction.CallbackContext context)
 	{
