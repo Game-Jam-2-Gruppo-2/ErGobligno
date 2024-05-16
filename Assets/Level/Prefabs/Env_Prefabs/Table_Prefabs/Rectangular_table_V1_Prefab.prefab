@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9068005126142108023}
   m_Layer: 0
-  m_Name: Rectangular_table_V1_Model
+  m_Name: Rectangular_table_V1_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -125,7 +125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2652779659749812670}
   m_Layer: 0
-  m_Name: Lantern_off_Model
+  m_Name: Lantern_off_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
