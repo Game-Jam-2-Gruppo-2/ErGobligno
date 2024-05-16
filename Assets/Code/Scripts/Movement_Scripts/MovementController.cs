@@ -69,11 +69,10 @@ public class MovementController : MonoBehaviour
 	public bool GroundCheck => Physics.SphereCast(transform.position, MyCollider.bounds.extents.x, Vector3.down, out _, RaycastDetectionLenght, LayerPlayer);
 	private void Awake()
 	{
-		InputManager.Initialize();
 		Rb = GetComponent<Rigidbody>();
 		MyCollider = GetComponent<Collider>();
 		MaxSpeed = WalkMaxSpeed;
-		//ChangeState(new MovingState());
+		ChangeState(new IdleState());
 	}
 
 	private void OnEnable()
