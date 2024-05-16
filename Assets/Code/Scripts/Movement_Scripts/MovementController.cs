@@ -134,6 +134,7 @@ public class MovementController : MonoBehaviour
 		if (CurrentState != null)
 			CurrentState.Exit();
 
+		Debug.LogWarning("current state= " + CurrentState + "\n" + newState);
 		CurrentState = newState;
 		CurrentState.Enter(this);
 	}

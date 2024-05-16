@@ -108,6 +108,7 @@ public class MoveState : MovementStates
 	public override void Enter(MovementController controller)
 	{
 		Controller = controller;
+		GoBackToWalk = false;
 		InputManager.inputActions.Movement.Run.performed += OnRun;
 		InputManager.inputActions.Movement.Jump.performed += OnJump;
 
