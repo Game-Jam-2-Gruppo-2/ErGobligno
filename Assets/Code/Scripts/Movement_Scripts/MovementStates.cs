@@ -162,6 +162,10 @@ public class MoveState : MovementStates
 			timer = 0;
 			FromSpeed = GetLastSpeed;
 			ToSpeed = GetLastSpeed / Controller.ChangeDirSpeedDivident;
+			if (ToSpeed < Controller.MinSpeed)
+			{
+				ToSpeed = Controller.MinSpeed;
+			}
 			usedCurve = Controller.DecelerationCurve;
 			duration = Controller.DecelerationTime;
 		}
@@ -203,7 +207,7 @@ public class MoveState : MovementStates
 		vel.y = Controller.Rb.velocity.y;
 		Controller.Rb.velocity = vel;
 
-		if (Controller.Rb.velocity == Vector3.zero)
+		if (Controller.Rb.velocity == Vector3.zero /*&& isIdle*/)
 		{
 			Controller.ChangeState(new IdleState());
 		}
@@ -218,8 +222,6 @@ public class MoveState : MovementStates
 			GetLastDot = Vector3.Dot(GetInputDir, GetMoveDir);
 			GetMoveDir = GetInputDir;
 		}
-		else
-			lastDir = Vector3.zero;
 
 		if (isColliding)
 		{
@@ -290,20 +292,10 @@ public class IdleState : MovementStates
 		//Debug.Log("IDLE");
 		Controller = controller;
 		Controller.Rb.velocity = Vector3.zero;
-		InputManager.inputActions.Movement.Walk.performed += MoveExit;
-		InputManager.inputActions.Movement.Jump.performed += JumpExit;
+		controller.IdleInputs();
 	}
 
-	private void MoveExit(UnityEngine.InputSystem.InputAction.CallbackContext context)
-	{
-		Controller.ChangeState(new MoveState());
-	}
 
-	private void JumpExit(UnityEngine.InputSystem.InputAction.CallbackContext context)
-	{
-		Controller.IsAirborne = true;
-		Controller.ChangeState(new JumpState());
-	}
 
 	public override void FixedTick()
 	{
@@ -332,10 +324,10 @@ public class IdleState : MovementStates
 		Controller.LastSpeed = 0;
 		Controller.MoveDir = Vector3.zero;
 		Controller.LastDot = 0;
-        InputManager.inputActions.Movement.Walk.performed -= MoveExit;
-        InputManager.inputActions.Movement.Jump.performed -= JumpExit;
+		Controller.IdleInputsDisable();
+		Debug.LogWarning("no more input?");
 
-    }
+	}
 
 }
 
