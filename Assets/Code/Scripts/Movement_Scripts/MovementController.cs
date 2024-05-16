@@ -92,12 +92,6 @@ public class MovementController : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (isClimbing == false && CheckLedge(transform.position + Vector3.up * RaycastDetectionHeight, transform.forward))
-		{
-			ClimbableObject = Hit.collider;
-			ChangeState(new ClimbState());
-			OnClimb?.Invoke();
-        }
 		CurrentState.FixedTick();
 	}
 	void Update()
@@ -119,8 +113,6 @@ public class MovementController : MonoBehaviour
 	private void OnCollisionExit(Collision other)
 	{
 		CurrentState.CollisionExit(other);
-		if (GroundCheck)
-			ChangeState(new FallingState());
 	}
 
 	private void OnPause(UnityEngine.InputSystem.InputAction.CallbackContext context)

@@ -23,7 +23,7 @@ public class MoveState : MovementStates
 	protected float timerIdle = 0, lastInputDuration;
 	protected float duration;
 	protected Vector3 vel, lastDir;
-	protected bool HasToFinish;
+	protected bool GoBackToWalk = false;
 	protected bool isIdle, isColliding;
 
 	// public MoveState(float minSpeed, float maxSpeed, float duration, bool HasToFinish, AnimationCurve usedCurve)
@@ -91,6 +91,7 @@ public class MoveState : MovementStates
 		if (Controller.IsAirborne || Controller.isClimbing)
 			return;
 
+		Debug.Log("running");
 		Controller.MaxSpeed = Controller.isRunning ? Controller.RunMaxSpeed : Controller.WalkMaxSpeed;
 		Controller.isRunning = !Controller.isRunning;
 		Controller.ChangeState(new MoveState());
@@ -112,14 +113,16 @@ public class MoveState : MovementStates
 
 		if (GetMaxSpeed < GetLastSpeed)
 		{
-			ToSpeed = GetLastSpeed;
-			FromSpeed = GetMaxSpeed;
+			Debug.Log("Decel");
+			FromSpeed = GetLastSpeed;
+			ToSpeed = GetMaxSpeed;
 			usedCurve = controller.DecelerationCurve;
 		}
 		else
 		{
-			ToSpeed = GetMaxSpeed;
+			Debug.Log("Accel");
 			FromSpeed = GetLastSpeed;
+			ToSpeed = GetMaxSpeed;
 			usedCurve = controller.AccelerationCurve;
 		}
 
@@ -131,42 +134,60 @@ public class MoveState : MovementStates
 	{
 		GetLastSpeed = speed;
 		FixedChecks();
+		Velocity();
+		CheckLedge();
 	}
 
+	void CheckLedge()
+	{
+		if (Controller.isClimbing == false && Controller.CheckLedge(Controller.transform.position + Vector3.up * Controller.RaycastDetectionHeight, Controller.transform.forward))
+		{
+			Controller.ClimbableObject = Controller.Hit.collider;
+			Controller.ChangeState(new ClimbState());
+			MovementController.OnClimb?.Invoke();
+			// WINX :3
+		}
+	}
 	void FixedChecks()
 	{
-
-		if (GetLastDot < GetMaxDot && lastDir != Vector3.zero)
+		if (GetLastDot < GetMaxDot && GoBackToWalk == false)
 		{
-			Debug.Log("Turn");
+			Debug.Log("Turn" + GetLastDot);
+			GoBackToWalk = true;
 			timer = 0;
 			FromSpeed = GetMaxSpeed;
 			ToSpeed = GetLastSpeed / Controller.ChangeDirSpeedDivident;
 			usedCurve = Controller.DecelerationCurve;
 			duration = Controller.DecelerationTime;
+
 		}
-		else if (isIdle && lastDir != Vector3.zero)
+		else if (isIdle && GoBackToWalk == false)
 		{
 			Debug.Log("Idle");
 			timer = 0;
-			ToSpeed = GetLastSpeed;
-			FromSpeed = 0;
+			FromSpeed = GetLastSpeed;
+			ToSpeed = 0;
 			usedCurve = Controller.DecelerationCurve;
 			duration = Controller.DecelerationTime;
-			GetMoveDir = lastDir;
 		}
 
 		if (timer < duration)
 		{
 			timer += Time.deltaTime;
 		}
-		else
+		else if (GoBackToWalk == true)
 		{
-			HasToFinish = false;
+			Debug.Log("ChangeStateMove");
+			GoBackToWalk = false;
+			Controller.ChangeState(new MoveState());
 		}
 
+	}
+
+	void Velocity()
+	{
 		speed = GetSpeed;
-		Controller.LastSpeed = speed;
+		GetLastSpeed = speed;
 
 		vel = speed * Time.fixedDeltaTime * GetMoveDir;
 		vel = vel.x * Controller.transform.right + Controller.transform.forward * vel.z;
@@ -178,15 +199,18 @@ public class MoveState : MovementStates
 			Controller.ChangeState(new IdleState());
 		}
 	}
-
 	public override void Tick()
 	{
 		lastDir = GetMoveDir;
-		GetLastDot = Vector3.Dot(GetInputDir, GetMoveDir);
-		isIdle = GetInputDir == Vector3.zero;
+		isIdle = GetInputDir == Vector3.zero && isIdle == false;
 
 		if (isIdle == false)
+		{
+			GetLastDot = Vector3.Dot(GetInputDir, GetMoveDir);
 			GetMoveDir = GetInputDir;
+		}
+		else
+			lastDir = Vector3.zero;
 
 		if (isColliding)
 		{
@@ -194,22 +218,18 @@ public class MoveState : MovementStates
 		}
 	}
 
-	public override void Exit()
-	{
-		GetLastSpeed = speed;
-	}
 
 	public override void Collision(Collision other)
 	{
-		Vector3 Normal = other.contacts[0].normal;
+		Normal = other.contacts[0].normal;
 
 		if (Controller.IsAirborne && Normal.y > 0)
 		{
-			Debug.Log("Walk");
+			Debug.Log("Collision walk");
 			timer = 0;
 			Controller.IsAirborne = false;
-			ToSpeed = Controller.MaxSpeed;
 			FromSpeed = 0;
+			ToSpeed = Controller.MaxSpeed;
 			duration = Controller.AccelerationTime;
 			usedCurve = Controller.AccelerationCurve;
 		}
@@ -229,20 +249,28 @@ public class MoveState : MovementStates
 			timer = 0;
 			Controller.IsAirborne = true;
 
-			ToSpeed = Controller.AirborneSpeed;
 			FromSpeed = GetLastSpeed;
+			ToSpeed = Controller.AirborneSpeed;
 			usedCurve = Controller.AccelerationCurve;
 
 			if (ToSpeed < GetLastSpeed)
 			{
 				usedCurve = Controller.DecelerationCurve;
-				ToSpeed = FromSpeed;
 				FromSpeed = Controller.AirborneSpeed;
+				ToSpeed = GetLastSpeed;
 			}
 			duration = Controller.AccelerationAirborneTime;
 		}
 	}
 
+	public override void Exit()
+	{
+		Debug.Log("i'm in heaven now");
+		InputManager.inputActions.Movement.Run.performed -= OnRun;
+		InputManager.inputActions.Movement.Jump.performed -= OnJump;
+
+		GetLastSpeed = speed;
+	}
 }
 
 public class IdleState : MovementStates
@@ -250,6 +278,7 @@ public class IdleState : MovementStates
 	public override MovementController Controller { get; set; }
 	public override void Enter(MovementController controller)
 	{
+		Debug.Log("IDLE");
 		Controller = controller;
 		Controller.Rb.velocity = Vector3.zero;
 		InputManager.inputActions.Movement.Walk.performed += MoveExit;
@@ -279,12 +308,7 @@ public class IdleState : MovementStates
 
 	public override void Collision(Collision other)
 	{
-		Vector3 Normal = other.contacts[0].normal;
 
-		if (Controller.IsAirborne && Normal.y > 0)
-		{
-			Controller.ChangeState(new IdleState());
-		}
 	}
 
 	public override void CollisionExit(Collision other)
@@ -324,22 +348,27 @@ public class JumpState : MovementStates
 
 	public override void FixedTick()
 	{
-
+		if (Controller.isClimbing == false && Controller.CheckLedge(Controller.transform.position + Vector3.up * Controller.RaycastDetectionHeight, Controller.transform.forward))
+		{
+			Controller.ClimbableObject = Controller.Hit.collider;
+			Controller.ChangeState(new ClimbState());
+			MovementController.OnClimb?.Invoke();
+		}
 	}
 
 	public override void Tick()
 	{
-		if (Normal.y > 0)
-		{
-			//Controller.ChangeState(new MovingState());
-		}
+
 	}
 
 	public override void Collision(Collision other)
 	{
-		Normal = other.contacts[0].normal;
-		//if (Normal.y > 0)
-		//Controller.ChangeState(new MovingState());
+		Vector3 Normal = other.contacts[0].normal;
+
+		if (Controller.IsAirborne && Normal.y > 0)
+		{
+			Controller.ChangeState(new IdleState());
+		}
 	}
 
 	public override void CollisionExit(Collision other)
@@ -445,7 +474,7 @@ public class ClimbState : MovementStates
 		else
 		{
 			Controller.Rb.MovePosition(endPos);
-			//Controller.ChangeState(new MovingState());
+			Controller.ChangeState(new IdleState());
 		}
 	}
 
