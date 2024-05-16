@@ -7,6 +7,7 @@ public class MovementController : MonoBehaviour
 {
 	[HideInInspector] public Rigidbody Rb;
 	[HideInInspector] public Collider MyCollider;
+
 	//|------------------------------------------------------------------------------------------|
 	[Header("Climb Settings:")]
 	[SerializeField] public LayerMask ClimableLayers;
@@ -19,6 +20,7 @@ public class MovementController : MonoBehaviour
 	///<summary>the offset in y after you climed</summary>
 	[Tooltip("the offset in y after you climed")]
 	[SerializeField] public float ClimbOffsetY, ClimbOffsetZ;
+
 	//|------------------------------------------------------------------------------------------|
 	[Header("Jump Settings:")]
 	[SerializeField] public float JumpForce;
@@ -33,6 +35,7 @@ public class MovementController : MonoBehaviour
 	[SerializeField] public float MinSpeed;
 	[SerializeField] public float ChangeDirSpeedDivident;
 	[SerializeField] public float AirborneSpeed;
+	[SerializeField] public LayerMask MovableLayer;
 
 
 	[Header("Momentum Settings:")]//|------------------------------------------------------------------------------------------|
@@ -62,14 +65,15 @@ public class MovementController : MonoBehaviour
 	[HideInInspector] public RaycastHit Hit;
 	[HideInInspector] public bool IsAirborne, isPaused, isRunning, isClimbing;
 	public static Action climb;
-	bool CheckLedge(Vector3 pos, Vector3 dir) => Physics.Raycast(pos, dir, out Hit, RaycastDetectionLenght, ClimableLayers);
+	public bool CheckLedge(Vector3 pos, Vector3 dir) => Physics.Raycast(pos, dir, out Hit, RaycastDetectionLenght, ClimableLayers);
+	public bool GroundCheck => Physics.SphereCast(transform.position, MyCollider.bounds.extents.x, Vector3.down, out _, RaycastDetectionLenght, LayerPlayer);
 	private void Awake()
 	{
 		InputManager.Initialize();
 		Rb = GetComponent<Rigidbody>();
 		MyCollider = GetComponent<Collider>();
 		MaxSpeed = WalkMaxSpeed;
-		ChangeState(new MovingState());
+		//ChangeState(new MovingState());
 	}
 
 	private void OnEnable()
@@ -115,7 +119,7 @@ public class MovementController : MonoBehaviour
 	private void OnCollisionExit(Collision other)
 	{
 		CurrentState.CollisionExit(other);
-		if (Physics.SphereCast(transform.position, 0.5f, Vector3.down, out _, RaycastDetectionLenght, LayerPlayer))
+		if (GroundCheck)
 			ChangeState(new FallingState());
 	}
 
