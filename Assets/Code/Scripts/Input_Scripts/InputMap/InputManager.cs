@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public static class InputManager
@@ -8,6 +7,11 @@ public static class InputManager
 	public static bool UsingController { get; private set; }
 	private static Vector2 CameraDelta;
 	public static Vector3 MovementDir => inputActions.Movement.Walk.ReadValue<Vector3>();
+
+	static InputManager()
+	{
+		Initialize();
+    }
 
 	public static void Initialize()
 	{

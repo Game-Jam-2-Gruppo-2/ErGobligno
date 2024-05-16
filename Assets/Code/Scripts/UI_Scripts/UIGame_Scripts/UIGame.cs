@@ -9,6 +9,7 @@ public class UIGame : MonoBehaviour
     [SerializeField] private TMP_Text TimerText;
     [SerializeField] private TMP_Text CoinText;
     [SerializeField] private UINoiseIndicator NoiseIndicator = new UINoiseIndicator();
+    [SerializeField] private UIHands HandsIndicator;
 
     private void UpdateNoise()
     {
@@ -30,12 +31,18 @@ public class UIGame : MonoBehaviour
         TimerText.text = min+" : "+result;
     }
 
+    private void AnimateClimb()
+    {
+        HandsIndicator.StartAnimation();
+    }
+
     private void OnEnable()
     {
         Cursor.lockState = CursorLockMode.Locked;
         ScoreManager.OnGameTimeChanged += UpdateTimer;
         ScoreManager.OnCoinChanged += UpdateCoin;
         ScoreManager.OnNoiseChanged += UpdateNoise;
+        MovementController.OnClimb += AnimateClimb;
     }
 
     private void OnDisable()
