@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
+	public static Action OnClimb;
+
 	[HideInInspector] public Rigidbody Rb;
 	[HideInInspector] public Collider MyCollider;
 
@@ -94,7 +96,8 @@ public class MovementController : MonoBehaviour
 		{
 			ClimbableObject = Hit.collider;
 			ChangeState(new ClimbState());
-		}
+			OnClimb?.Invoke();
+        }
 		CurrentState.FixedTick();
 	}
 	void Update()

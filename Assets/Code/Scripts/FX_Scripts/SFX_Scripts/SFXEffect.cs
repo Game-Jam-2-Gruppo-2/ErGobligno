@@ -20,6 +20,11 @@ public class SFXEffect : MonoBehaviour
         StartCoroutine(EffectIEnum(clip.length));
     }
 
+    public void SetPitch(float pitch)
+    {
+        Source.pitch = pitch;
+    }
+
     private IEnumerator EffectIEnum(float clipLenght)
     {
         yield return new WaitForSeconds(clipLenght);

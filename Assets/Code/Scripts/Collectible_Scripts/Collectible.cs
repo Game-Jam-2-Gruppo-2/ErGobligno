@@ -15,5 +15,6 @@ public class Collectible : MonoBehaviour, ICollectible
     public void Collect()
     {
         ScoreManager.IncreaseCoin(ScoreValue);
+        this.gameObject.SetActive(false);
     }
 }
