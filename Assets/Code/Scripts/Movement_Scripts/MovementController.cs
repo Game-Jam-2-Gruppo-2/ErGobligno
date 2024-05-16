@@ -24,6 +24,8 @@ public class MovementController : MonoBehaviour
 	//|------------------------------------------------------------------------------------------|
 	[Header("Jump Settings:")]
 	[SerializeField] public float JumpForce;
+	[SerializeField] public AudioClip Jump_SFX;
+	[SerializeField, Range(0f, 1f)] public float PitchVariation;
 
 	[Header("Falling Settings")]//|------------------------------------------------------------------------------------------|
 	[SerializeField] public LayerMask LayerPlayer;
@@ -77,15 +79,11 @@ public class MovementController : MonoBehaviour
 
 	private void OnEnable()
 	{
-		InputManager.inputActions.Movement.Jump.performed += OnJump;
-
 		InputManager.inputActions.Movement.Pause.performed += OnPause;
 		InputManager.inputActions.UI.Pause.performed += OnPause;
 	}
 	private void OnDisable()
 	{
-		InputManager.inputActions.Movement.Jump.performed -= OnJump;
-
 		InputManager.inputActions.Movement.Pause.performed -= OnPause;
 		InputManager.inputActions.UI.Pause.performed -= OnPause;
 	}
@@ -134,16 +132,6 @@ public class MovementController : MonoBehaviour
 			// pause
 			isPaused = true;
 		}
-	}
-
-
-	private void OnJump(UnityEngine.InputSystem.InputAction.CallbackContext context)
-	{
-		if (IsAirborne || isClimbing)
-			return;
-
-		IsAirborne = true;
-		ChangeState(new JumpState());
 	}
 
 	public void ChangeState(MovementStates newState)

@@ -172,6 +172,7 @@ public class MoveState : MovementStates
 		vel = vel.x * Controller.transform.right + Controller.transform.forward * vel.z;
 		vel.y = Controller.Rb.velocity.y;
 		Controller.Rb.velocity = vel;
+
 		if (Controller.Rb.velocity == Vector3.zero)
 		{
 			Controller.ChangeState(new IdleState());
@@ -238,7 +239,6 @@ public class MoveState : MovementStates
 				ToSpeed = FromSpeed;
 				FromSpeed = Controller.AirborneSpeed;
 			}
-
 			duration = Controller.AccelerationAirborneTime;
 		}
 	}
@@ -307,6 +307,7 @@ public class JumpState : MovementStates
 {
 	public override MovementController Controller { get; set; }
 
+
 	/// <summary>
 	/// get => Controller.CollisionNormal; 
 	/// set => Controller.CollisionNormal = value;
@@ -317,6 +318,8 @@ public class JumpState : MovementStates
 		Controller = controller;
 		controller.Rb.AddForce(controller.transform.up * controller.JumpForce, ForceMode.Impulse);
 		controller.IsAirborne = true;
+
+		AudioManager.Request3DSFX?.Invoke(controller.Jump_SFX, controller.transform.position, controller.PitchVariation);
 	}
 
 	public override void FixedTick()
