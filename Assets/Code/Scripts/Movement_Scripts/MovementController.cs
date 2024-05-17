@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
-	public static Action OnClimb;
-
 	[HideInInspector] public Rigidbody Rb;
 	[HideInInspector] public Collider MyCollider;
 
@@ -66,10 +64,9 @@ public class MovementController : MonoBehaviour
 	[HideInInspector] public Vector3 MoveDir, CollisionNormal, CollisionDir;
 	[HideInInspector] public Collider ClimbableCollider;
 	[HideInInspector] public RaycastHit Hit;
-	[HideInInspector] public bool IsAirborne, isPaused, isRunning, isClimbing;
 	[HideInInspector] public PlayerInputs inputActions;
-	public static Action climb;
-	public bool CheckLedge(Vector3 pos, Vector3 dir) => Physics.Raycast(pos, dir, out Hit, RaycastDetectionLenght, ClimableLayers);
+	public static Action OnClimb;
+	public bool CheckLedge => Physics.Raycast(transform.position + Vector3.up * RaycastDetectionHeight, transform.forward, out Hit, RaycastDetectionLenght, ClimableLayers);
 	public bool GroundCheck => Physics.SphereCast(transform.position, MyCollider.bounds.extents.x, Vector3.down, out _, RaycastDetectionLenght, LayerPlayer);
 	private void Awake()
 	{
@@ -117,12 +114,5 @@ public class MovementController : MonoBehaviour
 		//Debug.LogWarning("current state= " + CurrentState + "\nNewState= " + newState);
 		CurrentState = newState;
 		CurrentState.Enter(this);
-	}
-
-	public IEnumerator CheckLedgeCooldown()
-	{
-		isClimbing = true;
-		yield return new WaitForSeconds(CooldownAfterEnd);
-		isClimbing = false;
 	}
 }
