@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class SensitivityManager: MonoBehaviour
 {
+    public static SensitivityManager Instance;
+
     [SerializeField] private Sensitivity_Settings m_Settings;
 
     private static Sensitivity_Settings Settings;
@@ -9,6 +11,7 @@ public class SensitivityManager: MonoBehaviour
     private void Awake()
     {
         Settings = m_Settings;
+        Instance = this;
     }
 
     public static Vector2 GetSensitivityValue()

@@ -21,7 +21,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 0f3a14573ed21d342abdb036a9c36889, type: 3}
   - {fileID: 8300000, guid: 579a9a0fa05da2746b29387f3bc7ec7b, type: 3}
   - {fileID: 8300000, guid: 7df9fc580c4c1444aa3ec3ab19a82241, type: 3}
-  Tipping_SFX: {fileID: 8300000, guid: 9fa4025fdb431ad4f82cf561f9882784, type: 3}
-  PitchVariation_Tipping: 0.025
+  SideTipping_SFX: {fileID: 8300000, guid: 31a7ee25661f74c4a8429cfc3effac40, type: 3}
+  PitchVariation_SideTipping: 0.2
+  BottomTipping_SFX: {fileID: 8300000, guid: 9fa4025fdb431ad4f82cf561f9882784, type: 3}
+  PitchVariation_BottomTipping: 0.2
   BottleHit_SFX: {fileID: 8300000, guid: 3f890b62a27c8fa49a033fcc568c3d60, type: 3}
   PitchVariation_BottleHit: 0.2

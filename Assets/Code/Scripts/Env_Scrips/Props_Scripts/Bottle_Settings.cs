@@ -15,14 +15,18 @@ public class Bottle_Settings : ScriptableObject
     [SerializeField] public ParticleSystem Breaking_VFX;
     [SerializeField] public List<AudioClip> Breaking_SFX;
     [Header("Tipping FX")]
-    [SerializeField] public AudioClip Tipping_SFX;
-    [SerializeField, Range(0f, 1f)] private float PitchVariation_Tipping = 0f;
+    [Header("Tipping On side FX")]
+    [SerializeField] public AudioClip SideTipping_SFX;
+    [SerializeField, Range(0f, 1f)] private float PitchVariation_SideTipping = 0f;
+    [Header("Tipping on bottom FX")]
+    [SerializeField] public AudioClip BottomTipping_SFX;
+    [SerializeField, Range(0f, 1f)] private float PitchVariation_BottomTipping = 0f;
     [Header("Hitting Another Bottle FX")]
     [SerializeField] public AudioClip BottleHit_SFX;
     [SerializeField, Range(0f, 1f)] private float PitchVariation_BottleHit = 0f;
-
+    
     /// <summary>
-    /// Return an audioclip chosen randomly in a list
+    /// Return an audioclip chosen randomly in the braking AudioClip list
     /// </summary>
     /// <returns>AudioClip</returns>
     public AudioClip GetBreakingAudioClip()
@@ -30,14 +34,18 @@ public class Bottle_Settings : ScriptableObject
         return Breaking_SFX[UnityEngine.Random.Range(0, Breaking_SFX.Count)];
     }
 
-    public float GetTippingPitch()
+    public float GetSideTippingPitch()
     {
-        return 1+UnityEngine.Random.Range(-PitchVariation_Tipping, PitchVariation_Tipping);
+        return 1+UnityEngine.Random.Range(-PitchVariation_SideTipping, PitchVariation_SideTipping);
+    }
+
+    public float GetBottomTippingPitch()
+    {
+        return 1 + UnityEngine.Random.Range(-PitchVariation_BottomTipping, PitchVariation_BottomTipping);
     }
 
     public float GetBottleHitPitch()
     {
         return 1 + UnityEngine.Random.Range(-PitchVariation_BottleHit, PitchVariation_BottleHit);
     }
-
 }

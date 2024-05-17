@@ -16,7 +16,7 @@ public class CinemachinePOVExtention : CinemachineExtension
 
     protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
     {
-        if (InputManager.inputActions == null)
+        if (SensitivityManager.Instance == null)
             return;
 
         if (vcam.Follow)

@@ -14,39 +14,42 @@ public class Bottle : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == 6)
+        if (collision.collider.IsPlayer())
             return;
 
         //Breaking Case
         if (collision.impulse.magnitude > m_Settings.BreakingForce)
             Break();
-        //Tipping Case
-        else
-        {
-            if (collision.gameObject.TryGetComponent<Bottle>(out Bottle CollidingBottle))
-                AudioManager.Request3DSFX?.Invoke(m_Settings.BottleHit_SFX, transform.position, m_Settings.GetBottleHitPitch());
-            else
-                AudioManager.Request3DSFX?.Invoke(m_Settings.Tipping_SFX, transform.position, m_Settings.GetTippingPitch());
-        }
     }
-
+    
     private void OnCollisionStay(Collision collision)
     {
         //Stop if colliding with player
         if (collision.collider.IsPlayer())
             return;
-
-        //Stop if colliding with bottle
-        if (collision.gameObject.TryGetComponent<Bottle>(out Bottle CollidingBottle))
+        //Discard Collision if velocity is less than a threshold
+        if (m_Body.velocity.magnitude < 0.5f)
             return;
 
         //Get Contact Points
         ContactPoints = collision.contacts.ToList();
 
-        //Tipping Case
-        if (ContactPoints.Count > ContactCounter)
-            AudioManager.Request3DSFX?.Invoke(m_Settings.Tipping_SFX, transform.position, m_Settings.GetTippingPitch());
+        //Stop if colliding with bottle
+        if (collision.gameObject.TryGetComponent<Bottle>(out Bottle CollidingBottle))
+        {
+            AudioManager.Request3DSFX?.Invoke(m_Settings.BottleHit_SFX, transform.position, m_Settings.GetBottleHitPitch());
+            return;
+        }
 
+        //Tipping Case
+        if (ContactPoints.Count > ContactCounter && m_Body.angularVelocity.magnitude > 0.25f)
+        {
+            if(Mathf.Abs(collision.GetAverageNormal().x) > 0.5f)
+                AudioManager.Request3DSFX?.Invoke(m_Settings.SideTipping_SFX, transform.position, m_Settings.GetSideTippingPitch());
+            else
+                AudioManager.Request3DSFX?.Invoke(m_Settings.BottomTipping_SFX, transform.position, m_Settings.GetBottomTippingPitch());
+        }
+        
         //Update Contact Counter
         ContactCounter = ContactPoints.Count;
         Debug.Log(ContactCounter + " collisions with: "+collision.gameObject.name);
@@ -76,5 +79,15 @@ public static class CollisionExtention
     public static bool IsPlayer(this Collider collider)
     {
         return collider.gameObject.layer == 6;
+    }
+
+    public static Vector3 GetAverageNormal(this Collision collision)
+    {
+        Vector3 sum = Vector3.zero;
+        for(int i = 0; i<collision.contacts.Length; i++)
+        {
+            sum += collision.contacts[i].point;
+        }
+        return sum/ collision.contacts.Length;
     }
 }
