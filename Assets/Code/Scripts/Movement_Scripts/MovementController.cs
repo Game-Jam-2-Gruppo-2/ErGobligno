@@ -29,50 +29,28 @@ public class MovementController : MonoBehaviour
 	[Header("Falling Settings")]//|------------------------------------------------------------------------------------------|
 	[SerializeField] public LayerMask LayerPlayer;
 	[SerializeField] public float GroundCheckLenght;
+	[SerializeField] public float GroundCheckHight;
+	[SerializeField] public float GroundCheckRadius;
 
 	[Header("Speed Settings: ")]//|------------------------------------------------------------------------------------------|
 	[SerializeField] public float WalkMaxSpeed;
 	[SerializeField] public float RunMaxSpeed;
-	[SerializeField] public float MinSpeed;
-	[SerializeField] public float ChangeDirSpeedDivident;
 	[SerializeField] public float AirborneSpeed;
 	[SerializeField] public LayerMask MovableLayer;
-
-
-	[Header("Momentum Settings:")]//|------------------------------------------------------------------------------------------|
-
-	[Tooltip("this number checks if you are changing direction DRAMATICALLY from before\n(default: 0.7 witch is equal to 45° angle)")]
-	//(have you moved direction? will you move direction? when will you move direction?)
-	[SerializeField] public float maxDotProduct = 0.7f;
-
-	[SerializeField] public AnimationCurve AccelerationCurve; // how fast you XLR8
-
-	[Tooltip("how long you take to Accelerate")]
-	[SerializeField] public float AccelerationTime;
-	[SerializeField] public float AccelerationAirborneTime;
-
-	[Tooltip("how you stop moving based on decelerationTime")]
-	[SerializeField] public AnimationCurve DecelerationCurve;
-
-	[Tooltip("how long you take to decelerate")]
-	[SerializeField] public float DecelerationTime;
-	[Tooltip("time that it takes to save the last given input")]
-	[SerializeField] public float IdleInputTime;
+	[SerializeField] public float IMpulseForce;
 	//|------------------------------------------------------------------------------------------|
 	[HideInInspector] public MovementStates CurrentState;
-	[HideInInspector] public float MaxSpeed, LastDot, LastSpeed;
 	[HideInInspector] public Vector3 MoveDir, CollisionNormal, CollisionDir;
 	[HideInInspector] public Collider ClimbableCollider;
 	[HideInInspector] public RaycastHit Hit;
 	[HideInInspector] public PlayerInputs inputActions;
 	public static Action OnClimb;
 	public bool CheckLedge => Physics.Raycast(transform.position + Vector3.up * RaycastDetectionHeight, transform.forward, out Hit, RaycastDetectionLenght, ClimableLayers);
-	public bool GroundCheck => Physics.SphereCast(transform.position, MyCollider.bounds.extents.x, Vector3.down, out _, RaycastDetectionLenght, LayerPlayer);
+	public bool GroundCheck => Physics.SphereCast(transform.position + Vector3.up * GroundCheckHight, GroundCheckRadius, Vector3.down, out _, RaycastDetectionLenght, ~LayerPlayer);
 	private void Awake()
 	{
 		Rb = GetComponent<Rigidbody>();
 		MyCollider = GetComponent<Collider>();
-		MaxSpeed = WalkMaxSpeed;
 		inputActions = InputManager.inputActions;
 		ChangeState(new IdleState());
 	}
@@ -115,4 +93,15 @@ public class MovementController : MonoBehaviour
 		CurrentState = newState;
 		CurrentState.Enter(this);
 	}
+#if UNITY_EDITOR
+	private void OnDrawGizmos()
+	{
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawRay(transform.position + (transform.up * GroundCheckHight), -transform.up * GroundCheckLenght);
+		Gizmos.DrawWireSphere(transform.position + (transform.up * GroundCheckHight) - (transform.up * GroundCheckLenght), GroundCheckRadius);
+
+		Gizmos.color = Color.red;
+		Gizmos.DrawRay(transform.position + Vector3.up * RaycastDetectionHeight, transform.forward * RaycastDetectionLenght);
+	}
+#endif
 }
