@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MovementController : MonoBehaviour
@@ -65,7 +64,7 @@ public class MovementController : MonoBehaviour
 	[HideInInspector] public MovementStates CurrentState;
 	[HideInInspector] public float MaxSpeed, LastDot, LastSpeed;
 	[HideInInspector] public Vector3 MoveDir, CollisionNormal, CollisionDir;
-	[HideInInspector] public Collider ClimbableObject;
+	[HideInInspector] public Collider ClimbableCollider;
 	[HideInInspector] public RaycastHit Hit;
 	[HideInInspector] public bool IsAirborne, isPaused, isRunning, isClimbing;
 	public static Action climb;
@@ -128,28 +127,8 @@ public class MovementController : MonoBehaviour
 			isPaused = true;
 		}
 	}
-	public void IdleInputs()
-	{
-		InputManager.inputActions.Movement.Walk.performed += MoveExit;
-		InputManager.inputActions.Movement.Jump.performed += JumpExit;
-	}
-	public void IdleInputsDisable()
-	{
-		Debug.LogWarning("no more input?");
-		InputManager.inputActions.Movement.Walk.performed -= MoveExit;
-		InputManager.inputActions.Movement.Jump.performed -= JumpExit;
-	}
-	private void MoveExit(UnityEngine.InputSystem.InputAction.CallbackContext context)
-	{
-		Debug.Log("idle: " + Rb.velocity);
-		ChangeState(new MoveState());
-	}
 
-	private void JumpExit(UnityEngine.InputSystem.InputAction.CallbackContext context)
-	{
-		IsAirborne = true;
-		ChangeState(new JumpState());
-	}
+
 	public void ChangeState(MovementStates newState)
 	{
 		if (CurrentState != null)
@@ -163,8 +142,8 @@ public class MovementController : MonoBehaviour
 
 		if (CurrentState != null)
 		{
-			Debug.LogWarning("current state= " + CurrentState + "\nNewState= " + newState);
 			CurrentState.Exit();
+			Debug.LogWarning("current state= " + CurrentState + "\nNewState= " + newState);
 		}
 
 		//Debug.LogWarning("current state= " + CurrentState + "\nNewState= " + newState);

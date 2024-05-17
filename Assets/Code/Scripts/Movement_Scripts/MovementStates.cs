@@ -1,5 +1,3 @@
-using System;
-using System.Threading;
 using UnityEngine;
 
 public abstract class MovementStates
@@ -91,17 +89,16 @@ public class MoveState : MovementStates
 		if (Controller.IsAirborne || Controller.isClimbing)
 			return;
 
-		Debug.Log("running");
+		//Debug.Log("running");
 		Controller.MaxSpeed = Controller.isRunning ? Controller.RunMaxSpeed : Controller.WalkMaxSpeed;
 		Controller.isRunning = !Controller.isRunning;
 		Reset();
 	}
 	private void OnJump(UnityEngine.InputSystem.InputAction.CallbackContext context)
 	{
-		if (Controller.IsAirborne || Controller.isClimbing)
+		if (Controller.IsAirborne)
 			return;
 
-		Controller.IsAirborne = true;
 		Controller.ChangeState(new JumpState());
 	}
 
@@ -147,7 +144,7 @@ public class MoveState : MovementStates
 	{
 		if (Controller.isClimbing == false && Controller.CheckLedge(Controller.transform.position + Vector3.up * Controller.RaycastDetectionHeight, Controller.transform.forward))
 		{
-			Controller.ClimbableObject = Controller.Hit.collider;
+			Controller.ClimbableCollider = Controller.Hit.collider;
 			Controller.ChangeState(new ClimbState());
 			MovementController.OnClimb?.Invoke();
 			// WINX :3
@@ -157,7 +154,7 @@ public class MoveState : MovementStates
 	{
 		if (GetLastDot < GetMaxDot && GoBackToWalk == false)
 		{
-			Debug.Log("Turn" + GetLastDot);
+			//Debug.Log("Turn" + GetLastDot);
 			GoBackToWalk = true;
 			timer = 0;
 			FromSpeed = GetLastSpeed;
@@ -187,7 +184,7 @@ public class MoveState : MovementStates
 		else if (GoBackToWalk == true)
 		{
 			GoBackToWalk = false;
-			Debug.Log("ChangeStateMove");
+			//Debug.Log("ChangeStateMove");
 			Reset();
 		}
 		else
@@ -289,13 +286,20 @@ public class IdleState : MovementStates
 	public override MovementController Controller { get; set; }
 	public override void Enter(MovementController controller)
 	{
-		//Debug.Log("IDLE");
 		Controller = controller;
+
+		//reset
+		Controller.isRunning = false;
+		Controller.MaxSpeed = Controller.WalkMaxSpeed;
+		Controller.LastSpeed = 0;
+		Controller.MoveDir = Vector3.zero;
+		Controller.LastDot = 0;
 		Controller.Rb.velocity = Vector3.zero;
-		controller.IdleInputs();
+
+		//inputs check
+		InputManager.inputActions.Movement.Walk.performed += MoveExit;
+		InputManager.inputActions.Movement.Jump.performed += JumpExit;
 	}
-
-
 
 	public override void FixedTick()
 	{
@@ -319,44 +323,42 @@ public class IdleState : MovementStates
 
 	public override void Exit()
 	{
-		Controller.isRunning = false;
-		Controller.MaxSpeed = Controller.WalkMaxSpeed;
-		Controller.LastSpeed = 0;
-		Controller.MoveDir = Vector3.zero;
-		Controller.LastDot = 0;
-		Controller.IdleInputsDisable();
-		Debug.LogWarning("no more input?");
+		InputManager.inputActions.Movement.Walk.performed -= MoveExit;
+		InputManager.inputActions.Movement.Jump.performed -= JumpExit;
+	}
+	private void MoveExit(UnityEngine.InputSystem.InputAction.CallbackContext context)
+	{
+		Debug.Log("idle: " + Controller.Rb.velocity);
+		Controller.ChangeState(new MoveState());
+	}
 
+	private void JumpExit(UnityEngine.InputSystem.InputAction.CallbackContext context)
+	{
+		Controller.IsAirborne = true;
+		Controller.ChangeState(new JumpState());
 	}
 
 }
 
+
 public class JumpState : MovementStates
 {
 	public override MovementController Controller { get; set; }
-
-
-	/// <summary>
-	/// get => Controller.CollisionNormal; 
-	/// set => Controller.CollisionNormal = value;
-	/// </summary>
-	Vector3 Normal { get => Controller.CollisionNormal; set => Controller.CollisionNormal = value; }
 	public override void Enter(MovementController controller)
 	{
 		Controller = controller;
 		controller.Rb.AddForce(controller.transform.up * controller.JumpForce, ForceMode.Impulse);
-		controller.IsAirborne = true;
+
 
 		AudioManager.Request3DSFX?.Invoke(controller.Jump_SFX, controller.transform.position, controller.PitchVariation);
 	}
 
 	public override void FixedTick()
 	{
-		if (Controller.isClimbing == false && Controller.CheckLedge(Controller.transform.position + Vector3.up * Controller.RaycastDetectionHeight, Controller.transform.forward))
+		if (Controller.CheckLedge(Controller.transform.position + Vector3.up * Controller.RaycastDetectionHeight, Controller.transform.forward))
 		{
-			Controller.ClimbableObject = Controller.Hit.collider;
+			Controller.ClimbableCollider = Controller.Hit.collider;
 			Controller.ChangeState(new ClimbState());
-			MovementController.OnClimb?.Invoke();
 		}
 	}
 
@@ -369,7 +371,7 @@ public class JumpState : MovementStates
 	{
 		Vector3 Normal = other.contacts[0].normal;
 
-		if (Controller.IsAirborne && Normal.y > 0)
+		if (Normal.y > 0)
 		{
 			Controller.ChangeState(new IdleState());
 		}
@@ -382,7 +384,7 @@ public class JumpState : MovementStates
 
 	public override void Exit()
 	{
-		Controller.IsAirborne = false;
+
 	}
 }
 
@@ -454,6 +456,7 @@ public class ClimbState : MovementStates
 	public override void Enter(MovementController controller)
 	{
 		Controller = controller;
+
 		Controller.MyCollider.enabled = false;
 		Controller.Rb.useGravity = false;
 		Controller.isClimbing = true;
@@ -461,7 +464,7 @@ public class ClimbState : MovementStates
 
 		startpos = Controller.transform.position;
 		endPos = startpos;
-		endPos.y = Controller.ClimbableObject.bounds.max.y + Controller.MyCollider.bounds.extents.y + Controller.ClimbOffsetY; // + controller.ClimbOffset
+		endPos.y = Controller.ClimbableCollider.bounds.max.y + Controller.MyCollider.bounds.extents.y + Controller.ClimbOffsetY; // + controller.ClimbOffset
 		endPos += controller.transform.forward * controller.ClimbOffsetZ;
 
 		Controller.Rb.velocity = Vector3.zero;
