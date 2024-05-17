@@ -67,6 +67,7 @@ public class MovementController : MonoBehaviour
 	[HideInInspector] public Collider ClimbableCollider;
 	[HideInInspector] public RaycastHit Hit;
 	[HideInInspector] public bool IsAirborne, isPaused, isRunning, isClimbing;
+	[HideInInspector] public PlayerInputs inputActions;
 	public static Action climb;
 	public bool CheckLedge(Vector3 pos, Vector3 dir) => Physics.Raycast(pos, dir, out Hit, RaycastDetectionLenght, ClimableLayers);
 	public bool GroundCheck => Physics.SphereCast(transform.position, MyCollider.bounds.extents.x, Vector3.down, out _, RaycastDetectionLenght, LayerPlayer);
@@ -75,18 +76,8 @@ public class MovementController : MonoBehaviour
 		Rb = GetComponent<Rigidbody>();
 		MyCollider = GetComponent<Collider>();
 		MaxSpeed = WalkMaxSpeed;
+		inputActions = InputManager.inputActions;
 		ChangeState(new IdleState());
-	}
-
-	private void OnEnable()
-	{
-		InputManager.inputActions.Movement.Pause.performed += OnPause;
-		InputManager.inputActions.UI.Pause.performed += OnPause;
-	}
-	private void OnDisable()
-	{
-		InputManager.inputActions.Movement.Pause.performed -= OnPause;
-		InputManager.inputActions.UI.Pause.performed -= OnPause;
 	}
 
 	private void FixedUpdate()
@@ -114,37 +105,14 @@ public class MovementController : MonoBehaviour
 		CurrentState.CollisionExit(other);
 	}
 
-	private void OnPause(UnityEngine.InputSystem.InputAction.CallbackContext context)
-	{
-		if (isPaused)
-		{
-			// unpause
-			isPaused = false;
-		}
-		else
-		{
-			// pause
-			isPaused = true;
-		}
-	}
-
-
 	public void ChangeState(MovementStates newState)
 	{
-		if (CurrentState != null)
-		{
-			if (CurrentState.GetType() == newState.GetType())
-			{
-				//Debug.Log("opsy.txt");
-				return;
-			}
-		}
-
 		if (CurrentState != null)
 		{
 			CurrentState.Exit();
 			Debug.LogWarning("current state= " + CurrentState + "\nNewState= " + newState);
 		}
+
 
 		//Debug.LogWarning("current state= " + CurrentState + "\nNewState= " + newState);
 		CurrentState = newState;

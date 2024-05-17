@@ -17,28 +17,18 @@ public class MoveState : MovementStates
 	protected AnimationCurve usedCurve;
 	protected float speed;
 	protected float FromSpeed, ToSpeed;
-	protected float timer = 0, lastTimer = 0, from0To1;
+	protected float timer = 0, lastTimer = 0, NormalizedValue;
 	protected float timerIdle = 0, lastInputDuration;
 	protected float duration;
 	protected Vector3 vel, lastDir;
 	protected bool GoBackToWalk = false;
-	protected bool isIdle, isColliding;
-
-	// public MoveState(float minSpeed, float maxSpeed, float duration, bool HasToFinish, AnimationCurve usedCurve)
-	// {
-	// 	this.minSpeed = minSpeed;
-	// 	this.maxSpeed = maxSpeed;
-	// 	this.duration = duration;
-	// 	this.usedCurve = usedCurve;
-	// 	this.HasToFinish = HasToFinish;
-	// }
-
+	protected bool NoInputs, isColliding;
 
 	#region shortcuts
 	/// <summary>
 	/// usedCurve.Evaluate(timer)
 	/// </summary>
-	protected float CurveValue => usedCurve.Evaluate(from0To1);
+	protected float CurveValue => usedCurve.Evaluate(NormalizedValue);
 
 	/// <summary>
 	/// Mathf.Lerp(minSpeed, maxSpeed, CurveValue)
@@ -84,7 +74,18 @@ public class MoveState : MovementStates
 	protected Vector3 Normal { get => Controller.CollisionNormal; set => Controller.CollisionNormal = value; }
 	#endregion
 
-	private void OnRun(UnityEngine.InputSystem.InputAction.CallbackContext context)
+
+	public override void Enter(MovementController controller)
+	{
+		Controller = controller;
+		GoBackToWalk = false;
+
+		Controller.inputActions.Movement.Run.started += Run;
+		Controller.inputActions.Movement.Jump.started += Jump;
+		Reset();
+
+	}
+	private void Run(UnityEngine.InputSystem.InputAction.CallbackContext context)
 	{
 		if (Controller.IsAirborne || Controller.isClimbing)
 			return;
@@ -94,22 +95,12 @@ public class MoveState : MovementStates
 		Controller.isRunning = !Controller.isRunning;
 		Reset();
 	}
-	private void OnJump(UnityEngine.InputSystem.InputAction.CallbackContext context)
+	private void Jump(UnityEngine.InputSystem.InputAction.CallbackContext context)
 	{
 		if (Controller.IsAirborne)
 			return;
 
 		Controller.ChangeState(new JumpState());
-	}
-
-	public override void Enter(MovementController controller)
-	{
-		Controller = controller;
-		GoBackToWalk = false;
-		InputManager.inputActions.Movement.Run.performed += OnRun;
-		InputManager.inputActions.Movement.Jump.performed += OnJump;
-		Reset();
-
 	}
 	void Reset()
 	{
@@ -142,7 +133,7 @@ public class MoveState : MovementStates
 
 	void CheckLedge()
 	{
-		if (Controller.isClimbing == false && Controller.CheckLedge(Controller.transform.position + Vector3.up * Controller.RaycastDetectionHeight, Controller.transform.forward))
+		if (Controller.CheckLedge(Controller.transform.position + Vector3.up * Controller.RaycastDetectionHeight, Controller.transform.forward))
 		{
 			Controller.ClimbableCollider = Controller.Hit.collider;
 			Controller.ChangeState(new ClimbState());
@@ -166,7 +157,7 @@ public class MoveState : MovementStates
 			usedCurve = Controller.DecelerationCurve;
 			duration = Controller.DecelerationTime;
 		}
-		else if (isIdle && GoBackToWalk == false)
+		else if (NoInputs && GoBackToWalk == false)
 		{
 			//Debug.Log("Idle");
 			timer = 0;
@@ -179,7 +170,7 @@ public class MoveState : MovementStates
 		if (timer < duration)
 		{
 			timer += Time.deltaTime;
-			from0To1 = timer / duration;
+			NormalizedValue = timer / duration;
 		}
 		else if (GoBackToWalk == true)
 		{
@@ -189,7 +180,7 @@ public class MoveState : MovementStates
 		}
 		else
 		{
-			from0To1 = 1;
+			NormalizedValue = 1;
 		}
 
 	}
@@ -204,7 +195,7 @@ public class MoveState : MovementStates
 		vel.y = Controller.Rb.velocity.y;
 		Controller.Rb.velocity = vel;
 
-		if (Controller.Rb.velocity == Vector3.zero /*&& isIdle*/)
+		if (Controller.Rb.velocity == Vector3.zero && NoInputs)
 		{
 			Controller.ChangeState(new IdleState());
 		}
@@ -212,9 +203,9 @@ public class MoveState : MovementStates
 	public override void Tick()
 	{
 		lastDir = GetMoveDir;
-		isIdle = GetInputDir == Vector3.zero && isIdle == false;
+		NoInputs = GetInputDir == Vector3.zero;
 
-		if (isIdle == false)
+		if (NoInputs == false)
 		{
 			GetLastDot = Vector3.Dot(GetInputDir, GetMoveDir);
 			GetMoveDir = GetInputDir;
@@ -234,9 +225,9 @@ public class MoveState : MovementStates
 		if (Controller.IsAirborne && Normal.y > 0)
 		{
 			//Debug.Log("Collision walk");
-			timer = 0;
 			Controller.IsAirborne = false;
-			FromSpeed = 0;
+			timer = 0;
+			FromSpeed = GetLastSpeed;
 			ToSpeed = Controller.MaxSpeed;
 			duration = Controller.AccelerationTime;
 			usedCurve = Controller.AccelerationCurve;
@@ -249,33 +240,35 @@ public class MoveState : MovementStates
 
 	public override void CollisionExit(Collision other)
 	{
-		if (Controller.IsAirborne == false && Controller.GroundCheck == false)
+		if (Controller.IsAirborne == false && Controller.GroundCheck == false) // i check IsAirborne cause i don't want to know if 
 		{
+			Controller.IsAirborne = true;
+
 			Normal = Vector3.zero;
 			isColliding = false;
 
 			timer = 0;
-			Controller.IsAirborne = true;
 
 			FromSpeed = GetLastSpeed;
 			ToSpeed = Controller.AirborneSpeed;
 			usedCurve = Controller.AccelerationCurve;
+			duration = Controller.AccelerationAirborneTime;
 
 			if (ToSpeed < GetLastSpeed)
 			{
 				usedCurve = Controller.DecelerationCurve;
 				FromSpeed = Controller.AirborneSpeed;
 				ToSpeed = GetLastSpeed;
+				duration = Controller.DecelerationTime;
 			}
-			duration = Controller.AccelerationAirborneTime;
 		}
 	}
 
 	public override void Exit()
 	{
 		//Debug.Log("i'm in heaven now");
-		InputManager.inputActions.Movement.Run.performed -= OnRun;
-		InputManager.inputActions.Movement.Jump.performed -= OnJump;
+		Controller.inputActions.Movement.Run.started -= Run;
+		Controller.inputActions.Movement.Jump.started -= Jump;
 
 		GetLastSpeed = speed;
 	}
@@ -284,10 +277,10 @@ public class MoveState : MovementStates
 public class IdleState : MovementStates
 {
 	public override MovementController Controller { get; set; }
+
 	public override void Enter(MovementController controller)
 	{
 		Controller = controller;
-
 		//reset
 		Controller.isRunning = false;
 		Controller.MaxSpeed = Controller.WalkMaxSpeed;
@@ -297,8 +290,9 @@ public class IdleState : MovementStates
 		Controller.Rb.velocity = Vector3.zero;
 
 		//inputs check
-		InputManager.inputActions.Movement.Walk.performed += MoveExit;
-		InputManager.inputActions.Movement.Jump.performed += JumpExit;
+		Controller.inputActions.Movement.Walk.started += MoveExit;
+		Controller.inputActions.Movement.Jump.started += JumpExit;
+		Debug.Log("Idle Entered");
 	}
 
 	public override void FixedTick()
@@ -323,18 +317,16 @@ public class IdleState : MovementStates
 
 	public override void Exit()
 	{
-		InputManager.inputActions.Movement.Walk.performed -= MoveExit;
-		InputManager.inputActions.Movement.Jump.performed -= JumpExit;
+		Controller.inputActions.Movement.Walk.started -= MoveExit;
+		Controller.inputActions.Movement.Jump.started -= JumpExit;
 	}
 	private void MoveExit(UnityEngine.InputSystem.InputAction.CallbackContext context)
 	{
-		Debug.Log("idle: " + Controller.Rb.velocity);
 		Controller.ChangeState(new MoveState());
 	}
 
 	private void JumpExit(UnityEngine.InputSystem.InputAction.CallbackContext context)
 	{
-		Controller.IsAirborne = true;
 		Controller.ChangeState(new JumpState());
 	}
 
@@ -504,6 +496,5 @@ public class ClimbState : MovementStates
 	{
 		Controller.MyCollider.enabled = true;
 		Controller.Rb.useGravity = true;
-		Controller.StartCoroutine(Controller.CheckLedgeCooldown());
 	}
 }
