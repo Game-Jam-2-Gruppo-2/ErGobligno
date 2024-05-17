@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,45 +15,52 @@ public abstract class MovementStates
 public class MoveState : MovementStates
 {
 	public override MovementController Controller { get; set; }
-
-	Vector3 moveDir => InputManager.MovementDir;
-	Vector3 vel;
-
-	// AnimationCurve currentCurve;
-	float movementTimer, movementTime;
-	float maxSpeed, accelerationTimer, accelerationTime;
-	AnimationCurve accelerationCurve;
-
+	Vector3 inputMoveDir => InputManager.MovementDir;
+	Vector3 vel, moveDir, normal;
+	float maxSpeed;
+	bool isRunning, isAirborne;
+	Rigidbody rb;
+	float normalX, normalZ;
 
 
 	public override void Enter(MovementController controller)
 	{
 		Controller = controller;
+		Controller.Rb.velocity = Vector3.zero;
+		isRunning = false;
+		maxSpeed = controller.WalkMaxSpeed;
+		controller.inputActions.Movement.Run.performed += Run;
 		Controller.inputActions.Movement.Jump.performed += JumpExit;
-		Controller.inputActions.Movement.Run.performed += Run;
+		rb = controller.Rb;
 	}
 
 	private void Run(InputAction.CallbackContext context)
 	{
-
+		isRunning = !isRunning;
+		maxSpeed = isRunning ? Controller.RunMaxSpeed : Controller.WalkMaxSpeed;
 	}
 
 	public override void FixedTick()
 	{
-		if (Controller.Rb.velocity == Vector3.zero && moveDir == Vector3.zero)
-			Controller.ChangeState(new IdleState());
+		moveDir = inputMoveDir;
+		moveDir.x += normalX;
+		moveDir.z += normalZ;
+		moveDir = moveDir.normalized;
 
-		if (Controller.Rb.velocity.magnitude < maxSpeed)
-		{
-			//accelerate
-		}
-
-		vel = moveDir * Controller.WalkMaxSpeed;
 		vel.y = Controller.Rb.velocity.y;
-		Controller.Rb.velocity = vel;
+		rb.AddForce(Controller.IMpulseForce * moveDir.z * Time.fixedDeltaTime * rb.transform.forward, ForceMode.Impulse);
+		rb.AddForce(Controller.IMpulseForce * moveDir.x * Time.fixedDeltaTime * rb.transform.right, ForceMode.Impulse);
 
-		if (Controller.CheckLedge)
-			Controller.ChangeState(new ClimbState());
+		vel.x = Controller.Rb.velocity.x;
+		vel.z = Controller.Rb.velocity.z;
+		vel.x = Mathf.Clamp(vel.x, -maxSpeed, maxSpeed);
+		vel.z = Mathf.Clamp(vel.z, -maxSpeed, maxSpeed);
+		Controller.Rb.velocity = vel;
+		Debug.LogError("vel= " + vel + "\nNormal " + normal);
+
+
+		if (vel == Vector3.zero && inputMoveDir == Vector3.zero)
+			Controller.ChangeState(new IdleState());
 
 	}
 
@@ -65,24 +71,50 @@ public class MoveState : MovementStates
 
 	public override void Collision(Collision other)
 	{
+		if (isAirborne)
+		{
+			Debug.Log("it's airborne");
+			if (other.contacts[0].normal.y > 0)
+			{
+				isAirborne = false;
+				maxSpeed = Controller.WalkMaxSpeed;
+				Debug.Log("grounded");
+			}
 
+			if (other.contacts[0].normal.x != 0 || other.contacts[0].normal.z != 0)
+			{
+				normal = other.contacts[0].normal;
+				normalX = normal.x;
+				normalZ = normal.z;
+				Debug.Log("Normal z: " + normalZ + "\nnormal x " + normalX);
+			}
+		}
 	}
 
 	public override void CollisionExit(Collision other)
 	{
+		normalZ = normalX = 0;
 
+		if (Controller.GroundCheck == false && isAirborne == false)
+		{
+			isAirborne = true;
+			Debug.Log("i am become airborne");
+			maxSpeed = Controller.AirborneSpeed;
+		}
 	}
 
 	public override void Exit()
 	{
-		Controller.inputActions.Movement.Jump.performed -= JumpExit;
 		Controller.inputActions.Movement.Run.performed -= Run;
+		Controller.inputActions.Movement.Jump.performed -= JumpExit;
 	}
 	private void JumpExit(InputAction.CallbackContext context)
 	{
+		if (isAirborne)
+			return;
+
 		Controller.ChangeState(new JumpState());
 	}
-
 }
 
 
@@ -94,10 +126,6 @@ public class IdleState : MovementStates
 	{
 		Controller = controller;
 		//reset
-		Controller.MaxSpeed = Controller.WalkMaxSpeed;
-		Controller.LastSpeed = 0;
-		Controller.MoveDir = Vector3.zero;
-		Controller.LastDot = 0;
 		Controller.Rb.velocity = Vector3.zero;
 
 		//inputs check

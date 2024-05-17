@@ -481,6 +481,12 @@ Transform:
   - {fileID: 1007717667}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1447994361 stripped
+CapsuleCollider:
+  m_CorrespondingSourceObject: {fileID: 8261126384876582558, guid: ce4840c7e9cfa614bba18901c4365496,
+    type: 3}
+  m_PrefabInstance: {fileID: 3967233464923994168}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1499326167
 GameObject:
   m_ObjectHideFlags: 0
@@ -598,7 +604,22 @@ PrefabInstance:
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
       propertyPath: MinSpeed
-      value: 150
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: JumpForce
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: MyCollider
+      value: 
+      objectReference: {fileID: 1447994361}
+    - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: RunMaxSpeed
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
@@ -612,13 +633,53 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
+      propertyPath: IMpulseForce
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: InpulseForce
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: WalkMaxSpeed
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: AirborneSpeed
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
       propertyPath: IdleInputTime
       value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
       propertyPath: DecelerationTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: GroundCheckHight
       value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: GroundCheckLenght
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: GroundCheckRadius
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: RaycastDetectionHeight
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
@@ -653,12 +714,12 @@ PrefabInstance:
     - target: {fileID: 1129238353097798265, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 4.11
       objectReference: {fileID: 0}
     - target: {fileID: 1129238353097798265, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 8.74
       objectReference: {fileID: 0}
     - target: {fileID: 1129238353097798265, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
