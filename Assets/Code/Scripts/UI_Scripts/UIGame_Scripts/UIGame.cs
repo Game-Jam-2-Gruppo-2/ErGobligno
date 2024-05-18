@@ -11,6 +11,12 @@ public class UIGame : MonoBehaviour
     [SerializeField] private UINoiseIndicator NoiseIndicator = new UINoiseIndicator();
     [SerializeField] private UIHands HandsIndicator;
 
+    private void Start()
+    {
+        UpdateNoise();
+        UpdateCoin();
+    }
+
     private void UpdateNoise()
     {
         NoiseIndicator.UpdateIndicator(ScoreManager.GetNoiseValue()/ScoreManager.GetMaxNoiseValue(), (int)ScoreManager.GetNoiseValue());
@@ -18,7 +24,7 @@ public class UIGame : MonoBehaviour
 
     private void UpdateCoin()
     {
-        CoinText.text = ScoreManager.GetCoinValue()+" €";
+        CoinText.text = ScoreManager.GetCoinValue()+" / "+ ScoreManager.GetMaxCoinValue() + " €";
     }
 
     private void UpdateTimer()

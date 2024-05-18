@@ -37,7 +37,7 @@ public class Bottle : MonoBehaviour
         //Stop if colliding with bottle
         if (collision.gameObject.TryGetComponent<Bottle>(out Bottle CollidingBottle))
         {
-            AudioManager.Request3DSFX?.Invoke(m_Settings.BottleHit_SFX, transform.position, m_Settings.GetBottleHitPitch());
+            AudioManager.Request3DSFX?.Invoke(m_Settings.GetGlassHitClip(), transform.position, m_Settings.GetGlassHitPitch());
             return;
         }
 
@@ -45,14 +45,13 @@ public class Bottle : MonoBehaviour
         if (ContactPoints.Count > ContactCounter && m_Body.angularVelocity.magnitude > 0.25f)
         {
             if(Mathf.Abs(collision.GetAverageNormal().x) > 0.5f)
-                AudioManager.Request3DSFX?.Invoke(m_Settings.SideTipping_SFX, transform.position, m_Settings.GetSideTippingPitch());
+                AudioManager.Request3DSFX?.Invoke(m_Settings.GetSideTippingClip(), transform.position, m_Settings.GetSideTippingPitch());
             else
-                AudioManager.Request3DSFX?.Invoke(m_Settings.BottomTipping_SFX, transform.position, m_Settings.GetBottomTippingPitch());
+                AudioManager.Request3DSFX?.Invoke(m_Settings.GetBottomTippingClip(), transform.position, m_Settings.GetBottomTippingPitch());
         }
         
         //Update Contact Counter
         ContactCounter = ContactPoints.Count;
-        Debug.Log(ContactCounter + " collisions with: "+collision.gameObject.name);
     }
 
     private void Break()

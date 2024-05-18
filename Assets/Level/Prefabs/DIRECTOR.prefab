@@ -48,6 +48,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1290adfea30dbb458001cee991f339b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameScenes:
+  - LV1_Scene
+  - FlavioTestScene
+  MenuScenes:
+  - TitleScreen_Scene
 --- !u!114 &5331517471922367176
 MonoBehaviour:
   m_ObjectHideFlags: 0

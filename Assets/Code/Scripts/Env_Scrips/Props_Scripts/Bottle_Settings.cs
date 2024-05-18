@@ -13,16 +13,16 @@ public class Bottle_Settings : ScriptableObject
     [Header("FX")]
     [Header("Breaking FX")]
     [SerializeField] public ParticleSystem Breaking_VFX;
-    [SerializeField] public List<AudioClip> Breaking_SFX;
+    [SerializeField] private List<AudioClip> Breaking_SFX;
     [Header("Tipping FX")]
     [Header("Tipping On side FX")]
-    [SerializeField] public AudioClip SideTipping_SFX;
+    [SerializeField] private List<AudioClip> SideTipping_SFX;
     [SerializeField, Range(0f, 1f)] private float PitchVariation_SideTipping = 0f;
     [Header("Tipping on bottom FX")]
-    [SerializeField] public AudioClip BottomTipping_SFX;
+    [SerializeField] private List<AudioClip> BottomTipping_SFX;
     [SerializeField, Range(0f, 1f)] private float PitchVariation_BottomTipping = 0f;
     [Header("Hitting Another Bottle FX")]
-    [SerializeField] public AudioClip BottleHit_SFX;
+    [SerializeField] private List<AudioClip> GlassHit_SFX;
     [SerializeField, Range(0f, 1f)] private float PitchVariation_BottleHit = 0f;
     
     /// <summary>
@@ -32,6 +32,21 @@ public class Bottle_Settings : ScriptableObject
     public AudioClip GetBreakingAudioClip()
     {
         return Breaking_SFX[UnityEngine.Random.Range(0, Breaking_SFX.Count)];
+    }
+
+    public AudioClip GetSideTippingClip()
+    {
+        return SideTipping_SFX[UnityEngine.Random.Range(0, SideTipping_SFX.Count)];
+    }
+
+    public AudioClip GetBottomTippingClip()
+    {
+        return BottomTipping_SFX[UnityEngine.Random.Range(0, BottomTipping_SFX.Count)];
+    }
+
+    public AudioClip GetGlassHitClip()
+    {
+        return GlassHit_SFX[UnityEngine.Random.Range(0, GlassHit_SFX.Count)];
     }
 
     public float GetSideTippingPitch()
@@ -44,7 +59,7 @@ public class Bottle_Settings : ScriptableObject
         return 1 + UnityEngine.Random.Range(-PitchVariation_BottomTipping, PitchVariation_BottomTipping);
     }
 
-    public float GetBottleHitPitch()
+    public float GetGlassHitPitch()
     {
         return 1 + UnityEngine.Random.Range(-PitchVariation_BottleHit, PitchVariation_BottleHit);
     }

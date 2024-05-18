@@ -162,6 +162,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ScoreValue: 1
+  m_ClipOnCollect: {fileID: 8300000, guid: 635689acd330a22479a9bac278ef8ae7, type: 3}
+  m_PitchVariation: 0.2
 --- !u!136 &6325672168822151111
 CapsuleCollider:
   m_ObjectHideFlags: 0

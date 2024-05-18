@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,10 +16,16 @@ public class GameManager : MonoBehaviour
 	public static event GamePaused OnGamePause;
 
 	public delegate void GameEnded();
-	public static event GameEnded OnGameEnd;
+	public static event GameEnded OnGameEnd = () => { Debug.Log("U Won"); };
 
 	private GameState CurrentState = GameState.Menu;
 	private bool m_InGame = false;
+
+	[SerializeField] private List<String> GameScenes;
+    [SerializeField] private List<String> MenuScenes;
+
+	[Header("Debug")]
+	[SerializeField] bool EnterOnGame = false;
 
 	private void Awake()
 	{
@@ -33,17 +40,19 @@ public class GameManager : MonoBehaviour
 		}
 
 		DontDestroyOnLoad(this.gameObject);
-
-		InputManager.Initialize();
+		
         InputManager.inputActions.Movement.Pause.performed += PauseGame;
         InputManager.inputActions.UI.Pause.performed += PauseGame;
+		SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
 	private void Start()
 	{
-		//TODO: Swicth to gamestate game when scene is loaded
-		ChangeState(GameState.Game);
-	}
+        if (EnterOnGame)
+            ChangeState(GameState.Game);
+		else
+            ChangeState(GameState.Menu);
+    }
 
 	private void ChangeState(GameState newState)
 	{
@@ -100,9 +109,29 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	private void OnEnable()
+    private void CheckCoin()
+    {
+        Debug.Log(ScoreManager.GetCoinLeft());
+
+        if (ScoreManager.GetCoinLeft() <= 0)
+            OnGameEnd?.Invoke();
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+		for (int i = 0; i < GameScenes.Count; i++)
+			if (GameScenes[i] == scene.name)
+				ChangeState(GameState.Game);
+
+        for (int i = 0; i < MenuScenes.Count; i++)
+            if (MenuScenes[i] == scene.name)
+                ChangeState(GameState.Menu);
+    }
+
+    private void OnEnable()
 	{
 		ScoreManager.OnNoiseChanged += CheckNoise;
+		ScoreManager.OnCoinChanged += CheckCoin;
 	}
 
 	private void OnDisable()
@@ -110,7 +139,9 @@ public class GameManager : MonoBehaviour
 		InputManager.inputActions.UI.Pause.performed -= PauseGame;
         InputManager.inputActions.Movement.Pause.performed -= PauseGame;
         ScoreManager.OnNoiseChanged -= CheckNoise;
-		OnNewGame -= OnNewGame;
+        ScoreManager.OnCoinChanged -= CheckCoin;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        OnNewGame -= OnNewGame;
 		OnGamePause -= OnGamePause;
 		OnGameEnd -= OnGameEnd;
 	}

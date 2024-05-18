@@ -118,7 +118,6 @@ public class MoveState : MovementStates
 
 		if (GetLastDot < GetMaxDot && lastDir != Vector3.zero)
 		{
-			Debug.Log("Turn");
 			timer = 0;
 			FromSpeed = GetMaxSpeed;
 			ToSpeed = GetLastSpeed / Controller.ChangeDirSpeedDivident;
@@ -127,7 +126,6 @@ public class MoveState : MovementStates
 		}
 		else if (isIdle && lastDir != Vector3.zero)
 		{
-			Debug.Log("Idle");
 			timer = 0;
 			ToSpeed = GetLastSpeed;
 			FromSpeed = 0;
@@ -184,7 +182,6 @@ public class MoveState : MovementStates
 
 		if (Controller.IsAirborne && Normal.y > 0)
 		{
-			Debug.Log("Walk");
 			timer = 0;
 			Controller.IsAirborne = false;
 			ToSpeed = Controller.MaxSpeed;

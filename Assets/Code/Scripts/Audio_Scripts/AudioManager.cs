@@ -33,11 +33,15 @@ public class AudioManager : MonoBehaviour
             Destroy(this.gameObject);
             return;
         }
-
-        SetUpAudio();
+        
         SetUpSFX();
         Request3DSFX += Request3D_SFX;
         Request2DSFX += Request2D_SFX;
+    }
+
+    private void Start()
+    {
+        SetUpAudio();
     }
 
     #region Audio Manager

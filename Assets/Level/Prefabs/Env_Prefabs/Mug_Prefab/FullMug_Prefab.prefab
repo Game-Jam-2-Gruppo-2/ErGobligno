@@ -161,6 +161,16 @@ PrefabInstance:
       propertyPath: UVModule.fps
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1533669502395693766, guid: 85c889b1ff6d5dd43930ee06502974de,
+        type: 3}
+      propertyPath: UVModule.tilesX
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1533669502395693766, guid: 85c889b1ff6d5dd43930ee06502974de,
+        type: 3}
+      propertyPath: UVModule.timeMode
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2249645467397365290, guid: 85c889b1ff6d5dd43930ee06502974de,
         type: 3}
       propertyPath: m_Name
@@ -174,7 +184,7 @@ PrefabInstance:
     - target: {fileID: 7079797764094124412, guid: 85c889b1ff6d5dd43930ee06502974de,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.1545
+      value: 0.1573
       objectReference: {fileID: 0}
     - target: {fileID: 7079797764094124412, guid: 85c889b1ff6d5dd43930ee06502974de,
         type: 3}

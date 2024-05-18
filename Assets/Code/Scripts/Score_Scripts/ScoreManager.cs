@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ScoreManager: MonoBehaviour
@@ -25,6 +26,8 @@ public class ScoreManager: MonoBehaviour
     //Static variables
     private static float GameTime;
     private static int CoinAmount;
+    private static int CoinLeft;
+    private static int MaxCoin;
     private static float NoiseAmount;
     private static float MaxNoise;
 
@@ -149,9 +152,10 @@ public class ScoreManager: MonoBehaviour
         DecreaseNoiseProcedure();
     }
 
-    private void IncreaseCoinAmount(int amount)
+    private void IncreaseCoinScore(int amount)
     {
         CoinAmount += amount;
+        CoinLeft--;
         OnCoinChanged?.Invoke();
     }
 
@@ -159,6 +163,8 @@ public class ScoreManager: MonoBehaviour
     {
         ResetValues();
         TimerCoroutine = StartCoroutine(TimerEnumerator());
+        MaxCoin = FindObjectsOfType<Collectible>().Length;
+        CoinLeft = MaxCoin;
     }
 
     private void EndGame()
@@ -171,6 +177,16 @@ public class ScoreManager: MonoBehaviour
     public static float GetCoinValue()
     {
         return CoinAmount;
+    }
+
+    public static int GetMaxCoinValue()
+    {
+        return MaxCoin;
+    }
+
+    public static int GetCoinLeft()
+    {
+        return CoinLeft;
     }
 
     public static float GetNoiseValue()
@@ -202,14 +218,14 @@ public class ScoreManager: MonoBehaviour
     {
         GameManager.OnNewGame += StartGame;
         IncreaseNoise += IncreaseNoiseAmount;
-        IncreaseCoin += IncreaseCoinAmount;
+        IncreaseCoin += IncreaseCoinScore;
     }
 
     private void OnDisable()
     {
         GameManager.OnNewGame -= StartGame;
         IncreaseNoise -= IncreaseNoiseAmount;
-        IncreaseCoin -= IncreaseCoinAmount;
+        IncreaseCoin -= IncreaseCoinScore;
         OnCoinChanged -= OnCoinChanged;
         OnNoiseChanged -= OnNoiseChanged;
         OnGameTimeChanged -= OnGameTimeChanged;

@@ -21,9 +21,22 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 0f3a14573ed21d342abdb036a9c36889, type: 3}
   - {fileID: 8300000, guid: 579a9a0fa05da2746b29387f3bc7ec7b, type: 3}
   - {fileID: 8300000, guid: 7df9fc580c4c1444aa3ec3ab19a82241, type: 3}
-  SideTipping_SFX: {fileID: 8300000, guid: 31a7ee25661f74c4a8429cfc3effac40, type: 3}
+  SideTipping_SFX:
+  - {fileID: 8300000, guid: 98dadce3146c53d4a865672221637ee1, type: 3}
+  - {fileID: 8300000, guid: 6e689129d608f4143bfea7fb855e0fd5, type: 3}
+  - {fileID: 8300000, guid: e35a8d537103a8f47aaba5c8a870da0b, type: 3}
+  - {fileID: 8300000, guid: 32fdc907deceb5543ae480e29c76b2d8, type: 3}
+  - {fileID: 8300000, guid: c80d19f168376d2498712045cb33c002, type: 3}
   PitchVariation_SideTipping: 0.2
-  BottomTipping_SFX: {fileID: 8300000, guid: 9fa4025fdb431ad4f82cf561f9882784, type: 3}
+  BottomTipping_SFX:
+  - {fileID: 8300000, guid: 9fa4025fdb431ad4f82cf561f9882784, type: 3}
+  - {fileID: 8300000, guid: 38ff63de394187949b37e7a50bf0822b, type: 3}
+  - {fileID: 8300000, guid: b2a59a12bf3fcb84d8cdc3e90516f060, type: 3}
   PitchVariation_BottomTipping: 0.2
-  BottleHit_SFX: {fileID: 8300000, guid: 3f890b62a27c8fa49a033fcc568c3d60, type: 3}
+  GlassHit_SFX:
+  - {fileID: 8300000, guid: 3f890b62a27c8fa49a033fcc568c3d60, type: 3}
+  - {fileID: 8300000, guid: e23ba1a9165336442817da1bdc00e787, type: 3}
+  - {fileID: 8300000, guid: 75db1a102cfe22947b26deba064b114e, type: 3}
+  - {fileID: 8300000, guid: db169d2898c9d704dac586b3d42038a0, type: 3}
+  - {fileID: 8300000, guid: 2c78716d159311d449631f7c3738af1f, type: 3}
   PitchVariation_BottleHit: 0.2
