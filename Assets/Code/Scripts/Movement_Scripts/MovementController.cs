@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class MovementController : MonoBehaviour
@@ -11,9 +11,9 @@ public class MovementController : MonoBehaviour
 	[Header("Climb Settings:")]
 	[SerializeField] public LayerMask ClimableLayers;
 	[Tooltip("how far from the pivot in y is the raycast to detect ledges")]
-	[SerializeField] public float RaycastDetectionHeight;
+	[SerializeField] public float LedgeCheckHeight;
 	[Tooltip("how long is the raycast to detect ledges")]
-	[SerializeField] public float RaycastDetectionLenght;
+	[SerializeField] public float LedgeCheckLenght;
 	[SerializeField] public float ClimbDuration;
 	[SerializeField] public float CooldownAfterEnd;
 	///<summary>the offset in y after you climed</summary>
@@ -32,6 +32,9 @@ public class MovementController : MonoBehaviour
 	[SerializeField] public float GroundCheckHight;
 	[SerializeField] public float GroundCheckRadius;
 
+	[SerializeField] public float WallCheckHight;
+	[SerializeField] public float WallCheckLenght;
+
 	[Header("Speed Settings: ")]//|------------------------------------------------------------------------------------------|
 	[SerializeField] public float WalkMaxSpeed;
 	[SerializeField] public float RunMaxSpeed;
@@ -45,8 +48,8 @@ public class MovementController : MonoBehaviour
 	[HideInInspector] public RaycastHit Hit;
 	[HideInInspector] public PlayerInputs inputActions;
 	public static Action OnClimb;
-	public bool CheckLedge => Physics.Raycast(transform.position + Vector3.up * RaycastDetectionHeight, transform.forward, out Hit, RaycastDetectionLenght, ClimableLayers);
-	public bool GroundCheck => Physics.SphereCast(transform.position + Vector3.up * GroundCheckHight, GroundCheckRadius, Vector3.down, out _, RaycastDetectionLenght, ~LayerPlayer);
+	public bool CheckLedge => Physics.Raycast(transform.position + Vector3.up * LedgeCheckHeight, transform.forward, out Hit, LedgeCheckLenght, ClimableLayers);
+	public bool GroundCheck => Physics.SphereCast(transform.position + Vector3.up * GroundCheckHight, GroundCheckRadius, Vector3.down, out _, LedgeCheckLenght, ~LayerPlayer) == false;
 	private void Awake()
 	{
 		Rb = GetComponent<Rigidbody>();
@@ -96,12 +99,29 @@ public class MovementController : MonoBehaviour
 #if UNITY_EDITOR
 	private void OnDrawGizmos()
 	{
+
 		Gizmos.color = Color.yellow;
-		Gizmos.DrawRay(transform.position + (transform.up * GroundCheckHight), -transform.up * GroundCheckLenght);
-		Gizmos.DrawWireSphere(transform.position + (transform.up * GroundCheckHight) - (transform.up * GroundCheckLenght), GroundCheckRadius);
+		Gizmos.DrawRay(transform.position + (Vector3.up * GroundCheckHight), -Vector3.up * GroundCheckLenght);
+		Gizmos.DrawWireSphere(transform.position + (Vector3.up * GroundCheckHight) - (Vector3.up * GroundCheckLenght), GroundCheckRadius);
 
 		Gizmos.color = Color.red;
-		Gizmos.DrawRay(transform.position + Vector3.up * RaycastDetectionHeight, transform.forward * RaycastDetectionLenght);
+		Gizmos.DrawRay(transform.position + Vector3.up * LedgeCheckHeight, transform.forward * LedgeCheckLenght);
+
+		//Gizmos.color = Color.cyan;
+		// Vector3 halfExtent = MyCollider.bounds.extents * 2;
+		// halfExtent.z /= 2;
+		// MoveDir = MoveDir.x * transform.right + transform.forward * MoveDir.z;
+
+		// if (MoveDir == Vector3.zero)
+		// {
+		// 	Gizmos.DrawRay(transform.position + Vector3.up * WallCheckHight, transform.forward * WallCheckLenght);
+		// 	Gizmos.DrawRay(transform.position, transform.forward * WallCheckLenght);
+		// }
+		// else
+		// {
+		// 	Gizmos.DrawRay(transform.position + Vector3.up * WallCheckHight, MoveDir * WallCheckLenght);
+		// 	Gizmos.DrawRay(transform.position, MoveDir * WallCheckLenght);
+		// }
 	}
 #endif
 }

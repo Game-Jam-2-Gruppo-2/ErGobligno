@@ -16,13 +16,16 @@ public class MoveState : MovementStates
 {
 	public override MovementController Controller { get; set; }
 	Vector3 inputMoveDir => InputManager.MovementDir;
-	Vector3 vel, moveDir, normal;
+	Vector3 vel, moveDir, normal, halfExtent;
 	float maxSpeed;
 	bool isRunning, isAirborne;
 	Rigidbody rb;
-	float normalX, normalZ;
 
-
+#if UNITY_EDITOR
+	Vector3 drawDir;
+#endif
+	bool wallCheckTop => Physics.Raycast(Controller.transform.position + Vector3.up * Controller.WallCheckHight, moveDir);
+	bool wallCheckBot => Physics.Raycast(Controller.transform.position, moveDir);
 	public override void Enter(MovementController controller)
 	{
 		Controller = controller;
@@ -32,6 +35,7 @@ public class MoveState : MovementStates
 		controller.inputActions.Movement.Run.performed += Run;
 		Controller.inputActions.Movement.Jump.performed += JumpExit;
 		rb = controller.Rb;
+		halfExtent = controller.MyCollider.bounds.extents;
 	}
 
 	private void Run(InputAction.CallbackContext context)
@@ -43,9 +47,9 @@ public class MoveState : MovementStates
 	public override void FixedTick()
 	{
 		moveDir = inputMoveDir;
-		moveDir.x += normalX;
-		moveDir.z += normalZ;
-		moveDir = moveDir.normalized;
+
+		moveDir += normal;
+		//moveDir = moveDir.normalized;
 
 		vel.y = Controller.Rb.velocity.y;
 		rb.AddForce(Controller.IMpulseForce * moveDir.z * Time.fixedDeltaTime * rb.transform.forward, ForceMode.Impulse);
@@ -56,11 +60,26 @@ public class MoveState : MovementStates
 		vel.x = Mathf.Clamp(vel.x, -maxSpeed, maxSpeed);
 		vel.z = Mathf.Clamp(vel.z, -maxSpeed, maxSpeed);
 		Controller.Rb.velocity = vel;
-		Debug.LogError("vel= " + vel + "\nNormal " + normal);
+		//Debug.LogError("vel= " + vel + "\nMoveDir= " + Controller.MoveDir);
+
+
 
 
 		if (vel == Vector3.zero && inputMoveDir == Vector3.zero)
 			Controller.ChangeState(new IdleState());
+
+
+		isAirborne = Controller.GroundCheck;
+
+#if UNITY_EDITOR
+		Debug.Log("IsAirborne= " + isAirborne + "\ngroundCheck = " + Controller.GroundCheck);
+		drawDir = moveDir.z * Controller.transform.forward + (moveDir.x * Controller.transform.right);
+		if (isAirborne)
+		{
+			Debug.DrawRay(Controller.transform.position + Vector3.up * Controller.WallCheckHight, drawDir * Controller.WallCheckLenght, Color.cyan, Time.fixedDeltaTime);
+			Debug.DrawRay(Controller.transform.position, drawDir * Controller.WallCheckLenght, Color.cyan, Time.fixedDeltaTime);
+		}
+#endif
 
 	}
 
@@ -73,34 +92,25 @@ public class MoveState : MovementStates
 	{
 		if (isAirborne)
 		{
-			Debug.Log("it's airborne");
-			if (other.contacts[0].normal.y > 0)
+			if (Controller.GroundCheck == true)
 			{
 				isAirborne = false;
+				isRunning = false;
 				maxSpeed = Controller.WalkMaxSpeed;
-				Debug.Log("grounded");
 			}
 
-			if (other.contacts[0].normal.x != 0 || other.contacts[0].normal.z != 0)
+			if (wallCheckTop || wallCheckBot)
 			{
-				normal = other.contacts[0].normal;
-				normalX = normal.x;
-				normalZ = normal.z;
-				Debug.Log("Normal z: " + normalZ + "\nnormal x " + normalX);
+				normal = -moveDir;
+				//Debug.LogError("Normal " + normal);
 			}
 		}
+
 	}
 
 	public override void CollisionExit(Collision other)
 	{
-		normalZ = normalX = 0;
-
-		if (Controller.GroundCheck == false && isAirborne == false)
-		{
-			isAirborne = true;
-			Debug.Log("i am become airborne");
-			maxSpeed = Controller.AirborneSpeed;
-		}
+		normal = Vector3.zero;
 	}
 
 	public override void Exit()
@@ -131,6 +141,8 @@ public class IdleState : MovementStates
 		//inputs check
 		Controller.inputActions.Movement.Walk.performed += MoveExit;
 		Controller.inputActions.Movement.Jump.performed += JumpExit;
+		if (InputManager.MovementDir != Vector3.zero)
+			MoveExit();
 	}
 
 	public override void FixedTick()
@@ -159,6 +171,10 @@ public class IdleState : MovementStates
 		Controller.inputActions.Movement.Jump.performed -= JumpExit;
 	}
 	private void MoveExit(UnityEngine.InputSystem.InputAction.CallbackContext context)
+	{
+		Controller.ChangeState(new MoveState());
+	}
+	void MoveExit()
 	{
 		Controller.ChangeState(new MoveState());
 	}
