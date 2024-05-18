@@ -8,12 +8,21 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Level/Scenes/FlavioTest/FlavioTestScene.unity
     guid: d5a8b6a72ca120647bb1c6d1694c3cf7
-  - enabled: 0
-    path: Assets/Level/Scenes/GameScenes/TitleScreen_Scene.unity
+  - enabled: 1
+    path: Assets/Level/Scenes/GameScenes/Screens_Scene/TitleScreen_Scene.unity
     guid: 9a2838ed3d1e092448b05626cb289f92
-  - enabled: 0
+  - enabled: 1
+    path: Assets/Level/Scenes/GameScenes/Screens_Scene/Intro_Scene.unity
+    guid: d764e7b8c3e42a8429a5b7cdba212ce5
+  - enabled: 1
     path: Assets/Level/Scenes/GameScenes/Lv1_Scene/LV1_Scene.unity
     guid: d9c1e27aee7f8b34cabcb69e56e0fb8f
+  - enabled: 1
+    path: Assets/Level/Scenes/GameScenes/WinScreen_Scene.unity
+    guid: 4097218b74d39ba4ca88091e2a3529a8
+  - enabled: 1
+    path: Assets/Level/Scenes/GameScenes/Screens_Scene/LoseScreen_Scene.unity
+    guid: fbd0396db5392d145854a354e2ebef8d
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 3b195fa84020b04489dfec594d7dbcbf,
       type: 2}

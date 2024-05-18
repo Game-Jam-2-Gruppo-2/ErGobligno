@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ScoreManager: MonoBehaviour
 {
-    private static ScoreManager Instance;
+    public static ScoreManager Instance;
 
     [SerializeField] private ScoreManager_Settings m_Settings;
 
@@ -50,32 +50,6 @@ public class ScoreManager: MonoBehaviour
             return;
         }
 
-        ////Load All Records
-        Records = new List<RecordData>();
-        for (int i = 0; i < m_Settings.SavedScoreCount; i++)
-        {
-            RecordData record = new RecordData(0f, 0);
-
-            //Time Records
-            if (PlayerPrefs.HasKey("TimeRecord_" + i))
-                record.GameTime = PlayerPrefs.GetFloat("TimeRecord_" + i);
-            else
-            {
-                record.GameTime = 0;
-                PlayerPrefs.SetFloat("TimeRecord_" + i, 0f);
-            }
-            //Coin Record
-            if (PlayerPrefs.HasKey("ScoreRecord_" + i))
-                record.CoinAmount = (int)PlayerPrefs.GetFloat("ScoreRecord_" + i);
-            else
-            {
-                record.CoinAmount = 0;
-                PlayerPrefs.SetFloat("ScoreRecord_" + i, 0f);
-            }
-
-            Records.Add(record);
-        }
-
         MaxNoise = m_Settings.MaxNoise;
         TimerCoroutine = null;
         DecreaseTimerStack = new Stack<IEnumerator>();
@@ -84,20 +58,16 @@ public class ScoreManager: MonoBehaviour
     private void ResetValues()
     {
         //Reset Values
-        GameTime = 0f;
+        GameTime = m_Settings.MaxTime;
         CoinAmount = 0;
         NoiseAmount = 0f;
     }
 
-    /// <summary>
-    /// Play time Enumerator
-    /// </summary>
-    /// <returns></returns>
     private IEnumerator TimerEnumerator()
     {
         while (true)
         {
-            GameTime += Time.deltaTime;
+            GameTime -= Time.deltaTime;
             OnGameTimeChanged?.Invoke();
             yield return null;
         }
@@ -105,6 +75,9 @@ public class ScoreManager: MonoBehaviour
 
     private void DecreaseNoiseProcedure()
     {
+
+        if (NoiseAmount >= MaxNoise)
+            return;
         if (NoiseAmount <= 0)
         {
             NoiseAmount = 0;
@@ -134,14 +107,9 @@ public class ScoreManager: MonoBehaviour
         DecreaseNoiseProcedure();
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="amount"></param>
     private void IncreaseNoiseAmount(float amount)
     {
         NoiseAmount += amount;
-        NoiseAmount = Mathf.Clamp(NoiseAmount, 0, MaxNoise);
         OnNoiseChanged?.Invoke();
         DecreaseNoiseProcedure();
     }
@@ -169,48 +137,54 @@ public class ScoreManager: MonoBehaviour
     {
         //TODO: Save High Score
         ResetValues();
+        OnGameTimeChanged?.Invoke();
+        OnCoinChanged?.Invoke();
+        OnNoiseChanged?.Invoke();
     }
 
     //Public static getter
-    public static float GetCoinValue()
+    public static float GetCoinValue(){ return CoinAmount; }
+
+    public static int GetMaxCoinValue(){ return MaxCoin; }
+
+    public static int GetCoinLeft(){ return CoinLeft; }
+
+    public static float GetNoiseValue(){ return NoiseAmount; }
+
+    public static float GetMaxNoiseValue(){ return MaxNoise; }
+
+    public static float GetGameTimeValue(){ return GameTime; }
+
+    public static bool IsNoiseOnMax(){ return NoiseAmount > MaxNoise; }
+
+    public List<RecordData> GetRecords()
     {
-        return CoinAmount;
+        //Load All Records
+        Records = new List<RecordData>();
+        for (int i = 0; i < m_Settings.SavedScoreCount; i++)
+        {
+            RecordData record = new RecordData(0f, 0);
+
+            //Time Records
+            if (PlayerPrefs.HasKey("TimeRecord_" + i))
+                record.GameTime = PlayerPrefs.GetFloat("TimeRecord_" + i);
+            else
+            {
+                record.GameTime = 0;
+                PlayerPrefs.SetFloat("TimeRecord_" + i, 0f);
+            }
+            //Coin Record
+            if (PlayerPrefs.HasKey("ScoreRecord_" + i))
+                record.CoinAmount = (int)PlayerPrefs.GetFloat("ScoreRecord_" + i);
+            else
+            {
+                record.CoinAmount = 0;
+                PlayerPrefs.SetFloat("ScoreRecord_" + i, 0f);
+            }
+            Records.Add(record);
+        }
+        return Records;
     }
-
-    public static int GetMaxCoinValue()
-    {
-        return MaxCoin;
-    }
-
-    public static int GetCoinLeft()
-    {
-        return CoinLeft;
-    }
-
-    public static float GetNoiseValue()
-    {
-        return NoiseAmount;
-    }
-
-    public static float GetMaxNoiseValue()
-    {
-        return MaxNoise;
-    }
-
-    public static float GetGameTimeValue()
-    {
-        return GameTime;
-    }
-
-    public static bool IsNoiseOnMax()
-    {
-        return NoiseAmount > MaxNoise;
-    }
-
-    //public static List<float> GetRecords()
-    //{
-
-    //}
 
     private void OnEnable()
     {

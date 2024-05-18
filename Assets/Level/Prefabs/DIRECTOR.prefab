@@ -53,6 +53,12 @@ MonoBehaviour:
   - FlavioTestScene
   MenuScenes:
   - TitleScreen_Scene
+  - Intro_Scene
+  - WinScreen_Scene
+  - LoseScreen_Scene
+  WinScreen_Scene: WinScreen_Scene
+  LoseScreen_Scene: LoseScreen_Scene
+  EnterOnGame: 0
 --- !u!114 &5331517471922367176
 MonoBehaviour:
   m_ObjectHideFlags: 0

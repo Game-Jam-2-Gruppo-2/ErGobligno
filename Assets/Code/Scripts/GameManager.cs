@@ -16,13 +16,18 @@ public class GameManager : MonoBehaviour
 	public static event GamePaused OnGamePause;
 
 	public delegate void GameEnded();
-	public static event GameEnded OnGameEnd = () => { Debug.Log("U Won"); };
+	public static event GameEnded OnGameEnd;
 
 	private GameState CurrentState = GameState.Menu;
 	private bool m_InGame = false;
 
+	private PlayerInputs m_PlayerInputs = null;
+	[Header("Scenes")]
 	[SerializeField] private List<String> GameScenes;
     [SerializeField] private List<String> MenuScenes;
+
+    [SerializeField] private String WinScreen_Scene;
+    [SerializeField] private String LoseScreen_Scene;
 
 	[Header("Debug")]
 	[SerializeField] bool EnterOnGame = false;
@@ -40,10 +45,13 @@ public class GameManager : MonoBehaviour
 		}
 
 		DontDestroyOnLoad(this.gameObject);
-		
-        InputManager.inputActions.Movement.Pause.performed += PauseGame;
-        InputManager.inputActions.UI.Pause.performed += PauseGame;
-		SceneManager.sceneLoaded += OnSceneLoaded;
+
+		m_PlayerInputs = InputManager.inputActions;
+        m_PlayerInputs.UI.Pause.performed += PauseGame;
+        m_PlayerInputs.Movement.Pause.performed += PauseGame;
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+		OnGameEnd += FinishGame;
     }
 
 	private void Start()
@@ -59,73 +67,92 @@ public class GameManager : MonoBehaviour
 		switch (newState)
 		{
 			case GameState.Menu:
+                m_InGame = false;
+                ScoreManager.OnNoiseChanged -= CheckNoise;
+                ScoreManager.OnCoinChanged -= CheckCoin;
 				Time.timeScale = 1;
-				//TODO: Change State -> Menu
-				break;
+                break;
 
 			case GameState.Game:
-				//TODO: FIX
 				if (!m_InGame)
 				{
 					m_InGame = true;
 					OnNewGame?.Invoke();
-				}
+                    ScoreManager.OnNoiseChanged += CheckNoise;
+                    ScoreManager.OnCoinChanged += CheckCoin;
+                }
 				Time.timeScale = 1;
-				CurrentState = newState;
 				break;
 
 			case GameState.Pause:
 				Time.timeScale = 0;
-				CurrentState = newState;
 				break;
 		}
-	}
+        CurrentState = newState;
+    }
 
 	private void PauseGame(UnityEngine.InputSystem.InputAction.CallbackContext context)
 	{
-		if (CurrentState == GameState.Menu)
-			return;
-
 		if (CurrentState == GameState.Game)
 		{
+			m_PlayerInputs.Movement.Disable();
+			m_PlayerInputs.UI.Enable();
 			ChangeState(GameState.Pause);
-			InputManager.MoveInputs(false);
-			InputManager.UiInputs(true);
-		}
+        }
 		else
 		{
+            m_PlayerInputs.Movement.Enable();
+            m_PlayerInputs.UI.Disable();
 			ChangeState(GameState.Game);
-			InputManager.MoveInputs(true);
-			InputManager.UiInputs(false);
-		}
+        }
 		OnGamePause?.Invoke();
 	}
+
+	private void FinishGame()
+	{
+		if (ScoreManager.IsNoiseOnMax())
+            SceneManager.LoadScene(LoseScreen_Scene);
+        else
+			SceneManager.LoadScene(WinScreen_Scene);
+
+        ScoreManager.OnNoiseChanged -= CheckNoise;
+        ScoreManager.OnCoinChanged -= CheckCoin;
+		ChangeState(GameState.Menu);
+    }
 
 	private void CheckNoise()
 	{
 		if (ScoreManager.IsNoiseOnMax())
 		{
-			OnGameEnd?.Invoke();
+            OnGameEnd?.Invoke();
+			FinishGame();
 		}
 	}
 
     private void CheckCoin()
     {
-        Debug.Log(ScoreManager.GetCoinLeft());
-
         if (ScoreManager.GetCoinLeft() <= 0)
+		{
             OnGameEnd?.Invoke();
+            FinishGame();
+        }
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
 		for (int i = 0; i < GameScenes.Count; i++)
 			if (GameScenes[i] == scene.name)
+			{
 				ChangeState(GameState.Game);
+				return;
+			}
 
         for (int i = 0; i < MenuScenes.Count; i++)
             if (MenuScenes[i] == scene.name)
+			{
                 ChangeState(GameState.Menu);
+                return;
+            }
     }
 
     private void OnEnable()
@@ -136,8 +163,8 @@ public class GameManager : MonoBehaviour
 
 	private void OnDisable()
 	{
-		InputManager.inputActions.UI.Pause.performed -= PauseGame;
-        InputManager.inputActions.Movement.Pause.performed -= PauseGame;
+        m_PlayerInputs.UI.Pause.performed -= PauseGame;
+        m_PlayerInputs.Movement.Pause.performed -= PauseGame;
         ScoreManager.OnNoiseChanged -= CheckNoise;
         ScoreManager.OnCoinChanged -= CheckCoin;
         SceneManager.sceneLoaded -= OnSceneLoaded;
