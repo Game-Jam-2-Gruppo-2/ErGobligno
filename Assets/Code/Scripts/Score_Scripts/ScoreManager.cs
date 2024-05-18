@@ -50,8 +50,6 @@ public class ScoreManager: MonoBehaviour
             return;
         }
 
-        ResetValues();
-
         ////Load All Records
         Records = new List<RecordData>();
         for (int i = 0; i < m_Settings.SavedScoreCount; i++)
@@ -89,10 +87,6 @@ public class ScoreManager: MonoBehaviour
         GameTime = 0f;
         CoinAmount = 0;
         NoiseAmount = 0f;
-        //Call Update Value Events
-        OnGameTimeChanged?.Invoke();
-        OnCoinChanged?.Invoke();
-        OnNoiseChanged?.Invoke();
     }
 
     /// <summary>
@@ -165,6 +159,10 @@ public class ScoreManager: MonoBehaviour
         TimerCoroutine = StartCoroutine(TimerEnumerator());
         MaxCoin = FindObjectsOfType<Collectible>().Length;
         CoinLeft = MaxCoin;
+        //Call Update Value Events
+        OnGameTimeChanged?.Invoke();
+        OnCoinChanged?.Invoke();
+        OnNoiseChanged?.Invoke();
     }
 
     private void EndGame()

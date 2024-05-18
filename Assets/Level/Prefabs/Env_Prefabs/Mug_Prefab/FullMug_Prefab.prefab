@@ -171,6 +171,11 @@ PrefabInstance:
       propertyPath: UVModule.timeMode
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1533669502395693766, guid: 85c889b1ff6d5dd43930ee06502974de,
+        type: 3}
+      propertyPath: RotationModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2249645467397365290, guid: 85c889b1ff6d5dd43930ee06502974de,
         type: 3}
       propertyPath: m_Name
