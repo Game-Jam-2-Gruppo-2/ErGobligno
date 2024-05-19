@@ -17,7 +17,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private SFXManager_Settings m_SFX_Settings;
     //SFX Events
     public static Action<AudioClip, Vector3, float> Request3DSFX = (AudioClip clip, Vector3 pos, float pitch) => { };
-    public static Action<AudioClip, Vector3> Request2DSFX = (AudioClip clip, Vector3 pos) => { };
+    public static Action<AudioClip, Vector3, float, float> RequestAdvanced3DSFX = (AudioClip clip, Vector3 pos, float startingPitch, float pitchVariatio) => { };
+    public static Action<AudioClip, Vector3, float, float> Request2DSFX = (AudioClip clip, Vector3 pos, float startingPitch, float pitchVariation) => { };
     //SFX Lists
     private List<SFXEffect> Sources_3D = new List<SFXEffect>();
     private List<SFXEffect> Sources_2D = new List<SFXEffect>();
@@ -36,6 +37,7 @@ public class AudioManager : MonoBehaviour
         
         SetUpSFX();
         Request3DSFX += Request3D_SFX;
+        RequestAdvanced3DSFX += Request3D_SFX;
         Request2DSFX += Request2D_SFX;
     }
 
@@ -128,11 +130,37 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
+    ///  Place a game object containing a 3D audio source
+    /// </summary>
+    /// <param name="clip"></param>
+    /// <param name="position"></param>
+    /// <param name="startingPitch"></param>
+    /// <param name="pitchVariation"></param>
+    public void Request3D_SFX(AudioClip clip, Vector3 position, float startingPitch, float pitchVariation)
+    {
+        if (clip == null)
+            return;
+
+        for (int i = 0; i < m_SFX_Settings.Max3DSFX; i++)
+        {
+            if (!Sources_3D[i].gameObject.activeInHierarchy)
+            {
+                Sources_3D[i].gameObject.SetActive(true);
+                Sources_3D[i].SetPitch(startingPitch + pitchVariation);
+                Sources_3D[i].PlaySound(position, clip);
+                return;
+            }
+        }
+    }
+
+    /// <summary>
     /// Place a game object containing a 2D audio source
     /// </summary>
     /// <param name="clip"></param>
     /// <param name="position"></param>
-    public void Request2D_SFX(AudioClip clip, Vector3 position)
+    /// <param name="startingPitch"></param>
+    /// <param name="pitchVariation"></param>
+    public void Request2D_SFX(AudioClip clip, Vector3 position, float startingPitch, float pitchVariation)
     {
         if (clip == null)
             return;
@@ -142,6 +170,7 @@ public class AudioManager : MonoBehaviour
             if (!Sources_2D[i].gameObject.activeInHierarchy)
             {
                 Sources_2D[i].gameObject.SetActive(true);
+                Sources_3D[i].SetPitch(startingPitch + pitchVariation);
                 Sources_2D[i].PlaySound(position, clip);
                 return;
             }
@@ -152,6 +181,7 @@ public class AudioManager : MonoBehaviour
     private void OnDestroy()
     {
         Request3DSFX -= Request3DSFX;
+        RequestAdvanced3DSFX -= Request3D_SFX;
         Request2DSFX -= Request2DSFX;
     }
 }
