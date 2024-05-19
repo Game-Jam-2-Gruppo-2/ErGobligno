@@ -17,13 +17,14 @@ public class MovementController : MonoBehaviour
 	///<summary>the offset in y after you climed</summary>
 	[Tooltip("the offset in y after you climed")]
 	[SerializeField] public float ClimbOffsetY = 0, ClimbOffsetZ = 0.6f;
+	[SerializeField] public AudioClip Climb_SFX;
+	[SerializeField, Range(-1f, 1f)] public float ClimbPitchVariation;
 
 	//|------------------------------------------------------------------------------------------|
 	[Header("Jump Settings:")]
 	[SerializeField] public float JumpForce;
 	[SerializeField] public AudioClip Jump_SFX;
-	[HideInInspector, Range(-1f, 1f)] public float PitchVariation;
-	[SerializeField, Range(0f, 1f)] public float StartingPitch = 1.2f;
+	[SerializeField, Range(-1f, 1f)] public float JumpPitchVariation;
 
 	[Header("Falling Settings")]//|------------------------------------------------------------------------------------------|
 	[SerializeField] public LayerMask LayerPlayer;
@@ -38,6 +39,8 @@ public class MovementController : MonoBehaviour
 	[SerializeField] public LayerMask MovableLayer;
 	[SerializeField] public float IMpulseForce;
 	//|------------------------------------------------------------------------------------------|
+	// general stuff:
+	[SerializeField, Range(0f, 1f)] public float StartingPitch = 1.2f;
 	[HideInInspector] public MovementStates CurrentState;
 	[HideInInspector] public Vector3 MoveDir, CollisionNormal, CollisionDir;
 	[HideInInspector] public Collider ClimbableCollider;

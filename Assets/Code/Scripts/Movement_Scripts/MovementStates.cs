@@ -41,7 +41,6 @@ public class MoveState : MovementStates
 
 	private void Run(InputAction.CallbackContext context)
 	{
-		//Debug.Log("tua mamma ");
 		isRunning = !isRunning;
 		maxSpeed = isRunning ? Controller.RunMaxSpeed : Controller.WalkMaxSpeed;
 	}
@@ -50,7 +49,7 @@ public class MoveState : MovementStates
 	{
 		moveDir = inputMoveDir;
 		moveDir += normal;
-		//moveDir = moveDir.normalized;
+
 
 		rbY = Controller.Rb.velocity.y;
 		rb.AddForce(Controller.IMpulseForce * moveDir.z * Time.fixedDeltaTime * rb.transform.forward, ForceMode.Impulse);
@@ -65,7 +64,7 @@ public class MoveState : MovementStates
 
 
 		Controller.Rb.velocity = vel;
-		//Debug.LogError("vel= " + vel + "\nMoveDir= " + Controller.MoveDir);
+
 
 		if (vel == Vector3.zero && inputMoveDir == Vector3.zero)
 			Controller.ChangeState(new IdleState());
@@ -86,7 +85,7 @@ public class MoveState : MovementStates
 			if (wallCheckTop || wallCheckBot)
 			{
 				normal = -moveDir;
-				//Debug.LogError("Normal " + normal);
+
 			}
 			else
 				normal = Vector3.zero;
@@ -94,7 +93,7 @@ public class MoveState : MovementStates
 		}
 
 #if UNITY_EDITOR
-		//Debug.Log("IsAirborne= " + isAirborne + "\ngroundCheck = " + Controller.AirborneCheck);
+
 		drawDir = moveDir.z * Controller.transform.forward + (moveDir.x * Controller.transform.right);
 		if (isAirborne)
 		{
@@ -203,7 +202,7 @@ public class JumpState : MovementStates
 	{
 		Controller = controller;
 		controller.Rb.AddForce(controller.transform.up * controller.JumpForce, ForceMode.Impulse);
-		AudioManager.Request3DSFX?.Invoke(controller.Jump_SFX, controller.transform.position, controller.PitchVariation);
+		AudioManager.Request2DSFX?.Invoke(controller.Jump_SFX, controller.transform.position, controller.StartingPitch, Random.Range(-controller.JumpPitchVariation, controller.JumpPitchVariation));
 	}
 
 	public override void FixedTick()
@@ -263,6 +262,7 @@ public class ClimbState : MovementStates
 
 		Controller.Rb.velocity = Vector3.zero;
 		MovementController.OnClimb?.Invoke();
+		AudioManager.Request2DSFX?.Invoke(controller.Climb_SFX, controller.transform.position, controller.StartingPitch, Random.Range(-controller.ClimbPitchVariation, controller.ClimbPitchVariation));
 	}
 	public override void FixedTick()
 	{
