@@ -49,7 +49,18 @@ public class MovementController : MonoBehaviour
 	[HideInInspector] public PlayerInputs inputActions;
 	public static Action OnClimb;
 	public bool CheckLedge => Physics.Raycast(transform.position + Vector3.up * LedgeCheckHeight, transform.forward, out Hit, LedgeCheckLenght, ClimableLayers);
-	public bool GroundCheck => Physics.SphereCast(transform.position + Vector3.up * GroundCheckHight, GroundCheckRadius, Vector3.down, out _, LedgeCheckLenght, ~LayerPlayer) == false;
+	/// <summary>
+	/// return Physics.OverlapSphere(transform.position, GroundCheckRadius, ~LayerPlayer) == null;
+	/// </summary>
+	public bool AirborneCheck => IsAirborne();
+
+	public bool IsAirborne()
+	{
+		return Physics.CheckSphere(transform.position + Vector3.down * GroundCheckHight, GroundCheckRadius, ~LayerPlayer) == false;
+		//return Physics.SphereCast(transform.position + Vector3.up * GroundCheckHight, GroundCheckRadius, Vector3.down, out _, GroundCheckLenght, ~LayerPlayer) == false;
+		//return Physics.OverlapSphere(transform.position, GroundCheckRadius, ~LayerPlayer) == null;
+	}
+	//Physics.SphereCast(transform.position + Vector3.up * GroundCheckHight, GroundCheckRadius, Vector3.down, out _, GroundCheckLenght, ~LayerPlayer) == false;
 	private void Awake()
 	{
 		Rb = GetComponent<Rigidbody>();
@@ -77,10 +88,6 @@ public class MovementController : MonoBehaviour
 	private void OnCollisionEnter(Collision other)
 	{
 		CurrentState.Collision(other);
-	}
-	private void OnCollisionExit(Collision other)
-	{
-		CurrentState.CollisionExit(other);
 	}
 
 	public void ChangeState(MovementStates newState)

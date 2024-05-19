@@ -9,7 +9,6 @@ public abstract class MovementStates
 	public abstract void FixedTick();
 	public abstract void Exit();
 	public abstract void Collision(Collision other);
-	public abstract void CollisionExit(Collision other);
 }
 
 public class MoveState : MovementStates
@@ -24,8 +23,8 @@ public class MoveState : MovementStates
 #if UNITY_EDITOR
 	Vector3 drawDir;
 #endif
-	bool wallCheckTop => Physics.Raycast(Controller.transform.position + Vector3.up * Controller.WallCheckHight, moveDir);
-	bool wallCheckBot => Physics.Raycast(Controller.transform.position, moveDir);
+	bool wallCheckTop => Physics.Raycast(Controller.transform.position + Vector3.up * Controller.WallCheckHight, moveDir, Controller.WallCheckLenght);
+	bool wallCheckBot => Physics.Raycast(Controller.transform.position, moveDir, Controller.WallCheckLenght);
 	public override void Enter(MovementController controller)
 	{
 		Controller = controller;
@@ -36,6 +35,7 @@ public class MoveState : MovementStates
 		Controller.inputActions.Movement.Jump.performed += JumpExit;
 		rb = controller.Rb;
 		halfExtent = controller.MyCollider.bounds.extents;
+		isAirborne = false;
 	}
 
 	private void Run(InputAction.CallbackContext context)
@@ -47,7 +47,6 @@ public class MoveState : MovementStates
 	public override void FixedTick()
 	{
 		moveDir = inputMoveDir;
-
 		moveDir += normal;
 		//moveDir = moveDir.normalized;
 
@@ -62,17 +61,24 @@ public class MoveState : MovementStates
 		Controller.Rb.velocity = vel;
 		//Debug.LogError("vel= " + vel + "\nMoveDir= " + Controller.MoveDir);
 
-
-
-
 		if (vel == Vector3.zero && inputMoveDir == Vector3.zero)
 			Controller.ChangeState(new IdleState());
 
 
-		isAirborne = Controller.GroundCheck;
+		isAirborne = Controller.IsAirborne();
+		if (isAirborne)
+		{
+			if (wallCheckTop || wallCheckBot)
+			{
+				normal = -moveDir;
+				//Debug.LogError("Normal " + normal);
+			}
+			else
+				normal = Vector3.zero;
+		}
 
 #if UNITY_EDITOR
-		Debug.Log("IsAirborne= " + isAirborne + "\ngroundCheck = " + Controller.GroundCheck);
+		Debug.Log("IsAirborne= " + isAirborne + "\ngroundCheck = " + Controller.AirborneCheck);
 		drawDir = moveDir.z * Controller.transform.forward + (moveDir.x * Controller.transform.right);
 		if (isAirborne)
 		{
@@ -92,26 +98,17 @@ public class MoveState : MovementStates
 	{
 		if (isAirborne)
 		{
-			if (Controller.GroundCheck == true)
+			if (Controller.AirborneCheck == true)
 			{
 				isAirborne = false;
 				isRunning = false;
 				maxSpeed = Controller.WalkMaxSpeed;
 			}
-
-			if (wallCheckTop || wallCheckBot)
-			{
-				normal = -moveDir;
-				//Debug.LogError("Normal " + normal);
-			}
 		}
 
 	}
 
-	public override void CollisionExit(Collision other)
-	{
-		normal = Vector3.zero;
-	}
+
 
 	public override void Exit()
 	{
@@ -160,10 +157,7 @@ public class IdleState : MovementStates
 
 	}
 
-	public override void CollisionExit(Collision other)
-	{
 
-	}
 
 	public override void Exit()
 	{
@@ -220,10 +214,7 @@ public class JumpState : MovementStates
 		}
 	}
 
-	public override void CollisionExit(Collision other)
-	{
 
-	}
 
 	public override void Exit()
 	{
@@ -277,10 +268,7 @@ public class ClimbState : MovementStates
 
 	}
 
-	public override void CollisionExit(Collision other)
-	{
 
-	}
 
 
 	public override void Exit()
