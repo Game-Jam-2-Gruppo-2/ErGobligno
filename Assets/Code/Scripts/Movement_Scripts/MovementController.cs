@@ -1,12 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
-	public static Action OnClimb;
-
 	[HideInInspector] public Rigidbody Rb;
 	[HideInInspector] public Collider MyCollider;
 
@@ -14,9 +11,9 @@ public class MovementController : MonoBehaviour
 	[Header("Climb Settings:")]
 	[SerializeField] public LayerMask ClimableLayers;
 	[Tooltip("how far from the pivot in y is the raycast to detect ledges")]
-	[SerializeField] public float RaycastDetectionHeight;
+	[SerializeField] public float LedgeCheckHeight;
 	[Tooltip("how long is the raycast to detect ledges")]
-	[SerializeField] public float RaycastDetectionLenght;
+	[SerializeField] public float LedgeCheckLenght;
 	[SerializeField] public float ClimbDuration;
 	[SerializeField] public float CooldownAfterEnd;
 	///<summary>the offset in y after you climed</summary>
@@ -26,80 +23,54 @@ public class MovementController : MonoBehaviour
 	//|------------------------------------------------------------------------------------------|
 	[Header("Jump Settings:")]
 	[SerializeField] public float JumpForce;
+	[SerializeField] public AudioClip Jump_SFX;
+	[SerializeField, Range(0f, 1f)] public float PitchVariation;
 
 	[Header("Falling Settings")]//|------------------------------------------------------------------------------------------|
 	[SerializeField] public LayerMask LayerPlayer;
 	[SerializeField] public float GroundCheckLenght;
+	[SerializeField] public float GroundCheckHight;
+	[SerializeField] public float GroundCheckRadius;
+
+	[SerializeField] public float WallCheckHight;
+	[SerializeField] public float WallCheckLenght;
 
 	[Header("Speed Settings: ")]//|------------------------------------------------------------------------------------------|
 	[SerializeField] public float WalkMaxSpeed;
 	[SerializeField] public float RunMaxSpeed;
-	[SerializeField] public float MinSpeed;
-	[SerializeField] public float ChangeDirSpeedDivident;
 	[SerializeField] public float AirborneSpeed;
 	[SerializeField] public LayerMask MovableLayer;
-
-
-	[Header("Momentum Settings:")]//|------------------------------------------------------------------------------------------|
-
-	[Tooltip("this number checks if you are changing direction DRAMATICALLY from before\n(default: 0.7 witch is equal to 45° angle)")]
-	//(have you moved direction? will you move direction? when will you move direction?)
-	[SerializeField] public float maxDotProduct = 0.7f;
-
-	[SerializeField] public AnimationCurve AccelerationCurve; // how fast you XLR8
-
-	[Tooltip("how long you take to Accelerate")]
-	[SerializeField] public float AccelerationTime;
-	[SerializeField] public float AccelerationAirborneTime;
-
-	[Tooltip("how you stop moving based on decelerationTime")]
-	[SerializeField] public AnimationCurve DecelerationCurve;
-
-	[Tooltip("how long you take to decelerate")]
-	[SerializeField] public float DecelerationTime;
-	[Tooltip("time that it takes to save the last given input")]
-	[SerializeField] public float IdleInputTime;
+	[SerializeField] public float IMpulseForce;
 	//|------------------------------------------------------------------------------------------|
 	[HideInInspector] public MovementStates CurrentState;
-	[HideInInspector] public float MaxSpeed, LastDot, LastSpeed;
 	[HideInInspector] public Vector3 MoveDir, CollisionNormal, CollisionDir;
-	[HideInInspector] public Collider ClimbableObject;
+	[HideInInspector] public Collider ClimbableCollider;
 	[HideInInspector] public RaycastHit Hit;
-	[HideInInspector] public bool IsAirborne, isPaused, isRunning, isClimbing;
-	public static Action climb;
-	public bool CheckLedge(Vector3 pos, Vector3 dir) => Physics.Raycast(pos, dir, out Hit, RaycastDetectionLenght, ClimableLayers);
-	public bool GroundCheck => Physics.SphereCast(transform.position, MyCollider.bounds.extents.x, Vector3.down, out _, RaycastDetectionLenght, LayerPlayer);
+	[HideInInspector] public PlayerInputs inputActions;
+	public static Action OnClimb;
+	public bool CheckLedge => Physics.Raycast(transform.position + Vector3.up * LedgeCheckHeight, transform.forward, out Hit, LedgeCheckLenght, ClimableLayers);
+	/// <summary>
+	/// return Physics.OverlapSphere(transform.position, GroundCheckRadius, ~LayerPlayer) == null;
+	/// </summary>
+	public bool AirborneCheck => IsAirborne();
+
+	public bool IsAirborne()
+	{
+		return Physics.CheckSphere(transform.position, GroundCheckRadius, ~LayerPlayer) == false;
+		//return Physics.SphereCast(transform.position + Vector3.up * GroundCheckHight, GroundCheckRadius, Vector3.down, out _, GroundCheckLenght, ~LayerPlayer) == false;
+		//return Physics.OverlapSphere(transform.position, GroundCheckRadius, ~LayerPlayer) == null;
+	}
+	//Physics.SphereCast(transform.position + Vector3.up * GroundCheckHight, GroundCheckRadius, Vector3.down, out _, GroundCheckLenght, ~LayerPlayer) == false;
 	private void Awake()
 	{
 		Rb = GetComponent<Rigidbody>();
 		MyCollider = GetComponent<Collider>();
-		MaxSpeed = WalkMaxSpeed;
+		inputActions = InputManager.inputActions;
 		ChangeState(new IdleState());
-	}
-
-	private void OnEnable()
-	{
-		InputManager.inputActions.Movement.Jump.performed += OnJump;
-		InputManager.inputActions.Movement.Run.performed += OnRun;
-		InputManager.inputActions.Movement.Pause.performed += OnPause;
-		InputManager.inputActions.UI.Pause.performed += OnPause;
-	}
-	private void OnDisable()
-	{
-		InputManager.inputActions.Movement.Jump.performed -= OnJump;
-		InputManager.inputActions.Movement.Run.performed -= OnRun;
-		InputManager.inputActions.Movement.Pause.performed -= OnPause;
-		InputManager.inputActions.UI.Pause.performed -= OnPause;
 	}
 
 	private void FixedUpdate()
 	{
-		if (isClimbing == false && CheckLedge(transform.position + Vector3.up * RaycastDetectionHeight, transform.forward))
-		{
-			ClimbableObject = Hit.collider;
-			ChangeState(new ClimbState());
-			OnClimb?.Invoke();
-        }
 		CurrentState.FixedTick();
 	}
 	void Update()
@@ -118,58 +89,46 @@ public class MovementController : MonoBehaviour
 	{
 		CurrentState.Collision(other);
 	}
-	private void OnCollisionExit(Collision other)
-	{
-		CurrentState.CollisionExit(other);
-		if (GroundCheck)
-			ChangeState(new FallingState());
-	}
-
-	private void OnPause(UnityEngine.InputSystem.InputAction.CallbackContext context)
-	{
-		if (isPaused)
-		{
-			// unpause
-			isPaused = false;
-		}
-		else
-		{
-			// pause
-			isPaused = true;
-		}
-	}
-
-	private void OnRun(UnityEngine.InputSystem.InputAction.CallbackContext context)
-	{
-		if (IsAirborne || isClimbing)
-			return;
-
-		MaxSpeed = isRunning ? RunMaxSpeed : WalkMaxSpeed;
-		isRunning = !isRunning;
-	}
-
-	private void OnJump(UnityEngine.InputSystem.InputAction.CallbackContext context)
-	{
-		if (IsAirborne || isClimbing)
-			return;
-
-		IsAirborne = true;
-		ChangeState(new JumpState());
-	}
 
 	public void ChangeState(MovementStates newState)
 	{
 		if (CurrentState != null)
+		{
 			CurrentState.Exit();
+			Debug.LogWarning("current state= " + CurrentState + "\nNewState= " + newState);
+		}
 
+
+		//Debug.LogWarning("current state= " + CurrentState + "\nNewState= " + newState);
 		CurrentState = newState;
 		CurrentState.Enter(this);
 	}
-
-	public IEnumerator CheckLedgeCooldown()
+#if UNITY_EDITOR
+	private void OnDrawGizmos()
 	{
-		isClimbing = true;
-		yield return new WaitForSeconds(CooldownAfterEnd);
-		isClimbing = false;
+
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawRay(transform.position + (Vector3.up * GroundCheckHight), -Vector3.up * GroundCheckLenght);
+		Gizmos.DrawWireSphere(transform.position + (Vector3.up * GroundCheckHight) - (Vector3.up * GroundCheckLenght), GroundCheckRadius);
+
+		Gizmos.color = Color.red;
+		Gizmos.DrawRay(transform.position + Vector3.up * LedgeCheckHeight, transform.forward * LedgeCheckLenght);
+
+		//Gizmos.color = Color.cyan;
+		// Vector3 halfExtent = MyCollider.bounds.extents * 2;
+		// halfExtent.z /= 2;
+		// MoveDir = MoveDir.x * transform.right + transform.forward * MoveDir.z;
+
+		// if (MoveDir == Vector3.zero)
+		// {
+		// 	Gizmos.DrawRay(transform.position + Vector3.up * WallCheckHight, transform.forward * WallCheckLenght);
+		// 	Gizmos.DrawRay(transform.position, transform.forward * WallCheckLenght);
+		// }
+		// else
+		// {
+		// 	Gizmos.DrawRay(transform.position + Vector3.up * WallCheckHight, MoveDir * WallCheckLenght);
+		// 	Gizmos.DrawRay(transform.position, MoveDir * WallCheckLenght);
+		// }
 	}
+#endif
 }
