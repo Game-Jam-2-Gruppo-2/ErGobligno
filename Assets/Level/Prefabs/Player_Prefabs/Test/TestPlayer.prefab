@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8446896934497554373}
   - component: {fileID: 2434194121761337713}
   - component: {fileID: 1993604481935736353}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8849667751337418032}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: -- MESH HOLDER --
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4275302265703595052}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CameraHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -159,7 +159,7 @@ GameObject:
   - component: {fileID: 5455788610137237893}
   - component: {fileID: 8261126384876582558}
   - component: {fileID: 7087643094117398953}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TestPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197,98 +197,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Rb: {fileID: 0}
   MyCollider: {fileID: 0}
-  ClimableLayers:
-    serializedVersion: 2
-    m_Bits: 128
-  RaycastDetectionHeight: 0.5
-  RaycastDetectionLenght: 0.6
+  LedgeCheckHeight: 1
+  LedgeCheckLenght: 0.6
   ClimbDuration: 0.5
-  CooldownAfterEnd: 0.2
   ClimbOffsetY: 0
-  ClimbOffsetZ: 0
-  JumpForce: 10
+  ClimbOffsetZ: 0.6
+  Climb_SFX: {fileID: 0}
+  ClimbPitchVariation: 0.2
+  JumpForce: 4
+  Jump_SFX: {fileID: 0}
+  JumpPitchVariation: 0.2
   LayerPlayer:
     serializedVersion: 2
     m_Bits: 64
-  GroundCheckLenght: 0.55
-  WalkMaxSpeed: 500
-  RunMaxSpeed: 700
-  MinSpeed: 0
-  ChangeDirSpeedDivident: 3
-  AirborneSpeed: 300
-  maxDotProduct: 0.7
-  AccelerationCurve:
+  GroundCheckRadius: 0.4
+  WallCheckHight: 1
+  WallCheckLenght: 0.6
+  WalkMaxSpeed: 10
+  RunMaxSpeed: 15
+  MovableLayer:
     serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  AccelerationTime: 0.8
-  AccelerationAirborneTime: 1
-  DecelerationCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.5
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.11167526
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  DecelerationTime: 0.4
-  IdleInputTime: 0
-  MaxSpeed: 0
-  LastDot: 0
-  LastSpeed: 0
+    m_Bits: 0
+  ImpulseForce: 60
+  StartingPitch: 1.2
   MoveDir: {x: 0, y: 0, z: 0}
   CollisionNormal: {x: 0, y: 0, z: 0}
   CollisionDir: {x: 0, y: 0, z: 0}
-  ClimbableObject: {fileID: 0}
-  IsAirborne: 0
-  isPaused: 0
-  isRunning: 0
-  isClimbing: 0
+  ClimbableCollider: {fileID: 0}
 --- !u!54 &5455788610137237893
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -299,7 +234,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 5
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}

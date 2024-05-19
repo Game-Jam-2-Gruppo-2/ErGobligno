@@ -8,7 +8,6 @@ public class MovementController : MonoBehaviour
 
 	//|------------------------------------------------------------------------------------------|
 	[Header("Climb Settings:")]
-	[SerializeField] public LayerMask LedgeLayers;
 	[Tooltip("how far from the pivot in y is the raycast to detect ledges")]
 	[SerializeField] public float LedgeCheckHeight = 1f;
 	[Tooltip("how long is the raycast to detect ledges")]
@@ -18,13 +17,13 @@ public class MovementController : MonoBehaviour
 	[Tooltip("the offset in y after you climed")]
 	[SerializeField] public float ClimbOffsetY = 0, ClimbOffsetZ = 0.6f;
 	[SerializeField] public AudioClip Climb_SFX;
-	[SerializeField, Range(-1f, 1f)] public float ClimbPitchVariation;
+	[SerializeField, Range(-1f, 1f)] public float ClimbPitchVariation = 0.2f;
 
 	//|------------------------------------------------------------------------------------------|
 	[Header("Jump Settings:")]
-	[SerializeField] public float JumpForce;
+	[SerializeField] public float JumpForce = 4f;
 	[SerializeField] public AudioClip Jump_SFX;
-	[SerializeField, Range(-1f, 1f)] public float JumpPitchVariation;
+	[SerializeField, Range(-1f, 1f)] public float JumpPitchVariation = 0.2f;
 
 	[Header("Falling Settings")]//|------------------------------------------------------------------------------------------|
 	[SerializeField] public LayerMask LayerPlayer;
@@ -34,10 +33,10 @@ public class MovementController : MonoBehaviour
 	[SerializeField] public float WallCheckLenght = 0.6f;
 
 	[Header("Speed Settings: ")]//|------------------------------------------------------------------------------------------|
-	[SerializeField] public float WalkMaxSpeed = 500;
-	[SerializeField] public float RunMaxSpeed = 700;
+	[SerializeField] public float WalkMaxSpeed = 10;
+	[SerializeField] public float RunMaxSpeed = 15;
 	[SerializeField] public LayerMask MovableLayer;
-	[SerializeField] public float IMpulseForce;
+	[SerializeField] public float ImpulseForce = 60;
 	//|------------------------------------------------------------------------------------------|
 	// general stuff:
 	[SerializeField, Range(0f, 1f)] public float StartingPitch = 1.2f;

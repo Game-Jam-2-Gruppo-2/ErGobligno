@@ -52,8 +52,8 @@ public class MoveState : MovementStates
 
 
 		rbY = Controller.Rb.velocity.y;
-		rb.AddForce(Controller.IMpulseForce * moveDir.z * Time.fixedDeltaTime * rb.transform.forward, ForceMode.Impulse);
-		rb.AddForce(Controller.IMpulseForce * moveDir.x * Time.fixedDeltaTime * rb.transform.right, ForceMode.Impulse);
+		rb.AddForce(Controller.ImpulseForce * moveDir.z * Time.fixedDeltaTime * rb.transform.forward, ForceMode.Impulse);
+		rb.AddForce(Controller.ImpulseForce * moveDir.x * Time.fixedDeltaTime * rb.transform.right, ForceMode.Impulse);
 
 		vel = Controller.Rb.velocity;
 		vel.y = 0;

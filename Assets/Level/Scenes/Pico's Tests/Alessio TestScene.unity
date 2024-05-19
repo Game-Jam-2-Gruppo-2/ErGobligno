@@ -602,12 +602,6 @@ Transform:
   - {fileID: 1007717667}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 8.23, y: -41.205, z: 12.067}
---- !u!136 &1447994361 stripped
-CapsuleCollider:
-  m_CorrespondingSourceObject: {fileID: 8261126384876582558, guid: ce4840c7e9cfa614bba18901c4365496,
-    type: 3}
-  m_PrefabInstance: {fileID: 3967233464923994168}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1499326167
 GameObject:
   m_ObjectHideFlags: 0
@@ -1002,17 +996,17 @@ PrefabInstance:
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
       propertyPath: JumpForce
-      value: 10
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
       propertyPath: MyCollider
       value: 
-      objectReference: {fileID: 1447994361}
+      objectReference: {fileID: 0}
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
       propertyPath: RunMaxSpeed
-      value: 70
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
@@ -1022,7 +1016,7 @@ PrefabInstance:
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
       propertyPath: ClimbOffsetZ
-      value: 1
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
@@ -1037,7 +1031,7 @@ PrefabInstance:
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
       propertyPath: WalkMaxSpeed
-      value: 50
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
@@ -1052,12 +1046,12 @@ PrefabInstance:
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
       propertyPath: WallCheckHight
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
       propertyPath: WallCheckLenght
-      value: 1
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
@@ -1077,7 +1071,7 @@ PrefabInstance:
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
       propertyPath: LedgeCheckLenght
-      value: 1
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
@@ -1087,7 +1081,12 @@ PrefabInstance:
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
       propertyPath: GroundCheckRadius
-      value: 0.15
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: LayerPlayer.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
@@ -1188,6 +1187,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5455788610137237893, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: m_AngularDrag
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
