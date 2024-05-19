@@ -56,7 +56,7 @@ public class MovementController : MonoBehaviour
 
 	public bool IsAirborne()
 	{
-		return Physics.CheckSphere(transform.position + Vector3.down * GroundCheckHight, GroundCheckRadius, ~LayerPlayer) == false;
+		return Physics.CheckSphere(transform.position, GroundCheckRadius, ~LayerPlayer) == false;
 		//return Physics.SphereCast(transform.position + Vector3.up * GroundCheckHight, GroundCheckRadius, Vector3.down, out _, GroundCheckLenght, ~LayerPlayer) == false;
 		//return Physics.OverlapSphere(transform.position, GroundCheckRadius, ~LayerPlayer) == null;
 	}
