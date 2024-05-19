@@ -1,5 +1,4 @@
 using System;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class MovementController : MonoBehaviour
@@ -9,36 +8,33 @@ public class MovementController : MonoBehaviour
 
 	//|------------------------------------------------------------------------------------------|
 	[Header("Climb Settings:")]
-	[SerializeField] public LayerMask ClimableLayers;
+	[SerializeField] public LayerMask LedgeLayers;
 	[Tooltip("how far from the pivot in y is the raycast to detect ledges")]
-	[SerializeField] public float LedgeCheckHeight;
+	[SerializeField] public float LedgeCheckHeight = 1f;
 	[Tooltip("how long is the raycast to detect ledges")]
-	[SerializeField] public float LedgeCheckLenght;
-	[SerializeField] public float ClimbDuration;
-	[SerializeField] public float CooldownAfterEnd;
+	[SerializeField] public float LedgeCheckLenght = 0.6f;
+	[SerializeField] public float ClimbDuration = 0.5f;
 	///<summary>the offset in y after you climed</summary>
 	[Tooltip("the offset in y after you climed")]
-	[SerializeField] public float ClimbOffsetY, ClimbOffsetZ;
+	[SerializeField] public float ClimbOffsetY = 0, ClimbOffsetZ = 0.6f;
 
 	//|------------------------------------------------------------------------------------------|
 	[Header("Jump Settings:")]
 	[SerializeField] public float JumpForce;
 	[SerializeField] public AudioClip Jump_SFX;
-	[SerializeField, Range(0f, 1f)] public float PitchVariation;
+	[HideInInspector, Range(-1f, 1f)] public float PitchVariation;
+	[SerializeField, Range(0f, 1f)] public float StartingPitch = 1.2f;
 
 	[Header("Falling Settings")]//|------------------------------------------------------------------------------------------|
 	[SerializeField] public LayerMask LayerPlayer;
-	[SerializeField] public float GroundCheckLenght;
-	[SerializeField] public float GroundCheckHight;
-	[SerializeField] public float GroundCheckRadius;
-
-	[SerializeField] public float WallCheckHight;
-	[SerializeField] public float WallCheckLenght;
+	[Tooltip("default = 0.4f")]
+	[SerializeField] public float GroundCheckRadius = 0.4f;
+	[SerializeField] public float WallCheckHight = 1f;
+	[SerializeField] public float WallCheckLenght = 0.6f;
 
 	[Header("Speed Settings: ")]//|------------------------------------------------------------------------------------------|
-	[SerializeField] public float WalkMaxSpeed;
-	[SerializeField] public float RunMaxSpeed;
-	[SerializeField] public float AirborneSpeed;
+	[SerializeField] public float WalkMaxSpeed = 500;
+	[SerializeField] public float RunMaxSpeed = 700;
 	[SerializeField] public LayerMask MovableLayer;
 	[SerializeField] public float IMpulseForce;
 	//|------------------------------------------------------------------------------------------|
@@ -48,7 +44,7 @@ public class MovementController : MonoBehaviour
 	[HideInInspector] public RaycastHit Hit;
 	[HideInInspector] public PlayerInputs inputActions;
 	public static Action OnClimb;
-	public bool CheckLedge => Physics.Raycast(transform.position + Vector3.up * LedgeCheckHeight, transform.forward, out Hit, LedgeCheckLenght, ClimableLayers);
+	public bool CheckLedge => Physics.Raycast(transform.position + Vector3.up * LedgeCheckHeight, transform.forward, out Hit, LedgeCheckLenght);
 	/// <summary>
 	/// return Physics.OverlapSphere(transform.position, GroundCheckRadius, ~LayerPlayer) == null;
 	/// </summary>
@@ -92,43 +88,20 @@ public class MovementController : MonoBehaviour
 
 	public void ChangeState(MovementStates newState)
 	{
-		if (CurrentState != null)
-		{
-			CurrentState.Exit();
-			Debug.LogWarning("current state= " + CurrentState + "\nNewState= " + newState);
-		}
+		CurrentState?.Exit();
 
-
-		//Debug.LogWarning("current state= " + CurrentState + "\nNewState= " + newState);
 		CurrentState = newState;
 		CurrentState.Enter(this);
 	}
 #if UNITY_EDITOR
 	private void OnDrawGizmos()
 	{
-
 		Gizmos.color = Color.yellow;
-		Gizmos.DrawRay(transform.position + (Vector3.up * GroundCheckHight), -Vector3.up * GroundCheckLenght);
-		Gizmos.DrawWireSphere(transform.position + (Vector3.up * GroundCheckHight) - (Vector3.up * GroundCheckLenght), GroundCheckRadius);
+
+		Gizmos.DrawWireSphere(transform.position, GroundCheckRadius);
 
 		Gizmos.color = Color.red;
 		Gizmos.DrawRay(transform.position + Vector3.up * LedgeCheckHeight, transform.forward * LedgeCheckLenght);
-
-		//Gizmos.color = Color.cyan;
-		// Vector3 halfExtent = MyCollider.bounds.extents * 2;
-		// halfExtent.z /= 2;
-		// MoveDir = MoveDir.x * transform.right + transform.forward * MoveDir.z;
-
-		// if (MoveDir == Vector3.zero)
-		// {
-		// 	Gizmos.DrawRay(transform.position + Vector3.up * WallCheckHight, transform.forward * WallCheckLenght);
-		// 	Gizmos.DrawRay(transform.position, transform.forward * WallCheckLenght);
-		// }
-		// else
-		// {
-		// 	Gizmos.DrawRay(transform.position + Vector3.up * WallCheckHight, MoveDir * WallCheckLenght);
-		// 	Gizmos.DrawRay(transform.position, MoveDir * WallCheckLenght);
-		// }
 	}
 #endif
 }

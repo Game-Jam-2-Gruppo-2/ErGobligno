@@ -18,6 +18,7 @@ public class MoveState : MovementStates
 	Vector3 vel, moveDir, normal, halfExtent;
 	float maxSpeed;
 	bool isRunning, isAirborne;
+	float rbY;
 	Rigidbody rb;
 
 #if UNITY_EDITOR
@@ -40,6 +41,7 @@ public class MoveState : MovementStates
 
 	private void Run(InputAction.CallbackContext context)
 	{
+		//Debug.Log("tua mamma ");
 		isRunning = !isRunning;
 		maxSpeed = isRunning ? Controller.RunMaxSpeed : Controller.WalkMaxSpeed;
 	}
@@ -50,14 +52,18 @@ public class MoveState : MovementStates
 		moveDir += normal;
 		//moveDir = moveDir.normalized;
 
-		vel.y = Controller.Rb.velocity.y;
+		rbY = Controller.Rb.velocity.y;
 		rb.AddForce(Controller.IMpulseForce * moveDir.z * Time.fixedDeltaTime * rb.transform.forward, ForceMode.Impulse);
 		rb.AddForce(Controller.IMpulseForce * moveDir.x * Time.fixedDeltaTime * rb.transform.right, ForceMode.Impulse);
 
-		vel.x = Controller.Rb.velocity.x;
-		vel.z = Controller.Rb.velocity.z;
-		vel.x = Mathf.Clamp(vel.x, -maxSpeed, maxSpeed);
-		vel.z = Mathf.Clamp(vel.z, -maxSpeed, maxSpeed);
+		vel = Controller.Rb.velocity;
+		vel.y = 0;
+		Debug.Log("vel mag = " + vel.magnitude);
+		vel = Vector3.ClampMagnitude(vel, maxSpeed);
+		Debug.Log("vel mag = " + vel.magnitude);
+		vel.y = rbY;
+
+
 		Controller.Rb.velocity = vel;
 		//Debug.LogError("vel= " + vel + "\nMoveDir= " + Controller.MoveDir);
 
@@ -68,6 +74,15 @@ public class MoveState : MovementStates
 		isAirborne = Controller.IsAirborne();
 		if (isAirborne)
 		{
+			if (Controller.CheckLedge)
+			{
+				if (Controller.Hit.transform.TryGetComponent(out IClimbable _))
+				{
+					Controller.ClimbableCollider = Controller.Hit.collider;
+					Controller.ChangeState(new ClimbState());
+				}
+			}
+
 			if (wallCheckTop || wallCheckBot)
 			{
 				normal = -moveDir;
@@ -75,10 +90,11 @@ public class MoveState : MovementStates
 			}
 			else
 				normal = Vector3.zero;
+
 		}
 
 #if UNITY_EDITOR
-		Debug.Log("IsAirborne= " + isAirborne + "\ngroundCheck = " + Controller.AirborneCheck);
+		//Debug.Log("IsAirborne= " + isAirborne + "\ngroundCheck = " + Controller.AirborneCheck);
 		drawDir = moveDir.z * Controller.transform.forward + (moveDir.x * Controller.transform.right);
 		if (isAirborne)
 		{
@@ -194,8 +210,11 @@ public class JumpState : MovementStates
 	{
 		if (Controller.CheckLedge)
 		{
-			Controller.ClimbableCollider = Controller.Hit.collider;
-			Controller.ChangeState(new ClimbState());
+			if (Controller.Hit.transform.TryGetComponent(out IClimbable _))
+			{
+				Controller.ClimbableCollider = Controller.Hit.collider;
+				Controller.ChangeState(new ClimbState());
+			}
 		}
 	}
 
