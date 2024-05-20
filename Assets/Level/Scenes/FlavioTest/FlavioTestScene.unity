@@ -545,6 +545,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc15cf58226df014a8993b8d81fec017, type: 3}
+--- !u!114 &39502514 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5371444876636171950, guid: fc15cf58226df014a8993b8d81fec017,
+    type: 3}
+  m_PrefabInstance: {fileID: 39502513}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625fab7fc14d905499416d2d4a8ef865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &177983919
 GameObject:
   m_ObjectHideFlags: 0
@@ -1428,6 +1440,16 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
+    - target: {fileID: 4208102228667721228, guid: e4d497e8f1ede7e48b5c51b5fca6a58a,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5325470907228965441, guid: e4d497e8f1ede7e48b5c51b5fca6a58a,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 6964114692110693235, guid: e4d497e8f1ede7e48b5c51b5fca6a58a,
         type: 3}
       propertyPath: m_StaticEditorFlags
@@ -1538,6 +1560,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e4d497e8f1ede7e48b5c51b5fca6a58a, type: 3}
+--- !u!114 &783565692 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4600306317976839475, guid: e4d497e8f1ede7e48b5c51b5fca6a58a,
+    type: 3}
+  m_PrefabInstance: {fileID: 783565691}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625fab7fc14d905499416d2d4a8ef865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &833318675 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7078679511636839960, guid: 60e3e27644ace1d42a0c4cf06c01a71c,
@@ -2875,20 +2909,20 @@ MonoBehaviour:
   GizsmoScale_Bottle: 1.25
   HighlightColor_Bottle: {r: 1, g: 0, b: 0.8901963, a: 1}
   Bottles:
-  - {fileID: 2126754547}
   - {fileID: 2511422}
-  - {fileID: 864163703}
-  - {fileID: 1637848069}
-  - {fileID: 1402643395}
-  - {fileID: 2125887326}
   - {fileID: 782269061}
+  - {fileID: 864163703}
+  - {fileID: 1402643395}
+  - {fileID: 1637848069}
   - {fileID: 1948307359}
+  - {fileID: 2125887326}
+  - {fileID: 2126754547}
   Highlight_Climbable: 0
   GizsmoScale_Climbable: 1
   HighlightColor_Climbable: {r: 0, g: 1, b: 0.31264257, a: 1}
   Climbable:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 783565692}
+  - {fileID: 39502514}
 --- !u!1001 &1637848066
 PrefabInstance:
   m_ObjectHideFlags: 0
