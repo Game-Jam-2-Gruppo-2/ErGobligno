@@ -49,11 +49,15 @@ public class MoveState : MovementStates
 	{
 		moveDir = inputMoveDir;
 		moveDir += normal;
-
+		Vector3 dir = moveDir;
+		dir.x = Controller.ImpulseForce * moveDir.x;
+		dir.z = Controller.ImpulseForce * moveDir.z;
+		dir = dir.x * Controller.transform.right + Controller.transform.forward * dir.z;
 
 		rbY = Controller.Rb.velocity.y;
-		rb.AddForce(Controller.ImpulseForce * moveDir.z * Time.fixedDeltaTime * rb.transform.forward, ForceMode.Impulse);
-		rb.AddForce(Controller.ImpulseForce * moveDir.x * Time.fixedDeltaTime * rb.transform.right, ForceMode.Impulse);
+		// rb.AddForce(Controller.ImpulseForce * moveDir.z * Time.fixedDeltaTime * rb.transform.forward, ForceMode.Impulse);
+		// rb.AddForce(Controller.ImpulseForce * moveDir.x * Time.fixedDeltaTime * rb.transform.right, ForceMode.Impulse);
+		rb.AddForce(dir * Time.fixedDeltaTime, ForceMode.Impulse);
 
 		vel = Controller.Rb.velocity;
 		vel.y = 0;
@@ -61,7 +65,6 @@ public class MoveState : MovementStates
 		vel = Vector3.ClampMagnitude(vel, maxSpeed);
 		Debug.Log("vel mag = " + vel.magnitude);
 		vel.y = rbY;
-
 
 		Controller.Rb.velocity = vel;
 
@@ -122,8 +125,6 @@ public class MoveState : MovementStates
 		}
 
 	}
-
-
 
 	public override void Exit()
 	{
