@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 714a5a0edfd84d242a7b4ac8b026d3f3
+guid: 6e37b0df4087844448590dc62613b94a
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,18 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Ceiling_Material_
-    second: {fileID: 2100000, guid: 0b156a5c84d7b974aabdd6a20b2714df, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Floor_Material
-    second: {fileID: 2100000, guid: bf5ad2bd25c8bb145adcdb41e87d6b38, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Map_Material
-    second: {fileID: 2100000, guid: 155b2492aa63c4846b04ad065f7da2d3, type: 2}
+      name: Broken_Table_Material
+    second: {fileID: 2100000, guid: ae4ce17900734f744b3c1870d1705388, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
