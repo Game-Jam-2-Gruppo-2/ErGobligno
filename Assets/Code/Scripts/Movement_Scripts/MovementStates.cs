@@ -54,17 +54,20 @@ public class MoveState : MovementStates
 		dir.z = Controller.ImpulseForce * moveDir.z;
 		dir = dir.x * Controller.transform.right + Controller.transform.forward * dir.z;
 
-		rbY = Controller.Rb.velocity.y;
+
+		//rbY = Controller.Rb.velocity.y;
 		// rb.AddForce(Controller.ImpulseForce * moveDir.z * Time.fixedDeltaTime * rb.transform.forward, ForceMode.Impulse);
 		// rb.AddForce(Controller.ImpulseForce * moveDir.x * Time.fixedDeltaTime * rb.transform.right, ForceMode.Impulse);
-		rb.AddForce(dir * Time.fixedDeltaTime, ForceMode.Impulse);
+
+		// rb.
+		// rb.AddForce(dir * Time.fixedDeltaTime, ForceMode.Impulse);
 
 		vel = Controller.Rb.velocity;
-		vel.y = 0;
+		Debug.DrawRay(Controller.transform.position, vel, Color.red, Time.fixedDeltaTime);
 		Debug.Log("vel mag = " + vel.magnitude);
 		vel = Vector3.ClampMagnitude(vel, maxSpeed);
 		Debug.Log("vel mag = " + vel.magnitude);
-		vel.y = rbY;
+		//vel.y = rbY;
 
 		Controller.Rb.velocity = vel;
 
@@ -189,7 +192,7 @@ public class IdleState : MovementStates
 		Controller.ChangeState(new MoveState());
 	}
 
-	private void JumpExit(UnityEngine.InputSystem.InputAction.CallbackContext context)
+	private void JumpExit(InputAction.CallbackContext context)
 	{
 		Controller.ChangeState(new JumpState());
 	}
