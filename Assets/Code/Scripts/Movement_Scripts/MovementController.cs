@@ -39,7 +39,7 @@ public class MovementController : MonoBehaviour
 	[SerializeField] public float ImpulseForce = 60;
 	//|------------------------------------------------------------------------------------------|
 	// general stuff:
-	[SerializeField, Range(0f, 1f)] public float StartingPitch = 1.2f;
+	[SerializeField, Range(-1f, 2f)] public float StartingPitch = 1.2f;
 	[HideInInspector] public MovementStates CurrentState;
 	[HideInInspector] public Vector3 MoveDir, CollisionNormal, CollisionDir;
 	[HideInInspector] public Collider ClimbableCollider;

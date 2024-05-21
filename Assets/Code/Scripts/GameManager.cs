@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviour
 
 	private void FinishGame()
 	{
-		if (ScoreManager.IsNoiseOnMax())
+		if (ScoreManager.IsNoiseOnMax() || ScoreManager.GetGameTimeValue() <= 0)
             SceneManager.LoadScene(LoseScreen_Scene);
         else
 			SceneManager.LoadScene(WinScreen_Scene);
@@ -138,6 +138,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void CheckTimer()
+    {
+        if (ScoreManager.GetGameTimeValue() <= 0)
+        {
+            OnGameEnd?.Invoke();
+            FinishGame();
+        }
+    }
+
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
 		for (int i = 0; i < GameScenes.Count; i++)
@@ -159,6 +168,7 @@ public class GameManager : MonoBehaviour
 	{
 		ScoreManager.OnNoiseChanged += CheckNoise;
 		ScoreManager.OnCoinChanged += CheckCoin;
+		ScoreManager.OnGameTimeChanged += CheckTimer;
 	}
 
 	private void OnDisable()
@@ -167,6 +177,7 @@ public class GameManager : MonoBehaviour
         m_PlayerInputs.Movement.Pause.performed -= PauseGame;
         ScoreManager.OnNoiseChanged -= CheckNoise;
         ScoreManager.OnCoinChanged -= CheckCoin;
+        ScoreManager.OnGameTimeChanged -= CheckTimer;
         SceneManager.sceneLoaded -= OnSceneLoaded;
         OnNewGame -= OnNewGame;
 		OnGamePause -= OnGamePause;

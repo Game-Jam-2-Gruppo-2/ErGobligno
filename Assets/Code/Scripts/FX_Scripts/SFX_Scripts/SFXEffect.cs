@@ -7,7 +7,7 @@ public class SFXEffect : MonoBehaviour
 {
     [SerializeField] private AudioSource Source;
 
-    private void OnEnable()
+    private void Awake()
     {
         Source = GetComponent<AudioSource>();
     }
@@ -22,6 +22,8 @@ public class SFXEffect : MonoBehaviour
 
     public void SetPitch(float pitch)
     {
+        if(Source == null)
+            Source = GetComponent<AudioSource>();
         Source.pitch = pitch;
     }
 

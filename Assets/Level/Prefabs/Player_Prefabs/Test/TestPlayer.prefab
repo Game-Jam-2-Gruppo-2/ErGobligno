@@ -202,10 +202,10 @@ MonoBehaviour:
   ClimbDuration: 0.5
   ClimbOffsetY: 0
   ClimbOffsetZ: 0.6
-  Climb_SFX: {fileID: 0}
+  Climb_SFX: {fileID: 8300000, guid: b35fbc9cf694b5a4785c8e4395196542, type: 3}
   ClimbPitchVariation: 0.2
   JumpForce: 4
-  Jump_SFX: {fileID: 0}
+  Jump_SFX: {fileID: 8300000, guid: 0aaace53230460740adaca998c5ae722, type: 3}
   JumpPitchVariation: 0.2
   LayerPlayer:
     serializedVersion: 2

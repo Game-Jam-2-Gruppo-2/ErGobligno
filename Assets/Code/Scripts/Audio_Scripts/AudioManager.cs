@@ -170,7 +170,7 @@ public class AudioManager : MonoBehaviour
             if (!Sources_2D[i].gameObject.activeInHierarchy)
             {
                 Sources_2D[i].gameObject.SetActive(true);
-                Sources_3D[i].SetPitch(startingPitch + pitchVariation);
+                Sources_2D[i].SetPitch(startingPitch + pitchVariation);
                 Sources_2D[i].PlaySound(position, clip);
                 return;
             }
