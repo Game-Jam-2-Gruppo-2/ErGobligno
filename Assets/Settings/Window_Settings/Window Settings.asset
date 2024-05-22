@@ -13,22 +13,7 @@ MonoBehaviour:
   m_Name: Window Settings
   m_EditorClassIdentifier: 
   m_WindowData:
-  - SilhouetteSprite: {fileID: -1235828817, guid: 9dc29cec505933a44a50d308e3455844,
-      type: 3}
+  - SilhouetteSprite: {fileID: 21300000, guid: 25e1fb9433160104cab774e7355d2bf9, type: 3}
     Speed: 0.5
-    SpawnProbability: 0.2
-  - SilhouetteSprite: {fileID: 105411947, guid: 9dc29cec505933a44a50d308e3455844,
-      type: 3}
-    Speed: 0.75
-    SpawnProbability: 0.2
-  - SilhouetteSprite: {fileID: 21300000, guid: 113c32af59f6b4848bf4aa86223d2e32, type: 3}
-    Speed: 1
-    SpawnProbability: 0.2
-  - SilhouetteSprite: {fileID: 620103755, guid: 9dc29cec505933a44a50d308e3455844,
-      type: 3}
-    Speed: 0.1
-    SpawnProbability: 0.2
-  - SilhouetteSprite: {fileID: -1367687481, guid: 9dc29cec505933a44a50d308e3455844,
-      type: 3}
-    Speed: 0.88
-    SpawnProbability: 0.2
+    Hz: 15
+    SpawnProbability: 1
