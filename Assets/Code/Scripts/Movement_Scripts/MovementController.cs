@@ -34,6 +34,7 @@ public class MovementController : MonoBehaviour
 	[SerializeField] public float Gravity = 9.8f;
 	[SerializeField] public float GravityMaxDuration;
 	[HideInInspector] public float GravityTimer;
+	[HideInInspector] public float OldMaxSpeed;
 
 	[Header("Speed Settings: ")]//|------------------------------------------------------------------------------------------|
 	[SerializeField] public float WalkMaxSpeed = 10;
@@ -68,10 +69,7 @@ public class MovementController : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-
 		CurrentState?.FixedTick();
-
-
 	}
 	void Update()
 	{

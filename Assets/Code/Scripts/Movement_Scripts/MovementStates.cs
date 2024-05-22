@@ -120,6 +120,7 @@ public class MoveState : MovementStates
 	{
 		Controller.inputActions.Movement.Run.performed -= Run;
 		Controller.inputActions.Movement.Jump.performed -= JumpExit;
+		Controller.OldMaxSpeed = maxSpeed;
 	}
 	private void JumpExit(InputAction.CallbackContext context)
 	{
@@ -182,6 +183,7 @@ public class IdleState : MovementStates
 	{
 		Controller.inputActions.Movement.Walk.performed -= MoveExit;
 		Controller.inputActions.Movement.Jump.performed -= JumpExit;
+		Controller.OldMaxSpeed = 1;
 	}
 	private void MoveExit(UnityEngine.InputSystem.InputAction.CallbackContext context)
 	{
@@ -207,6 +209,7 @@ public class JumpState : MovementStates
 		Controller = controller;
 		Vector3 oldVel = controller.Rb.velocity;
 		oldVel.y = 0;
+		oldVel = oldVel.normalized * controller.OldMaxSpeed;
 		controller.Rb.AddForce(controller.transform.up * controller.JumpForce, ForceMode.Impulse);
 		controller.Rb.velocity += oldVel;
 		Debug.Log("vel= " + controller.Rb.velocity + "\noldVel= " + oldVel);
