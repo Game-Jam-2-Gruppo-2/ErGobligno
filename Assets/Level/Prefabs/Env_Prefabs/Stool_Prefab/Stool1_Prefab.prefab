@@ -432,7 +432,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2669957053736584471}
   - component: {fileID: 9017571666244184242}
-  m_Layer: 0
+  - component: {fileID: 6946052053685782214}
+  m_Layer: 7
   m_Name: Seat_Grab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -475,6 +476,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.57427526, y: 0.0434016, z: 0.56145227}
   m_Center: {x: -0.2102978, y: -0.14490029, z: 0.07565588}
+--- !u!114 &6946052053685782214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8240122575848193061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625fab7fc14d905499416d2d4a8ef865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8257550322727762429
 GameObject:
   m_ObjectHideFlags: 0

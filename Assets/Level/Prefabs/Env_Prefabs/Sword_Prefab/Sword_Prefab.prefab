@@ -93,7 +93,8 @@ GameObject:
   m_Component:
   - component: {fileID: 460522592096084947}
   - component: {fileID: 5443223867130234944}
-  m_Layer: 0
+  - component: {fileID: 2307831975589374049}
+  m_Layer: 7
   m_Name: Handle_Grab_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,6 +137,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.02891481, y: 0.37587357, z: 0.055022396}
   m_Center: {x: -0.1512619, y: 1.0135534, z: -0.0042232983}
+--- !u!114 &2307831975589374049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1903678951974115314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625fab7fc14d905499416d2d4a8ef865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2358954336976127041
 GameObject:
   m_ObjectHideFlags: 0
@@ -184,7 +197,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2084879988682363606}
   - component: {fileID: 4214145866564123017}
-  m_Layer: 0
+  - component: {fileID: 3006952601466894527}
+  m_Layer: 7
   m_Name: Blade_Grab_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -227,6 +241,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.057349086, y: 0.84187394, z: 0.029403225}
   m_Center: {x: -0.19360825, y: 0.4254826, z: -0.0050048013}
+--- !u!114 &3006952601466894527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2568667498334016740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625fab7fc14d905499416d2d4a8ef865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2922528837956997460
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,7 +263,8 @@ GameObject:
   m_Component:
   - component: {fileID: 9204947384541171214}
   - component: {fileID: 589427977449597055}
-  m_Layer: 0
+  - component: {fileID: 3231018652271694775}
+  m_Layer: 7
   m_Name: Handle_Grab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -280,6 +307,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.033554956, y: 0.37587357, z: 0.055022396}
   m_Center: {x: -0.09442044, y: 1.0135534, z: -0.0042232983}
+--- !u!114 &3231018652271694775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2922528837956997460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625fab7fc14d905499416d2d4a8ef865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3576242692506535864
 GameObject:
   m_ObjectHideFlags: 0
@@ -343,7 +382,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6331839153154767401}
   - component: {fileID: 6639579463458887627}
-  m_Layer: 0
+  - component: {fileID: 3237927487310750662}
+  m_Layer: 7
   m_Name: Blade_Grab_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -386,6 +426,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.124219865, y: 0.13850522, z: 0.029403225}
   m_Center: {x: -0.016785845, y: 0.75001943, z: -0.005004801}
+--- !u!114 &3237927487310750662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5720473449836781830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625fab7fc14d905499416d2d4a8ef865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5803402015426294028
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,7 +566,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1682148240062478101}
   - component: {fileID: 7804641421484976083}
-  m_Layer: 0
+  - component: {fileID: 7045473246490200476}
+  m_Layer: 7
   m_Name: Blade_Grab_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -557,3 +610,15 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.053143114, y: 0.6972116, z: 0.027069863}
   m_Center: {x: -0.065308064, y: 0.35315064, z: -0.0048751533}
+--- !u!114 &7045473246490200476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9159466641646368353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625fab7fc14d905499416d2d4a8ef865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

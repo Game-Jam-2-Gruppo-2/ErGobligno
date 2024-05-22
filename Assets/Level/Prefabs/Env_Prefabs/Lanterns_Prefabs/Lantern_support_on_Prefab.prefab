@@ -375,7 +375,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2250016868743406183}
   - component: {fileID: 3165369187722384464}
-  m_Layer: 0
+  - component: {fileID: 5216791060328827997}
+  m_Layer: 7
   m_Name: Grab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -418,6 +419,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.17959017, y: 0.05733919, z: 0.6772971}
   m_Center: {x: -0.031007499, y: 0.31160396, z: -0.2187593}
+--- !u!114 &5216791060328827997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5329251090100209860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625fab7fc14d905499416d2d4a8ef865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5569191538229065696
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,7 +494,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3803425129992056854}
   - component: {fileID: 7022477605707563236}
-  m_Layer: 0
+  - component: {fileID: 1336568305044751845}
+  m_Layer: 7
   m_Name: Cover_Grab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -524,6 +538,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.36368442, y: 0.03349799, z: 0.3601489}
   m_Center: {x: -0.012230992, y: 0.19897047, z: 0.034546614}
+--- !u!114 &1336568305044751845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5748429562699707723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625fab7fc14d905499416d2d4a8ef865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5759878997533016091
 GameObject:
   m_ObjectHideFlags: 0

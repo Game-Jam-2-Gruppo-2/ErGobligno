@@ -351,7 +351,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4672085732827161936}
   - component: {fileID: 1939841992716446067}
-  m_Layer: 0
+  - component: {fileID: 5261480369646870737}
+  m_Layer: 7
   m_Name: Shelf_Grab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -394,6 +395,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.44389042, y: 0.020050168, z: 0.25686362}
   m_Center: {x: -0.0037341267, y: -0.12157431, z: -0.00912635}
+--- !u!114 &5261480369646870737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5424040813095925885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625fab7fc14d905499416d2d4a8ef865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5773661696744457757
 GameObject:
   m_ObjectHideFlags: 0

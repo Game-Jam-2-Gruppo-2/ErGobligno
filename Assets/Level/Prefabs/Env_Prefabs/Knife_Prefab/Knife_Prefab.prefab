@@ -181,7 +181,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4598823772678048366}
   - component: {fileID: 2186703759936848301}
-  m_Layer: 0
+  - component: {fileID: 7055821793017089831}
+  m_Layer: 7
   m_Name: Handle_Grab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,6 +225,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.11810589, y: 0.49522787, z: 0.049696922}
   m_Center: {x: -0.10474539, y: 0.24696991, z: -0.0018854141}
+--- !u!114 &7055821793017089831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7547959665346882310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625fab7fc14d905499416d2d4a8ef865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7884791492636304366
 GameObject:
   m_ObjectHideFlags: 0
