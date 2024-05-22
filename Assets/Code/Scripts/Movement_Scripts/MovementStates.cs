@@ -17,10 +17,11 @@ public class MoveState : MovementStates
 	Vector3 inputMoveDir => InputManager.MovementDir;
 	Vector3 vel, moveDir, normal, halfExtent;
 	float maxSpeed;
-	bool isRunning, isAirborne;
+	bool isRunning;
 	float rbY;
 	Rigidbody rb;
 
+	bool IsAirborne { get => Controller.IsAirborne; set => Controller.IsAirborne = value; }
 #if UNITY_EDITOR
 	Vector3 drawDir;
 #endif
@@ -36,7 +37,7 @@ public class MoveState : MovementStates
 		Controller.inputActions.Movement.Jump.performed += JumpExit;
 		rb = controller.Rb;
 		halfExtent = controller.MyCollider.bounds.extents;
-		isAirborne = false;
+		IsAirborne = false;
 	}
 
 	private void Run(InputAction.CallbackContext context)
@@ -52,32 +53,25 @@ public class MoveState : MovementStates
 		Vector3 dir = moveDir;
 		dir.x = Controller.ImpulseForce * moveDir.x;
 		dir.z = Controller.ImpulseForce * moveDir.z;
-		dir = dir.x * Controller.transform.right + Controller.transform.forward * dir.z;
 
+		rbY = Controller.Rb.velocity.y;
 
-		//rbY = Controller.Rb.velocity.y;
-		// rb.AddForce(Controller.ImpulseForce * moveDir.z * Time.fixedDeltaTime * rb.transform.forward, ForceMode.Impulse);
-		// rb.AddForce(Controller.ImpulseForce * moveDir.x * Time.fixedDeltaTime * rb.transform.right, ForceMode.Impulse);
+		rb.AddForce(Controller.ImpulseForce * moveDir.z * rb.transform.forward, ForceMode.Impulse);
+		rb.AddForce(Controller.ImpulseForce * moveDir.x * rb.transform.right, ForceMode.Impulse);
 
-		// rb.
-		// rb.AddForce(dir * Time.fixedDeltaTime, ForceMode.Impulse);
+		vel = rb.velocity;
 
-		vel = Controller.Rb.velocity;
 		Debug.DrawRay(Controller.transform.position, vel, Color.red, Time.fixedDeltaTime);
-		Debug.Log("vel mag = " + vel.magnitude);
+
 		vel = Vector3.ClampMagnitude(vel, maxSpeed);
-		Debug.Log("vel mag = " + vel.magnitude);
-		//vel.y = rbY;
 
-		Controller.Rb.velocity = vel;
-
+		rb.velocity = vel;
 
 		if (vel == Vector3.zero && inputMoveDir == Vector3.zero)
 			Controller.ChangeState(new IdleState());
 
 
-		isAirborne = Controller.IsAirborne();
-		if (isAirborne)
+		if (IsAirborne)
 		{
 			if (Controller.CheckLedge)
 			{
@@ -96,12 +90,13 @@ public class MoveState : MovementStates
 			else
 				normal = Vector3.zero;
 
+
 		}
 
 #if UNITY_EDITOR
 
 		drawDir = moveDir.z * Controller.transform.forward + (moveDir.x * Controller.transform.right);
-		if (isAirborne)
+		if (IsAirborne)
 		{
 			Debug.DrawRay(Controller.transform.position + Vector3.up * Controller.WallCheckHight, drawDir * Controller.WallCheckLenght, Color.cyan, Time.fixedDeltaTime);
 			Debug.DrawRay(Controller.transform.position, drawDir * Controller.WallCheckLenght, Color.cyan, Time.fixedDeltaTime);
@@ -117,11 +112,11 @@ public class MoveState : MovementStates
 
 	public override void Collision(Collision other)
 	{
-		if (isAirborne)
+		if (IsAirborne)
 		{
 			if (Controller.AirborneCheck == true)
 			{
-				isAirborne = false;
+				IsAirborne = false;
 				isRunning = false;
 				maxSpeed = Controller.WalkMaxSpeed;
 			}
@@ -136,7 +131,7 @@ public class MoveState : MovementStates
 	}
 	private void JumpExit(InputAction.CallbackContext context)
 	{
-		if (isAirborne)
+		if (IsAirborne)
 			return;
 
 		Controller.ChangeState(new JumpState());
@@ -236,8 +231,6 @@ public class JumpState : MovementStates
 		}
 	}
 
-
-
 	public override void Exit()
 	{
 
@@ -256,7 +249,7 @@ public class ClimbState : MovementStates
 		Controller = controller;
 
 		Controller.MyCollider.enabled = false;
-		Controller.Rb.useGravity = false;
+		Controller.IsClimbing = true;
 
 
 		startpos = Controller.transform.position;
@@ -297,6 +290,6 @@ public class ClimbState : MovementStates
 	public override void Exit()
 	{
 		Controller.MyCollider.enabled = true;
-		Controller.Rb.useGravity = true;
+		Controller.IsClimbing = false;
 	}
 }

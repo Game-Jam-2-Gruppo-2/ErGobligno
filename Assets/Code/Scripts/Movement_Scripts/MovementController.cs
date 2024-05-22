@@ -31,6 +31,9 @@ public class MovementController : MonoBehaviour
 	[SerializeField] public float GroundCheckRadius = 0.4f;
 	[SerializeField] public float WallCheckHight = 1f;
 	[SerializeField] public float WallCheckLenght = 0.6f;
+	[SerializeField] public float Gravity = 9.8f;
+	[SerializeField] float GravityMaxDuration;
+	float GravityTimer;
 
 	[Header("Speed Settings: ")]//|------------------------------------------------------------------------------------------|
 	[SerializeField] public float WalkMaxSpeed = 10;
@@ -45,20 +48,16 @@ public class MovementController : MonoBehaviour
 	[HideInInspector] public Collider ClimbableCollider;
 	[HideInInspector] public RaycastHit Hit;
 	[HideInInspector] public PlayerInputs inputActions;
+	[HideInInspector] public bool IsAirborne, IsClimbing;
+
+
 	public static Action OnClimb;
 	public bool CheckLedge => Physics.Raycast(transform.position + Vector3.up * LedgeCheckHeight, transform.forward, out Hit, LedgeCheckLenght);
 	/// <summary>
 	/// return Physics.OverlapSphere(transform.position, GroundCheckRadius, ~LayerPlayer) == null;
 	/// </summary>
-	public bool AirborneCheck => IsAirborne();
+	public bool AirborneCheck => Physics.CheckSphere(transform.position, GroundCheckRadius, ~LayerPlayer) == false;
 
-	public bool IsAirborne()
-	{
-		return Physics.CheckSphere(transform.position, GroundCheckRadius, ~LayerPlayer) == false;
-		//return Physics.SphereCast(transform.position + Vector3.up * GroundCheckHight, GroundCheckRadius, Vector3.down, out _, GroundCheckLenght, ~LayerPlayer) == false;
-		//return Physics.OverlapSphere(transform.position, GroundCheckRadius, ~LayerPlayer) == null;
-	}
-	//Physics.SphereCast(transform.position + Vector3.up * GroundCheckHight, GroundCheckRadius, Vector3.down, out _, GroundCheckLenght, ~LayerPlayer) == false;
 	private void Awake()
 	{
 		Rb = GetComponent<Rigidbody>();
@@ -69,7 +68,24 @@ public class MovementController : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+
 		CurrentState.FixedTick();
+
+		if (IsAirborne && IsClimbing == false)
+		{
+			if (GravityTimer < GravityMaxDuration)
+			{
+				GravityTimer += Time.fixedDeltaTime;
+			}
+
+			float gravityPower = Mathf.Lerp(0, Gravity, GravityTimer / GravityMaxDuration);
+
+			Rb.velocity += Vector3.down * gravityPower;
+		}
+		else
+		{
+			GravityTimer = 0;
+		}
 	}
 	void Update()
 	{
