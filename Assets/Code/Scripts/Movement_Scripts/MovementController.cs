@@ -32,8 +32,8 @@ public class MovementController : MonoBehaviour
 	[SerializeField] public float WallCheckHight = 1f;
 	[SerializeField] public float WallCheckLenght = 0.6f;
 	[SerializeField] public float Gravity = 9.8f;
-	[SerializeField] float GravityMaxDuration;
-	float GravityTimer;
+	[SerializeField] public float GravityMaxDuration;
+	[HideInInspector] public float GravityTimer;
 
 	[Header("Speed Settings: ")]//|------------------------------------------------------------------------------------------|
 	[SerializeField] public float WalkMaxSpeed = 10;
@@ -69,27 +69,13 @@ public class MovementController : MonoBehaviour
 	private void FixedUpdate()
 	{
 
-		CurrentState.FixedTick();
+		CurrentState?.FixedTick();
 
-		if (IsAirborne && IsClimbing == false)
-		{
-			if (GravityTimer < GravityMaxDuration)
-			{
-				GravityTimer += Time.fixedDeltaTime;
-			}
 
-			float gravityPower = Mathf.Lerp(0, Gravity, GravityTimer / GravityMaxDuration);
-
-			Rb.velocity += Vector3.down * gravityPower;
-		}
-		else
-		{
-			GravityTimer = 0;
-		}
 	}
 	void Update()
 	{
-		CurrentState.Tick();
+		CurrentState?.Tick();
 	}
 
 	private void OnTriggerEnter(Collider other)
@@ -101,16 +87,16 @@ public class MovementController : MonoBehaviour
 	}
 	private void OnCollisionEnter(Collision other)
 	{
-		CurrentState.Collision(other);
+		CurrentState?.Collision(other);
 	}
 
 	public void ChangeState(MovementStates newState)
 	{
 		CurrentState?.Exit();
-
 		CurrentState = newState;
 		CurrentState.Enter(this);
 	}
+
 #if UNITY_EDITOR
 	private void OnDrawGizmos()
 	{
@@ -120,6 +106,12 @@ public class MovementController : MonoBehaviour
 
 		Gizmos.color = Color.red;
 		Gizmos.DrawRay(transform.position + Vector3.up * LedgeCheckHeight, transform.forward * LedgeCheckLenght);
+
+		Gizmos.color = Color.cyan;
+		Gizmos.DrawWireSphere(transform.position + Vector3.up * WallCheckHight + transform.forward * WallCheckLenght, 0.2f);
+		Gizmos.DrawWireSphere(transform.position + Vector3.up * 0.3f + transform.forward * WallCheckLenght, 0.2f);
+		Gizmos.DrawRay(transform.position + Vector3.up * WallCheckHight, transform.forward * WallCheckLenght);
+		Gizmos.DrawRay(transform.position + Vector3.up * 0.3f, transform.forward * WallCheckLenght);
 	}
 #endif
 }
