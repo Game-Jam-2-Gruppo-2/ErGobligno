@@ -474,6 +474,16 @@ PrefabInstance:
       propertyPath: StartingPitch
       value: 1.2
       objectReference: {fileID: 0}
+    - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: GroundCheckRadius
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 523868490282131359, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: GravityMaxDuration
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1129238353097798265, guid: ce4840c7e9cfa614bba18901c4365496,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -528,6 +538,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TestPlayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 5455788610137237893, guid: ce4840c7e9cfa614bba18901c4365496,
+        type: 3}
+      propertyPath: m_UseGravity
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
