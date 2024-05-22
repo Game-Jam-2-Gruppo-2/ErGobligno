@@ -16,4 +16,4 @@ MonoBehaviour:
   - SilhouetteSprite: {fileID: 21300000, guid: 25e1fb9433160104cab774e7355d2bf9, type: 3}
     Speed: 0.5
     Hz: 15
-    SpawnProbability: 1
+    SpawnProbability: 0

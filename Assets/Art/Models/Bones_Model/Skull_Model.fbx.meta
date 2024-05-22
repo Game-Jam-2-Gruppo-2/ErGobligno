@@ -7,6 +7,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Skull_Material
+    second: {fileID: 2100000, guid: 2178210a7b4287f4d880d352c8875382, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: _Skull_Material
     second: {fileID: 2100000, guid: 2178210a7b4287f4d880d352c8875382, type: 2}
   materials:
