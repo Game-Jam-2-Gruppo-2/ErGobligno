@@ -286,7 +286,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5088564397052785880}
   - component: {fileID: 1608839044887205131}
-  m_Layer: 0
+  - component: {fileID: 5086676881854163431}
+  m_Layer: 7
   m_Name: Horizontal Plane_Grab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -329,6 +330,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4.205267, y: 0.13325405, z: 1.783078}
   m_Center: {x: -0.08573055, y: 0.8732629, z: 0.025759071}
+--- !u!114 &5086676881854163431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3854691416598513767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625fab7fc14d905499416d2d4a8ef865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3944471323240422704
 GameObject:
   m_ObjectHideFlags: 0

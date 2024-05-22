@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7879906697907808232}
   - component: {fileID: 4165417820513048799}
-  m_Layer: 0
+  - component: {fileID: 8586566914183595236}
+  m_Layer: 7
   m_Name: Cover_Grab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,6 +54,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.36368442, y: 0.03349799, z: 0.3601489}
   m_Center: {x: -0.012230992, y: 0.19897047, z: 0.034546614}
+--- !u!114 &8586566914183595236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 349794370330611352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625fab7fc14d905499416d2d4a8ef865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &779220666814752559
 GameObject:
   m_ObjectHideFlags: 0

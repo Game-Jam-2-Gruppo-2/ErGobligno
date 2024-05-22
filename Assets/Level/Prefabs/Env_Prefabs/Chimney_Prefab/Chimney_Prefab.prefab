@@ -183,7 +183,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7745634559151860593}
   - component: {fileID: 4475606501683652574}
-  m_Layer: 0
+  - component: {fileID: 2452784729721131645}
+  m_Layer: 7
   m_Name: Structure_Grab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -226,6 +227,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.1649046, y: 0.067340374, z: 0.3930564}
   m_Center: {x: -0.15180731, y: 0.53747666, z: 0.6339934}
+--- !u!114 &2452784729721131645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5152820416408109546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625fab7fc14d905499416d2d4a8ef865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7343502229632366879
 GameObject:
   m_ObjectHideFlags: 0
