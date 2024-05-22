@@ -58,7 +58,7 @@ public class ScoreManager: MonoBehaviour
     private void ResetValues()
     {
         //Reset Values
-        GameTime = m_Settings.MaxTime;
+        GameTime = m_Settings.StartingTime;
         CoinAmount = 0;
         NoiseAmount = 0f;
     }
@@ -118,6 +118,7 @@ public class ScoreManager: MonoBehaviour
     {
         CoinAmount += amount;
         CoinLeft--;
+        GameTime += m_Settings.IncreaseTimeOnCoin;
         OnCoinChanged?.Invoke();
     }
 
