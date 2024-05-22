@@ -3346,10 +3346,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bottle1_Prefab
       objectReference: {fileID: 0}
+    - target: {fileID: 7031013722438321286, guid: e07a2d8d12eed0447b103af1e3024b7b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8044625011965735268, guid: e07a2d8d12eed0447b103af1e3024b7b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.045
+      value: 4.847
       objectReference: {fileID: 0}
     - target: {fileID: 8044625011965735268, guid: e07a2d8d12eed0447b103af1e3024b7b,
         type: 3}

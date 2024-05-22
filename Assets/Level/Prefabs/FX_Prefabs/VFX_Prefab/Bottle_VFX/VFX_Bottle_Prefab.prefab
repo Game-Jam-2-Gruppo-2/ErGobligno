@@ -17,11 +17,29 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+      objectReference: {fileID: 2358633738051271728, guid: eff8fc82752e41845925ee2acd161c40,
+        type: 3}
+    - target: {fileID: 5725690379208226890, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
+      propertyPath: m_Mesh1
+      value: 
+      objectReference: {fileID: -2877619249594098630, guid: 6d07792def09e554abe7414618ad15b6,
+        type: 3}
+    - target: {fileID: 5725690379208226890, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
+      propertyPath: m_Mesh2
+      value: 
+      objectReference: {fileID: 2745110786396116219, guid: e1d76e9a2f971bd40a27cee4f361e2ef,
+        type: 3}
     - target: {fileID: 5725690379208226890, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: m_RenderMode
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5725690379208226890, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
+      propertyPath: m_MeshDistribution
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5725690379208226890, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
@@ -72,7 +90,7 @@ PrefabInstance:
         type: 3}
       propertyPath: ShapeModule.m_Mesh
       value: 
-      objectReference: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+      objectReference: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: SizeModule.enabled
@@ -81,6 +99,11 @@ PrefabInstance:
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: TriggerModule.enter
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
+      propertyPath: emitterVelocityMode
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
@@ -101,12 +124,17 @@ PrefabInstance:
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: ShapeModule.m_Scale.x
-      value: 0.3
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
+      propertyPath: ShapeModule.m_Scale.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: ShapeModule.m_Scale.z
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
@@ -126,7 +154,7 @@ PrefabInstance:
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: CollisionModule.quality
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
@@ -146,7 +174,12 @@ PrefabInstance:
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: ShapeModule.placementMode
-      value: 0
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
+      propertyPath: CollisionModule.radiusScale
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
@@ -166,7 +199,7 @@ PrefabInstance:
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: InitialModule.startSize.scalar
-      value: 0.05
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
@@ -181,7 +214,12 @@ PrefabInstance:
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: InitialModule.startSpeed.scalar
-      value: 0.2
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
+      propertyPath: CollisionModule.maxCollisionShapes
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
@@ -191,6 +229,16 @@ PrefabInstance:
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
+      propertyPath: CollisionModule.collidesWith.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
+      propertyPath: CollisionModule.collidesWithDynamic
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
@@ -256,7 +304,7 @@ PrefabInstance:
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
-      value: 45
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
@@ -511,7 +559,20 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+      objectReference: {fileID: -9119247571743195145, guid: ec363d09be572f947b6217431f0be72b,
+        type: 3}
+    - target: {fileID: 5725690379208226890, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
+      propertyPath: m_Mesh1
+      value: 
+      objectReference: {fileID: -6125044060709201643, guid: 48d76c735d8f5ab4893fbb274e47a9d4,
+        type: 3}
+    - target: {fileID: 5725690379208226890, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
+      propertyPath: m_Mesh2
+      value: 
+      objectReference: {fileID: 5401308473398605320, guid: cbc70234159ea0541b22c715268ede58,
+        type: 3}
     - target: {fileID: 5725690379208226890, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: m_RenderMode
@@ -580,6 +641,11 @@ PrefabInstance:
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: TriggerModule.enter
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
+      propertyPath: emitterVelocityMode
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
@@ -654,6 +720,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
+      propertyPath: CollisionModule.radiusScale
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
       propertyPath: EmissionModule.m_BurstCount
       value: 1
       objectReference: {fileID: 0}
@@ -669,8 +740,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
+      propertyPath: CollisionModule.collisionMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
       propertyPath: InitialModule.startSize.scalar
-      value: 0.2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
@@ -689,12 +765,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
+      propertyPath: CollisionModule.maxCollisionShapes
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
+      propertyPath: CollisionModule.collidesWith.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
+        type: 3}
+      propertyPath: CollisionModule.collidesWithDynamic
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
@@ -765,7 +856,7 @@ PrefabInstance:
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
-      value: 5
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 6431320295064156031, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
@@ -945,37 +1036,37 @@ PrefabInstance:
     - target: {fileID: 6587716972323069126, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.079074
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6587716972323069126, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.17067878
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6587716972323069126, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.057744674
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6587716972323069126, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.75717074
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6587716972323069126, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.64300233
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6587716972323069126, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.058643732
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6587716972323069126, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.09900218
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6587716972323069126, guid: bde799601ec49574b8c625d21b7a0fdb,
         type: 3}
