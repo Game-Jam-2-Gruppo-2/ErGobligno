@@ -29,11 +29,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: ad43be90ef212694f9be6bee4f558303, type: 3}
+        m_Texture: {fileID: 2800000, guid: 583299553b488c545bb2f3efac537d35, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: b60c499b9d466d4439135d8a76ec8b93, type: 3}
+        m_Texture: {fileID: 2800000, guid: af44bc2dca23bbb4a9adcd758cd24392, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -49,15 +49,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
-        m_Texture: {fileID: 2800000, guid: 983a4b0f437fac04d80975d0710e1b19, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8a36115f8cd8c3842885244c9e55d9ee, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: ad43be90ef212694f9be6bee4f558303, type: 3}
+        m_Texture: {fileID: 2800000, guid: 583299553b488c545bb2f3efac537d35, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
-        m_Texture: {fileID: 2800000, guid: 348731eb638303948a606ea57cce7271, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0853f243fb32fde4cb3942c9e5aed2a2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -65,7 +65,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
-        m_Texture: {fileID: 2800000, guid: ad316b8b0312cab4a882202a497df492, type: 3}
+        m_Texture: {fileID: 2800000, guid: 040b8ce4b872d3846ac0b0f50df2e867, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -108,7 +108,7 @@ Material:
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 0.5
+    - _Smoothness: 0.217
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
