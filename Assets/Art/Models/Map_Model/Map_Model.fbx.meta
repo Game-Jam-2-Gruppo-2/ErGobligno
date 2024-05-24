@@ -7,11 +7,6 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Beams_Pillars_Material_
-    second: {fileID: 2100000, guid: db1fcd6f384bf604096f7c76f020216c, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: Ceiling_Material_
     second: {fileID: 2100000, guid: 0b156a5c84d7b974aabdd6a20b2714df, type: 2}
   - first:

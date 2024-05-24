@@ -33,14 +33,14 @@ public class DebugManager : MonoBehaviour
         {
             Gizmos.color = HighlightColor_Bottle;
             for (int i = 0; i < Bottles.Length; i++)
-                Gizmos.DrawCube(Bottles[i].gameObject.transform.position, Bottles[i].gameObject.GetComponent<Collider>().bounds.extents * 2 * GizsmoScale_Bottle);
+                Gizmos.DrawCube(Bottles[i].gameObject.GetComponentInChildren<Collider>().bounds.center, Bottles[i].gameObject.GetComponentInChildren<Collider>().bounds.extents * 2 * GizsmoScale_Bottle);
         }
 
         if (Highlight_Climbable)
         {
             Gizmos.color = HighlightColor_Climbable;
             for (int i = 0; i < Climbable.Count; i++)
-                Gizmos.DrawCube(Climbable[i].gameObject.transform.position, Climbable[i].gameObject.GetComponent<Collider>().bounds.extents * 2 * GizsmoScale_Climbable);
+                Gizmos.DrawCube(Climbable[i].gameObject.GetComponent<Collider>().bounds.center, Climbable[i].gameObject.GetComponent<Collider>().bounds.extents * 2 * GizsmoScale_Climbable);
         }
     }
 }

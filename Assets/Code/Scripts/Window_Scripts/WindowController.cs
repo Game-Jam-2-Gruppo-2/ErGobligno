@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class WindowController : MonoBehaviour
@@ -12,6 +10,7 @@ public class WindowController : MonoBehaviour
     [SerializeField] private Transform m_EndPos;
     [Header("Renderer Refs")]
     [SerializeField] private SpriteRenderer m_SpriteRenderer;
+    [SerializeField] private SpriteRenderer m_SpriteRendererShadowCaster;
 
     private void Awake()
     {
@@ -24,8 +23,10 @@ public class WindowController : MonoBehaviour
         //Window values
         WindowData newData = m_Settings.GetRandomWindowData();
         //Update silhouette
-        m_SpriteRenderer.flipX = false;
+        m_SpriteRenderer.flipX = true;
+        m_SpriteRendererShadowCaster.flipX = true;
         m_SpriteRenderer.sprite = newData.SilhouetteSprite;
+        m_SpriteRendererShadowCaster.sprite = m_SpriteRenderer.sprite;
         //Animation values
         float progress = 0f;
         Vector3 startPos = m_StartPos.position;
@@ -37,18 +38,18 @@ public class WindowController : MonoBehaviour
             x = startPos;
             startPos = endPos;
             endPos = x;
-            m_SpriteRenderer.flipX = true;
+            m_SpriteRenderer.flipX = false;
+            m_SpriteRendererShadowCaster.flipX = false;
         }
         //Move sprite
         while(progress<1f)
         {
             m_SilhouetteTransform.position = Vector3.Lerp(startPos, endPos, progress);
-            float y = (float)(0.5 * Mathf.Sin(Time.time * newData.Hz) + 0.5);
-            m_SilhouetteTransform.position = new Vector3(m_SilhouetteTransform.position.x, m_SilhouetteTransform.position.y + y, m_SilhouetteTransform.position.z);
             progress += Time.deltaTime * newData.Speed;
             yield return null;
         }
         //Loop
+        yield return new WaitForSeconds(UnityEngine.Random.Range(5f, 10f));
         StartCoroutine(MoveSilhouette());
     }
 
