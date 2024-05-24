@@ -1,3 +1,4 @@
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -204,20 +205,26 @@ public class IdleState : MovementStates
 public class JumpState : MovementStates
 {
 	public override MovementController Controller { get; set; }
+	float airborneTimer;
+	Vector3 oldVel;
 	public override void Enter(MovementController controller)
 	{
 		Controller = controller;
-		Vector3 oldVel = controller.Rb.velocity;
+		oldVel = controller.Rb.velocity;
+
 		oldVel.y = 0;
-		oldVel = oldVel.normalized * controller.OldMaxSpeed;
+
+		// oldVel = oldVel.normalized;
+		// oldVel *= controller.OldMaxSpeed;
+
 		controller.Rb.AddForce(controller.transform.up * controller.JumpForce, ForceMode.Impulse);
-		controller.Rb.velocity += oldVel;
 		Debug.Log("vel= " + controller.Rb.velocity + "\noldVel= " + oldVel);
 		AudioManager.Request2DSFX?.Invoke(controller.Jump_SFX, controller.transform.position, controller.StartingPitch, Random.Range(-controller.JumpPitchVariation, controller.JumpPitchVariation));
 	}
 
 	public override void FixedTick()
 	{
+		Vector3 vel = Controller.Rb.velocity;
 		if (Controller.CheckLedge)
 		{
 			if (Controller.Hit.transform.TryGetComponent(out IClimbable _))
@@ -227,15 +234,22 @@ public class JumpState : MovementStates
 			}
 		}
 
-
-		if (Controller.GravityTimer < Controller.GravityMaxDuration)
+		if (airborneTimer < Controller.AirTimeBeforeGravity)
+		{
+			airborneTimer += Time.fixedDeltaTime;
+		}
+		else if (Controller.GravityTimer < Controller.GravityMaxDuration)
 		{
 			Controller.GravityTimer += Time.fixedDeltaTime;
+
+			float gravityPower = Mathf.Lerp(0, Controller.Gravity, Controller.GravityTimer / Controller.GravityMaxDuration);
+
+			vel += Vector3.down * gravityPower;
 		}
+		vel.x = oldVel.x;
+		vel.z = oldVel.z;
 
-		float gravityPower = Mathf.Lerp(0, Controller.Gravity, Controller.GravityTimer / Controller.GravityMaxDuration);
-
-		Controller.Rb.velocity += Vector3.down * gravityPower;
+		Controller.Rb.velocity = vel;
 	}
 
 	public override void Tick()

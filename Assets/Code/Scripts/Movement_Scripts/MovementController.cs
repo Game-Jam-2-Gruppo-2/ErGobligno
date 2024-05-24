@@ -24,6 +24,8 @@ public class MovementController : MonoBehaviour
 	[SerializeField] public float JumpForce = 4f;
 	[SerializeField] public AudioClip Jump_SFX;
 	[SerializeField, Range(-1f, 1f)] public float JumpPitchVariation = 0.2f;
+	[Tooltip("it's the time before i start applaying gravity (this is so that )")]
+	[SerializeField] public float AirTimeBeforeGravity = 0.4f;
 
 	[Header("Falling Settings")]//|------------------------------------------------------------------------------------------|
 	[SerializeField] public LayerMask LayerPlayer;
