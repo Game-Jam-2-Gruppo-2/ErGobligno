@@ -207,15 +207,17 @@ public class JumpState : MovementStates
 	public override MovementController Controller { get; set; }
 	float airborneTimer;
 	Vector3 oldVel;
+
+	Ray rayTop => new Ray(Controller.transform.position + Vector3.up * Controller.WallCheckHight, oldVel);
+	Ray rayBot => new Ray(Controller.transform.position, oldVel);
+	bool wallCheckTop => Physics.SphereCast(rayTop, 0.2f, Controller.WallCheckLenght);
+	bool wallCheckBot => Physics.SphereCast(rayBot, 0.2f, Controller.WallCheckLenght);
 	public override void Enter(MovementController controller)
 	{
 		Controller = controller;
 		oldVel = controller.Rb.velocity;
 
 		oldVel.y = 0;
-
-		// oldVel = oldVel.normalized;
-		// oldVel *= controller.OldMaxSpeed;
 
 		controller.Rb.AddForce(controller.transform.up * controller.JumpForce, ForceMode.Impulse);
 		Debug.Log("vel= " + controller.Rb.velocity + "\noldVel= " + oldVel);
@@ -225,6 +227,7 @@ public class JumpState : MovementStates
 	public override void FixedTick()
 	{
 		Vector3 vel = Controller.Rb.velocity;
+
 		if (Controller.CheckLedge)
 		{
 			if (Controller.Hit.transform.TryGetComponent(out IClimbable _))
@@ -246,8 +249,14 @@ public class JumpState : MovementStates
 
 			vel += Vector3.down * gravityPower;
 		}
+
 		vel.x = oldVel.x;
 		vel.z = oldVel.z;
+		if (wallCheckTop || wallCheckBot)
+		{
+			vel.x = 0;
+			vel.z = 0;
+		}
 
 		Controller.Rb.velocity = vel;
 	}
@@ -259,6 +268,9 @@ public class JumpState : MovementStates
 
 	public override void Collision(Collision other)
 	{
+
+
+
 		Vector3 Normal = other.contacts[0].normal;
 
 		if (Normal.y > 0)
