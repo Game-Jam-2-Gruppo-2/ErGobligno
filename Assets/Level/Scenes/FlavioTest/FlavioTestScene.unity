@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.4405321, g: 0.48914874, b: 0.5692967, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -439,18 +439,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc15cf58226df014a8993b8d81fec017, type: 3}
---- !u!114 &39502514 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5371444876636171950, guid: fc15cf58226df014a8993b8d81fec017,
-    type: 3}
-  m_PrefabInstance: {fileID: 39502513}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 625fab7fc14d905499416d2d4a8ef865, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &98702656
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2412,7 +2400,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &1418188578
 Light:
   m_ObjectHideFlags: 0
@@ -2425,7 +2413,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -2749,7 +2737,7 @@ MonoBehaviour:
   HighlightColor_Climbable: {r: 0, g: 1, b: 0.31264257, a: 1}
   Climbable:
   - {fileID: 783565693}
-  - {fileID: 39502514}
+  - {fileID: 0}
   - {fileID: 0}
 --- !u!1001 &1647337305
 PrefabInstance:
@@ -3245,7 +3233,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 1
-  sharedProfile: {fileID: 11400000, guid: a6560a915ef98420e9faacc1c7438823, type: 2}
+  sharedProfile: {fileID: 11400000, guid: 8b419de20087f3546b7d8145146ddc06, type: 2}
 --- !u!4 &2145468235
 Transform:
   m_ObjectHideFlags: 0
