@@ -8,6 +8,7 @@ public class UIGame : MonoBehaviour
 {
     [SerializeField] private TMP_Text TimerText;
     [SerializeField] private TMP_Text CoinText;
+    [SerializeField] private TMP_Text MaxCoinText;
     [SerializeField] private UINoiseIndicator NoiseIndicator = new UINoiseIndicator();
     [SerializeField] private UIHands HandsIndicator;
 
@@ -24,7 +25,8 @@ public class UIGame : MonoBehaviour
 
     private void UpdateCoin()
     {
-        CoinText.text = ScoreManager.GetCoinValue()+" / "+ ScoreManager.GetMaxCoinValue() + " €";
+        CoinText.text = ScoreManager.GetCoinValue().ToString();
+        MaxCoinText.text = ScoreManager.GetMaxCoinValue().ToString();
     }
 
     private void UpdateTimer()
