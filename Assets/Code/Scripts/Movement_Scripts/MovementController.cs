@@ -12,6 +12,7 @@ public class MovementController : MonoBehaviour
 	[SerializeField] public float LedgeCheckHeight = 1f;
 	[Tooltip("how long is the raycast to detect ledges")]
 	[SerializeField] public float LedgeCheckLenght = 0.6f;
+	[SerializeField] public float LedgeCheckRadius = 0.4f;
 	[SerializeField] public float ClimbDuration = 0.5f;
 	///<summary>the offset in y after you climed</summary>
 	[Tooltip("the offset in y after you climed")]
@@ -55,7 +56,7 @@ public class MovementController : MonoBehaviour
 
 
 	public static Action OnClimb;
-	public bool CheckLedge => Physics.Raycast(transform.position + Vector3.up * LedgeCheckHeight, transform.forward, out Hit, LedgeCheckLenght);
+	public bool CheckLedge => Physics.SphereCast(transform.position + Vector3.up * LedgeCheckHeight, LedgeCheckRadius, transform.forward, out Hit, LedgeCheckLenght);
 	/// <summary>
 	/// return Physics.OverlapSphere(transform.position, GroundCheckRadius, ~LayerPlayer) == null;
 	/// </summary>
@@ -106,6 +107,7 @@ public class MovementController : MonoBehaviour
 
 		Gizmos.color = Color.red;
 		Gizmos.DrawRay(transform.position + Vector3.up * LedgeCheckHeight, transform.forward * LedgeCheckLenght);
+		Gizmos.DrawWireSphere(transform.position + Vector3.up * LedgeCheckHeight + transform.forward * LedgeCheckLenght, LedgeCheckRadius);
 
 		Gizmos.color = Color.cyan;
 		Gizmos.DrawWireSphere(transform.position + Vector3.up * WallCheckHight + transform.forward * WallCheckLenght, 0.2f);
