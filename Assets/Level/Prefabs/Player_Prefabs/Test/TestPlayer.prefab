@@ -197,7 +197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Rb: {fileID: 0}
   MyCollider: {fileID: 0}
-  LedgeCheckHeight: 1
+  LedgeCheckHeight: 0.7
   LedgeCheckLenght: 0.6
   ClimbDuration: 0.5
   ClimbOffsetY: 0
@@ -207,12 +207,17 @@ MonoBehaviour:
   JumpForce: 4
   Jump_SFX: {fileID: 8300000, guid: 0aaace53230460740adaca998c5ae722, type: 3}
   JumpPitchVariation: 0.2
+  AirTimeBeforeGravity: 0.4
   LayerPlayer:
     serializedVersion: 2
     m_Bits: 64
   GroundCheckRadius: 0.4
-  WallCheckHight: 1
+  WallCheckHight: 0.8
   WallCheckLenght: 0.6
+  Gravity: 9.8
+  GravityMaxDuration: 0
+  GravityTimer: 0
+  OldMaxSpeed: 0
   WalkMaxSpeed: 10
   RunMaxSpeed: 15
   MovableLayer:
@@ -224,6 +229,8 @@ MonoBehaviour:
   CollisionNormal: {x: 0, y: 0, z: 0}
   CollisionDir: {x: 0, y: 0, z: 0}
   ClimbableCollider: {fileID: 0}
+  IsAirborne: 0
+  IsClimbing: 0
 --- !u!54 &5455788610137237893
 Rigidbody:
   m_ObjectHideFlags: 0

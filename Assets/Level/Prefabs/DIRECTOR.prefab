@@ -51,6 +51,7 @@ MonoBehaviour:
   GameScenes:
   - LV1_Scene
   - FlavioTestScene
+  - LevelDesign Fixed
   MenuScenes:
   - TitleScreen_Scene
   - Intro_Scene
