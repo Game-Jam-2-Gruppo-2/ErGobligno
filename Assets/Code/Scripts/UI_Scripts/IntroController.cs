@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class IntroController : MonoBehaviour
 {
-    [SerializeField] private List<Canvas> m_Canvases = new List<Canvas>();
+    [SerializeField] private List<RectTransform> m_Canvases = new List<RectTransform>();
     [SerializeField] private string m_SceneToLoad = "none";
     private int currentIndex;
 
