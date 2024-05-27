@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4bb5f9790a5ec84eadf459f91deda9e, type: 3}
   m_Name: Score Settings
   m_EditorClassIdentifier: 
-  StartingTime: 600
-  IncreaseTimeOnCoin: 15
+  StartingTime: 10
+  IncreaseTimeOnCoin: 5
   MaxNoise: 3
   DecreaseTime:
-  - 2.5
-  - 5
-  - 10
+  - 7.5
+  - 12
+  - 15
   SavedScoreCount: 5

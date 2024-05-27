@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a6eb52dbf384c24c8c3a830040debb3, type: 3}
   m_Name: Bottle Settings
   m_EditorClassIdentifier: 
-  BreakingForce: 5
+  BreakingForce: 2
   BreakingNoise: 1
   Breaking_VFX: {fileID: 2130009982584459135, guid: 5a4031d4e22211648940e18e77b017fa,
     type: 3}
