@@ -7,11 +7,18 @@ public class CinemachinePOVExtention : CinemachineExtension
     [SerializeField] private Transform m_Target;
 
     private Vector3 m_StartingRotation;
+    bool m_ForFix = false;
 
+    
     protected override void Awake()
     {
         base.Awake();
-        m_StartingRotation = transform.localRotation.eulerAngles;
+       
+    }
+
+    private void Start()
+    {
+        m_StartingRotation = transform.eulerAngles;
     }
 
     protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
@@ -27,8 +34,8 @@ public class CinemachinePOVExtention : CinemachineExtension
                 m_StartingRotation.x += deltaInput.x * SensitivityManager.GetSensitivityValue().x * Time.deltaTime;
                 m_StartingRotation.y += deltaInput.y * SensitivityManager.GetSensitivityValue().y * Time.deltaTime;
                 m_StartingRotation.y = Mathf.Clamp(m_StartingRotation.y, -m_ClampAngle, m_ClampAngle);
-                state.RawOrientation = Quaternion.Euler(-m_StartingRotation.y, m_StartingRotation.x, 0f);
-                m_Target.rotation = Quaternion.Euler(0f, m_StartingRotation.x, 0f);
+                state.RawOrientation = Quaternion.Euler(-m_StartingRotation.y, m_StartingRotation.x + 180, 0f);
+                m_Target.rotation = Quaternion.Euler(0f, m_StartingRotation.x + 180, 0f);
             }
         }
     }

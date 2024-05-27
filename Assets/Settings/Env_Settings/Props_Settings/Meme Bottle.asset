@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a6eb52dbf384c24c8c3a830040debb3, type: 3}
+  m_Name: Meme Bottle
+  m_EditorClassIdentifier: 
+  BreakingForce: 4
+  BreakingNoise: 0
+  Breaking_VFX: {fileID: 2130009982584459135, guid: 5a4031d4e22211648940e18e77b017fa,
+    type: 3}
+  Breaking_SFX:
+  - {fileID: 8300000, guid: 352410afd6a64014581515617616bf08, type: 3}
+  SideTipping_SFX:
+  - {fileID: 8300000, guid: cc2cade1c336f814cab4f921f67bff1d, type: 3}
+  PitchVariation_SideTipping: 0.2
+  BottomTipping_SFX:
+  - {fileID: 8300000, guid: 9fa4025fdb431ad4f82cf561f9882784, type: 3}
+  PitchVariation_BottomTipping: 0.2
+  GlassHit_SFX:
+  - {fileID: 8300000, guid: 3f890b62a27c8fa49a033fcc568c3d60, type: 3}
+  - {fileID: 8300000, guid: e23ba1a9165336442817da1bdc00e787, type: 3}
+  - {fileID: 8300000, guid: 75db1a102cfe22947b26deba064b114e, type: 3}
+  - {fileID: 8300000, guid: db169d2898c9d704dac586b3d42038a0, type: 3}
+  - {fileID: 8300000, guid: 2c78716d159311d449631f7c3738af1f, type: 3}
+  PitchVariation_BottleHit: 0.2
