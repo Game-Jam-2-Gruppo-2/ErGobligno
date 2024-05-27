@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 
 public class MovementController : MonoBehaviour
@@ -115,5 +116,7 @@ public class MovementController : MonoBehaviour
 		Gizmos.DrawRay(transform.position + Vector3.up * WallCheckHight, transform.forward * WallCheckLenght);
 		Gizmos.DrawRay(transform.position + Vector3.up * 0.3f, transform.forward * WallCheckLenght);
 	}
+
+	
 #endif
 }
