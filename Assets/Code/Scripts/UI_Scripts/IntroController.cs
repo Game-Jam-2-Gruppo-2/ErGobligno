@@ -18,13 +18,13 @@ public class IntroController : MonoBehaviour
 
     public void NextTab()
     {
-        m_Canvases[currentIndex].gameObject.SetActive(false);
-        currentIndex++;
         if (currentIndex >= m_Canvases.Count)
         {
             SceneManager.LoadScene(m_SceneToLoad);
             return;
         }
+        m_Canvases[currentIndex].gameObject.SetActive(false);
+        currentIndex++;
         m_Canvases[currentIndex].gameObject.SetActive(true);
     }
 }
