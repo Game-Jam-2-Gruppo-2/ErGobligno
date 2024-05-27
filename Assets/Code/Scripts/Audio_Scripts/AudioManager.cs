@@ -177,13 +177,6 @@ public class AudioManager : MonoBehaviour
         }
     }
     #endregion
-
-    private void OnDestroy()
-    {
-        Request3DSFX -= Request3DSFX;
-        RequestAdvanced3DSFX -= Request3D_SFX;
-        Request2DSFX -= Request2DSFX;
-    }
 }
 
 /// <summary>
