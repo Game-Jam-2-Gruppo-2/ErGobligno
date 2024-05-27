@@ -110,6 +110,9 @@ public class GameManager : MonoBehaviour
 
 	private void FinishGame()
 	{
+		if (!m_InGame)
+			return;
+
 		if (ScoreManager.IsNoiseOnMax() || ScoreManager.GetGameTimeValue() <= 0)
             SceneManager.LoadScene(LoseScreen_Scene);
         else
@@ -169,19 +172,6 @@ public class GameManager : MonoBehaviour
 		ScoreManager.OnNoiseChanged += CheckNoise;
 		ScoreManager.OnCoinChanged += CheckCoin;
 		ScoreManager.OnGameTimeChanged += CheckTimer;
-	}
-
-	private void OnDisable()
-	{
-        m_PlayerInputs.UI.Pause.performed -= PauseGame;
-        m_PlayerInputs.Movement.Pause.performed -= PauseGame;
-        ScoreManager.OnNoiseChanged -= CheckNoise;
-        ScoreManager.OnCoinChanged -= CheckCoin;
-        ScoreManager.OnGameTimeChanged -= CheckTimer;
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-        OnNewGame -= OnNewGame;
-		OnGamePause -= OnGamePause;
-		OnGameEnd -= OnGameEnd;
 	}
 }
 

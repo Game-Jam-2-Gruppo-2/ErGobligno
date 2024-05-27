@@ -125,19 +125,11 @@ public class ScoreManager: MonoBehaviour
     private void StartGame()
     {
         ResetValues();
+        StopAllCoroutines();
         TimerCoroutine = StartCoroutine(TimerEnumerator());
         MaxCoin = FindObjectsOfType<Collectible>().Length;
         CoinLeft = MaxCoin;
         //Call Update Value Events
-        OnGameTimeChanged?.Invoke();
-        OnCoinChanged?.Invoke();
-        OnNoiseChanged?.Invoke();
-    }
-
-    private void EndGame()
-    {
-        //TODO: Save High Score
-        ResetValues();
         OnGameTimeChanged?.Invoke();
         OnCoinChanged?.Invoke();
         OnNoiseChanged?.Invoke();
@@ -192,15 +184,5 @@ public class ScoreManager: MonoBehaviour
         GameManager.OnNewGame += StartGame;
         IncreaseNoise += IncreaseNoiseAmount;
         IncreaseCoin += IncreaseCoinScore;
-    }
-
-    private void OnDisable()
-    {
-        GameManager.OnNewGame -= StartGame;
-        IncreaseNoise -= IncreaseNoiseAmount;
-        IncreaseCoin -= IncreaseCoinScore;
-        OnCoinChanged -= OnCoinChanged;
-        OnNoiseChanged -= OnNoiseChanged;
-        OnGameTimeChanged -= OnGameTimeChanged;
     }
 }

@@ -55,8 +55,8 @@ MonoBehaviour:
   MenuScenes:
   - TitleScreen_Scene
   - Intro_Scene
-  - WinScreen_Scene
   - LoseScreen_Scene
+  - WinScreen_Scene
   WinScreen_Scene: WinScreen_Scene
   LoseScreen_Scene: LoseScreen_Scene
   EnterOnGame: 0

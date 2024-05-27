@@ -10,6 +10,11 @@ public class SensitivityManager: MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
         Settings = m_Settings;
         Instance = this;
     }
