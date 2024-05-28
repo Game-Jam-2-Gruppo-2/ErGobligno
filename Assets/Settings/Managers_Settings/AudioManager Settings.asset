@@ -16,6 +16,6 @@ MonoBehaviour:
   - Type: 0
     DefaultVolume: 1
   - Type: 1
-    DefaultVolume: 0.3
+    DefaultVolume: 0.1
   - Type: 2
     DefaultVolume: 0.75
