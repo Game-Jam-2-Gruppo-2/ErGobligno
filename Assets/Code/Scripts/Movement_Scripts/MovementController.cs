@@ -67,6 +67,12 @@ public class MovementController : MonoBehaviour
 		Rb = GetComponent<Rigidbody>();
 		MyCollider = GetComponent<Collider>();
 		inputActions = InputManager.inputActions;
+		//ChangeState(new IdleState());
+	}
+
+	private void OnEnable()
+	{
+		IsAirborne = IsClimbing = false;
 		ChangeState(new IdleState());
 	}
 
