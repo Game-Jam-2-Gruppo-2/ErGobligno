@@ -980,7 +980,7 @@ PrefabInstance:
     - target: {fileID: 8044625011965735268, guid: 754d69189ed85b34e97181daa5d53a12,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 13.742786
+      value: 13.601
       objectReference: {fileID: 0}
     - target: {fileID: 8044625011965735268, guid: 754d69189ed85b34e97181daa5d53a12,
         type: 3}
@@ -19060,7 +19060,11 @@ PrefabInstance:
       value: Sword_Prefab_37
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5720473449836781830, guid: 707fff91387799d459e0e4fe64be7177, type: 3}
+    - {fileID: 2568667498334016740, guid: 707fff91387799d459e0e4fe64be7177, type: 3}
+    - {fileID: 9159466641646368353, guid: 707fff91387799d459e0e4fe64be7177, type: 3}
+    - {fileID: 1903678951974115314, guid: 707fff91387799d459e0e4fe64be7177, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 707fff91387799d459e0e4fe64be7177, type: 3}
@@ -38635,6 +38639,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI_Prefab
       objectReference: {fileID: 0}
+    - target: {fileID: 290747351544913475, guid: bb8cf1f92518af143806292cc32ace43,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -3.2000732
+      objectReference: {fileID: 0}
+    - target: {fileID: 1796571381208516086, guid: bb8cf1f92518af143806292cc32ace43,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 2.2000732
+      objectReference: {fileID: 0}
+    - target: {fileID: 2248317529053266550, guid: bb8cf1f92518af143806292cc32ace43,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -3.1999512
+      objectReference: {fileID: 0}
     - target: {fileID: 3131737291272227217, guid: bb8cf1f92518af143806292cc32ace43,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -38684,6 +38703,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3461281813889790010, guid: bb8cf1f92518af143806292cc32ace43,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 1.1999512
+      objectReference: {fileID: 0}
+    - target: {fileID: 4848313823144898498, guid: bb8cf1f92518af143806292cc32ace43,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.8000488
+      objectReference: {fileID: 0}
+    - target: {fileID: 5506894784905474749, guid: bb8cf1f92518af143806292cc32ace43,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -3.1999512
+      objectReference: {fileID: 0}
+    - target: {fileID: 6189654605525590553, guid: bb8cf1f92518af143806292cc32ace43,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.8000488
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
